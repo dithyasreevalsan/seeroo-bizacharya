@@ -77,6 +77,10 @@ strong { font-weight: 600; color: var(--ink); }
 .section--navy h1, .section--navy h2, .section--navy h3, .section--navy h4 { color: #fff; }
 .section--navy p { color: var(--on-dark); }
 .section--navy .eyebrow { color: #4FC3B5; }
+/* Two sections sharing a background read as one continuous band, so their stacked vertical
+   padding doubles into dead space. Drop the second one's top padding and let the first
+   section's bottom padding carry the whole gap. (Home: #events -> #sectors.) */
+.section--light + .section--light { padding-top: 0; }
 .section--pattern::before, .section--pattern-dark::before { content: none; }
 .section-head { max-width: 680px; margin-bottom: clamp(2.25rem, 4vw, 3.5rem); }
 .section-head--center { margin-left: auto; margin-right: auto; text-align: center; }
@@ -199,7 +203,14 @@ strong { font-weight: 600; color: var(--ink); }
 /* Homepage only: header integrated into the dark hero instead of a separate white bar.
    The logo has no light/white asset in the project, so it's inverted via filter here —
    the file itself is untouched, this only affects how it renders on the dark header. */
-body.has-hero .topbar { background: var(--black); border-bottom-color: rgba(255, 255, 255, .12); }
+body.has-hero .topbar { background: var(--black); border-bottom-color: rgba(255, 255, 255, .06); }
+/* The cell dividers inherit the light-theme --line (#D9E4EE), which reads as a hard bright
+   rule against the dark hero header — drop them to a faint white so they just separate
+   rather than draw the eye. */
+body.has-hero .topbar__info > * { border-right-color: rgba(255, 255, 255, .07); }
+body.has-hero .topbar__auth { border-left-color: rgba(255, 255, 255, .07); }
+body.has-hero .social--cells a { border-left-color: rgba(255, 255, 255, .07); }
+body.has-hero .social--cells li:last-child a { border-right-color: rgba(255, 255, 255, .07); }
 body.has-hero .topbar__info a, body.has-hero .topbar__right a { color: rgba(255, 255, 255, .78); }
 body.has-hero .topbar__info a:hover, body.has-hero .topbar__right a:hover { color: #fff; }
 body.has-hero .topbar__auth span { color: rgba(255, 255, 255, .35); }
@@ -237,7 +248,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .drawer__sub a { padding: .65rem 1.25rem .65rem 2rem; font-weight: 400; font-size: .92rem; }
 .drawer__foot { padding: 1.25rem; border-top: 1px solid var(--line); display: grid; gap: .75rem; }
 .social { display: flex; gap: .25rem; }
-.social a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: var(--radius-sm); color: inherit; transition: background .2s, color .2s; }
+.social a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 100%; border-radius: 0; color: inherit; transition: background .2s, color .2s; }
 .social a:hover { background: rgba(127, 127, 127, .15); color: inherit; }
 .social .icon { width: 17px; height: 17px; }
 .drawer__foot .social { color: var(--ink); }
@@ -291,17 +302,16 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .hero { position: relative; overflow: hidden; min-height: 760px; background: var(--black); display: flex; align-items: center; }
 .hero .container { width: 100%; }
 @media (min-width: 992px) { .hero { min-height: max(760px, calc(100vh - 120px)); } }
-/* assets/img/hero-bg.jpg is the full composited visual (board, hand, callouts, glow path, script
+/* assets/img/hero_bg.png is the full composited visual (board, hand, callouts, glow path, script
    line, curve). The gradient here only adds extra legibility for the text on the left, per the
    brief's formula — it's not what's carrying the brand colour, the photo already is. */
 .hero__bg {
   position: absolute; inset: 0; z-index: 0;
-  background-image: linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%), url("assets/img/hero-bg.jpg");
+  background-image: linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%), url("../img/hero_bg.png");
   background-size: cover; background-position: center right; background-repeat: no-repeat;
   opacity: 0; transform: scale(1.01); animation: hero-bg-in 1.3s var(--ease) forwards;
 }
 @keyframes hero-bg-in { to { opacity: 1; transform: scale(1); } }
-.hero::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .15; background-image: radial-gradient(rgba(255, 255, 255, .18) 1px, transparent 1.5px); background-size: 26px 26px; -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.8), transparent 80%); mask-image: linear-gradient(180deg, rgba(0,0,0,.8), transparent 80%); }
 .hero .container { position: relative; z-index: 2; }
 .hero__inner { display: grid; gap: 2.5rem; padding-top: clamp(2.5rem, 6vw, 5.5rem); padding-bottom: clamp(3.5rem, 9vw, 7rem); align-items: center; }
 .hero__content { min-width: 0; }
@@ -325,7 +335,9 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .hero .btn--outline:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, .08); }
 @media (min-width: 576px) { .hero h1 { font-size: clamp(2.5rem, 6vw, 3.4rem); } }
 @media (min-width: 992px) {
-  .hero__inner { max-width: 50%; }
+  /* Container stays centred (so the hero lines up with every other section's left gutter);
+     the grid track is what narrows to the dark half and sits at the container's left edge. */
+  .hero__inner { grid-template-columns: minmax(0, 50%); justify-content: start; }
   .hero h1 { font-size: clamp(2.5rem, 3.4vw, 4rem); }
 }
 
@@ -347,19 +359,12 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .hero__stats .icon { width: 22px; height: 22px; flex: none; color: #4FC3B5; }
 
 @keyframes hero-fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Curved seam into the next (white) section — kept as its own overlay (not relying on the photo's
-   own baked-in curve) so the transition lands exactly on this section's edge at every viewport,
-   including the cropped/repositioned mobile view where the photo's curve may not be in frame. */
-.hero__curve { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 50px; z-index: 3; display: block; }
-@media (min-width: 768px) { .hero__curve { height: 80px; } }
-
 @media (max-width: 991.98px) {
   .hero__inner { grid-template-columns: 1fr; }
   /* Content now spans the full width, so the overlay goes stronger/more even (not just left-to-right)
      and the crop shifts to keep the board's centre piece in frame instead of the far right edge. */
   .hero__bg {
-    background-image: linear-gradient(180deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .82) 45%, rgba(10, 37, 64, .94) 100%), url("assets/img/hero-bg.jpg");
+    background-image: linear-gradient(180deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .82) 45%, rgba(10, 37, 64, .94) 100%), url("../img/hero_bg.png");
     background-position: 62% 30%;
   }
 }
@@ -1113,30 +1118,32 @@ fieldset[disabled] { opacity: .6; }
   .listing__list::after { transform: none; }
 }
 
-/* ---------- Custom cursor (desktop, fine-pointer only; JS-gated) ---------- */
-.cursor {
-  position: fixed; top: 0; left: 0; z-index: 9999; display: none;
-  pointer-events: none; opacity: 0; transition: opacity .2s var(--ease);
-  will-change: transform;
+/* ---------- Cursor: Bizacharya mark on links and buttons ---------- */
+/* Everything clickable (links, buttons, submit inputs) shows the logo mark in place of the
+   hand pointer. Everything else keeps the browser's own cursors — arrow on the page, beam in
+   text fields; there is no JS cursor overlay any more.
+   cursor-logo-32.png is a 30x32 copy of cursor-logo.png: browsers ignore cursor images larger
+   than 128px, so the full-size 160x171 mark cannot be used here.
+   Gated to fine pointers — touch devices have no cursor to replace. */
+@media (hover: hover) and (pointer: fine) {
+  a[href],
+  .btn,
+  button,
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  .file-field__btn {
+    cursor: url("../img/cursor-logo-32.png") 2 2, pointer;
+  }
+  /* Primary buttons are solid navy, where the navy mark would disappear — use the white copy.
+     A cursor image cannot be recoloured in CSS (filter does not apply), so this is a second file. */
+  .btn--primary {
+    cursor: url("../img/cursor-logo-32-white.png") 2 2, pointer;
+  }
+  .btn[disabled], button:disabled, input[type="submit"]:disabled, input[type="button"]:disabled {
+    cursor: not-allowed;
+  }
 }
-html.has-custom-cursor .cursor { display: block; }
-.cursor.is-visible { opacity: 1; }
-.cursor__mark {
-  display: block; width: 26px; height: auto;
-  filter: drop-shadow(0 3px 8px rgba(10, 37, 64, .35));
-  transition: transform .25s var(--ease), filter .15s var(--ease);
-}
-.cursor.is-hover .cursor__mark { transform: scale(1.4); }
-/* While the mouse button is held down, recolour the mark white. */
-.cursor.is-active .cursor__mark { filter: brightness(0) invert(1) drop-shadow(0 3px 8px rgba(10, 37, 64, .45)); }
-
-/* Hide the native pointer everywhere the custom cursor is active... */
-html.has-custom-cursor, html.has-custom-cursor * { cursor: none !important; }
-/* ...except real text-entry fields, where the native text-beam is still expected. */
-html.has-custom-cursor input[type="text"], html.has-custom-cursor input[type="email"],
-html.has-custom-cursor input[type="tel"], html.has-custom-cursor input[type="search"],
-html.has-custom-cursor input[type="password"], html.has-custom-cursor input[type="number"],
-html.has-custom-cursor textarea { cursor: text !important; }
 
 /* ---------- 20. Utilities ---------- */
 .mt-0 { margin-top: 0 !important; }
