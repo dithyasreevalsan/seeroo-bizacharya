@@ -6,53 +6,6 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  // Resolve the cursor mark relative to this script's own location, so it works from any page depth (root or subfolders).
-  const CURSOR_IMG = document.currentScript ? new URL('../img/cursor-logo.png', document.currentScript.src).href : 'assets/img/cursor-logo.png';
-
-  /* ---------- Custom cursor: small Bizacharya mark, desktop/fine-pointer only ---------- */
-  function initCustomCursor() {
-    if (reducedMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor';
-    cursor.setAttribute('aria-hidden', 'true');
-    const mark = document.createElement('img');
-    mark.className = 'cursor__mark';
-    mark.src = CURSOR_IMG; mark.alt = ''; mark.width = 26; mark.height = 28;
-    cursor.appendChild(mark);
-    document.body.appendChild(cursor);
-    document.documentElement.classList.add('has-custom-cursor');
-
-    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2, curX = mouseX, curY = mouseY, hasMoved = false;
-
-    const onMove = (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      if (!hasMoved) { hasMoved = true; curX = mouseX; curY = mouseY; cursor.classList.add('is-visible'); }
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    window.addEventListener('mouseout', (e) => { if (!e.relatedTarget) cursor.classList.remove('is-visible', 'is-active'); }, { passive: true });
-    window.addEventListener('mousedown', () => cursor.classList.add('is-active'), { passive: true });
-    window.addEventListener('mouseup', () => cursor.classList.remove('is-active'), { passive: true });
-
-    // Bail out cleanly on the first real touch, for hybrid laptop/tablet devices that report a fine pointer.
-    window.addEventListener('touchstart', () => {
-      window.removeEventListener('mousemove', onMove);
-      document.documentElement.classList.remove('has-custom-cursor');
-      cursor.remove();
-    }, { once: true, passive: true });
-
-    document.addEventListener('mouseover', (e) => {
-      cursor.classList.toggle('is-hover', Boolean(e.target.closest && e.target.closest(FOCUSABLE)));
-    }, { passive: true });
-
-    // Smoothly ease the mark toward the real pointer position each frame, rather than snapping to it.
-    (function tick() {
-      curX += (mouseX - curX) * 0.35;
-      curY += (mouseY - curY) * 0.35;
-      cursor.style.transform = 'translate3d(' + curX + 'px, ' + curY + 'px, 0) translate(-50%, -50%)';
-      requestAnimationFrame(tick);
-    })();
-  }
 
   /* ---------- Header: shrink on scroll + active link ---------- */
   function initHeader() {
@@ -532,7 +485,6 @@
 
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
-    initCustomCursor();
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initBackToTop();
     initJourney(); initEvents(); initVisionMission(); initCarousels(); initMultiselect();
     initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs();
