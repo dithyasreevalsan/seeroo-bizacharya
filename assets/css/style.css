@@ -1648,14 +1648,66 @@ fieldset[disabled] { opacity: .6; }
 .module-list .tag { margin-left: auto; }
 @media (min-width: 576px) { .module-list { grid-template-columns: repeat(2, 1fr); } }
 /* Careers */
-.job-card { display: flex; flex-direction: column; gap: .65rem; height: 100%; padding: 1.6rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer; transition: border-color .2s; position: relative; }
-.job-card:hover { border-color: var(--primary); }
-.job-card h3 { font-size: 1.15rem; margin: 0; }
-.job-card h3 a { color: var(--black); }
-.job-card h3 a::after { content: ""; position: absolute; inset: 0; }
-.job-card__loc { display: inline-flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .9rem; }
-.job-card__loc .icon { width: 16px; height: 16px; }
-.job-card .btn { align-self: flex-start; margin-top: auto; position: relative; z-index: 1; }
+/* Career listing rows, following the Kinsey careers pattern: full-width rows separated by a
+   hairline rather than boxed cards, a meta pair on the left, and a corner-cut arrow button that
+   fills on hover while a rule wipes across the full width of the row. */
+/* Held to a readable measure and centred — at the full 1440px container the title and the arrow
+   ended up a long way apart with dead space between them. */
+.job-list { max-width: 1000px; margin-inline: auto; counter-reset: jobrow; }
+.job-row { position: relative; isolation: isolate; counter-increment: jobrow; }
+/* Soft tint sweeping in from the left on hover */
+.job-row::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, var(--surface) 0%, rgba(242, 247, 251, 0) 76%);
+  opacity: 0; transform: translateX(-12px);
+  transition: opacity .35s var(--ease), transform .45s var(--ease);
+}
+.job-row:hover::before { opacity: 1; transform: none; }
+.job-row__inner {
+  display: flex; align-items: center; justify-content: space-between; gap: clamp(1rem, 2vw, 1.75rem);
+  padding: clamp(1.35rem, 2.6vw, 1.9rem) clamp(.75rem, 1.5vw, 1.25rem);
+  border-bottom: 1px solid var(--line);
+}
+/* Row index, generated from the counter so it renumbers itself as jobs are added or removed */
+.job-row__inner::before {
+  content: "0" counter(jobrow);
+  flex: none; align-self: flex-start; padding-top: .15rem;
+  font-size: .95rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--brand-2-ink); transition: color .25s var(--ease);
+}
+.job-row:hover .job-row__inner::before { color: var(--primary); }
+.job-row:first-child .job-row__inner { border-top: 1px solid var(--line); }
+.job-row__content { min-width: 0; flex: 1; }
+.job-row__title { font-size: clamp(1.15rem, 2vw, 1.5rem); margin: 0 0 .55rem; transition: color .25s var(--ease); }
+.job-row__title a { color: var(--black); }
+/* stretched link: the whole row is the click target, the title stays the accessible one */
+.job-row__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.job-row:hover .job-row__title, .job-row:hover .job-row__title a { color: var(--primary); }
+.job-row__meta { display: flex; flex-wrap: wrap; gap: .45rem 1.5rem; }
+.job-row__meta span { display: inline-flex; align-items: center; gap: .55rem; font-size: .95rem; color: var(--text); }
+.job-row__meta .icon { width: 19px; height: 19px; color: var(--muted); flex: none; }
+/* Kinsey's corner-cut button: border-radius: 20px 0 rounds only the TL and BR corners */
+.job-row__go {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 54px; height: 54px; border-radius: 20px 0;
+  background: var(--surface); color: var(--primary);
+  transition: background .3s var(--ease), color .3s var(--ease), transform .3s var(--ease);
+}
+.job-row__go .icon { width: 20px; height: 20px; }
+.job-row:hover .job-row__go { background: var(--primary); color: #fff; transform: translateX(3px); }
+/* rule wipes across on hover */
+.job-row::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0;
+  background: var(--black); transition: width .35s var(--ease);
+}
+.job-row:hover::after { width: 100%; }
+@media (max-width: 575.98px) {
+  .job-row__inner { gap: .85rem; padding-inline: .25rem; }
+  .job-row__inner::before { font-size: .82rem; }
+  .job-row__go { width: 46px; height: 46px; border-radius: 16px 0; }
+  .job-row__meta { gap: .35rem 1rem; }
+  .job-row__meta span { font-size: .88rem; }
+}
 .badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 .job-facts { display: grid; gap: 1rem; grid-template-columns: 1fr; margin: 1.5rem 0 2rem; }
 .job-fact { padding: 1rem 1.25rem; background: var(--surface); border-radius: var(--radius-sm); }
