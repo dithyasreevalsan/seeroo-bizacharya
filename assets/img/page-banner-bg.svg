@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 420" width="1600" height="420" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true">
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A2540"/>
+      <stop offset="0.52" stop-color="#0D3358"/>
+      <stop offset="1" stop-color="#07579A"/>
+    </linearGradient>
+
+    <radialGradient id="tealGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1A9A8C" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#1A9A8C" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#1A9A8C" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="blueGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1F6DAE" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#1F6DAE" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="strokeFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4FC3B5" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#4FC3B5" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#4FC3B5" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="strokeFade2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7FB4E4" stop-opacity="0"/>
+      <stop offset="0.55" stop-color="#7FB4E4" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#7FB4E4" stop-opacity="0"/>
+    </linearGradient>
+
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#ffffff" fill-opacity="0.075"/>
+    </pattern>
+
+    <linearGradient id="dotMask" x1="0" y1="0" x2="1" y2="0.6">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="0.62" stop-color="#fff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="dotFade">
+      <rect width="1600" height="420" fill="url(#dotMask)"/>
+    </mask>
+  </defs>
+
+  <!-- base field -->
+  <rect width="1600" height="420" fill="url(#field)"/>
+
+  <!-- dot grid, fading out to the right so headline copy sits on clean ground -->
+  <rect width="1600" height="420" fill="url(#dots)" mask="url(#dotFade)"/>
+
+  <!-- soft brand glows -->
+  <ellipse cx="1370" cy="120" rx="470" ry="330" fill="url(#tealGlow)"/>
+  <ellipse cx="180" cy="420" rx="520" ry="300" fill="url(#blueGlow)"/>
+
+  <!-- flowing growth arcs, right-weighted so they sit clear of the title -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M760 470 C 990 380, 1120 250, 1210 40" stroke="url(#strokeFade)" stroke-width="1.5"/>
+    <path d="M860 480 C 1100 400, 1245 265, 1340 30" stroke="url(#strokeFade2)" stroke-width="1.5"/>
+    <path d="M960 490 C 1210 415, 1370 280, 1470 20" stroke="url(#strokeFade)" stroke-width="1.5" opacity="0.7"/>
+  </g>
+
+  <!-- concentric rings bleeding off the top-right corner -->
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.08">
+    <circle cx="1455" cy="-40" r="180" stroke-width="1"/>
+    <circle cx="1455" cy="-40" r="262" stroke-width="1"/>
+    <circle cx="1455" cy="-40" r="348" stroke-width="1"/>
+  </g>
+
+  <!-- teal node accents on the arcs -->
+  <g fill="#4FC3B5">
+    <circle cx="1210" cy="40" r="4" fill-opacity="0.85"/>
+    <circle cx="1340" cy="30" r="3" fill-opacity="0.6"/>
+  </g>
+
+  <!-- closing hairline along the bottom edge -->
+  <rect x="0" y="418" width="1600" height="2" fill="url(#strokeFade)"/>
+</svg>

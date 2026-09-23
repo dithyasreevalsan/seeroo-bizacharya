@@ -96,7 +96,10 @@
     if (reducedMotion || !('IntersectionObserver' in window)) { nodes.forEach((n) => n.classList.add('is-visible')); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      // A ratio threshold is unsafe here: intersectionRatio is measured against the element's own
+      // height, so a block taller than ~8x the viewport can never reach 0.12 and would stay
+      // invisible forever. Firing on any intersection past a percentage margin is height-proof.
+    }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
     nodes.forEach((n) => io.observe(n));
   }
 
@@ -165,8 +168,11 @@
     const stages = $$('.journey-stage', jm);
     if (!stages.length) return;
 
-    // Number visible, then crossfades into the settled image; 2x the original pace (halved throughout).
-    const TIMING = { numberIn: 150, hold: 250, crossfade: 200, pause: 100, line: 200 };
+    // Number visible, then crossfades into the settled image. Each step is given at least as long
+    // as its CSS transition so nothing is cut off mid-motion. The five values sum to one stage
+    // cycle (1100ms) — .journey-map__list::after uses that same duration to glide the connector
+    // line continuously between nodes, so keep the two in step if you retune either.
+    const TIMING = { numberIn: 300, hold: 200, crossfade: 340, pause: 80, line: 180 };
 
     const showFinalState = () => {
       stages.forEach((s) => s.classList.add('is-in', 'show-image'));
@@ -192,24 +198,31 @@
       }
     };
 
+    // --progress is a fraction of the *track*, which runs from the first node's centre to the
+    // last one's — so node i sits at i / (stages - 1), not i / stages.
+    const lastNode = Math.max(stages.length - 1, 1);
+
     // Walk the stages 01 -> 06, one at a time: number appears, holds, crossfades into the image,
-    // pauses, then the line advances to that stage's node before the next one begins.
+    // then pauses before the next one begins. The line is aimed one node ahead at the top of each
+    // stage, so it spends the whole cycle gliding toward the circle that lights up next and lands
+    // exactly as it does, rather than catching up in a jump once the stage is already over.
     const runSequence = () => {
       reset();
       const token = runToken;
       let t = 40;
       stages.forEach((stage, i) => {
-        timers.push(setTimeout(() => { if (runToken === token) stage.classList.add('is-in', 'is-current'); }, t));
+        const nextNode = String(Math.min((i + 1) / lastNode, 1));
+        timers.push(setTimeout(() => {
+          if (runToken !== token) return;
+          stage.classList.add('is-in', 'is-current');
+          if (list) list.style.setProperty('--progress', nextNode);
+        }, t));
         t += TIMING.numberIn + TIMING.hold;
 
         timers.push(setTimeout(() => { if (runToken === token) stage.classList.add('show-image'); }, t));
         t += TIMING.crossfade + TIMING.pause;
 
-        timers.push(setTimeout(() => {
-          if (runToken !== token) return;
-          stage.classList.remove('is-current');
-          if (list) list.style.setProperty('--progress', String((i + 1) / stages.length));
-        }, t));
+        timers.push(setTimeout(() => { if (runToken === token) stage.classList.remove('is-current'); }, t));
         t += TIMING.line;
       });
     };
@@ -310,7 +323,6 @@
     const slotPrev = $('.story-deck__card--prev', root);
     const slotActive = $('.story-deck__card--active', root);
     const slotNext = $('.story-deck__card--next', root);
-    const dotsWrap = $('.story-deck__dots', root);
     if (!track || !slotPrev || !slotActive || !slotNext) return;
 
     const avatarSvg = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>';
@@ -333,28 +345,12 @@
     let timer = null;
     const n = STORIES.length;
 
-    function buildDots() {
-      if (!dotsWrap) return;
-      dotsWrap.innerHTML = '';
-      STORIES.forEach((story, i) => {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.setAttribute('role', 'tab');
-        dot.setAttribute('aria-label', 'Show story: ' + story.name);
-        dot.setAttribute('aria-selected', i === active ? 'true' : 'false');
-        if (i === active) dot.classList.add('is-active');
-        dot.addEventListener('click', () => { goTo(i); restart(); });
-        dotsWrap.appendChild(dot);
-      });
-    }
-
     function render() {
       const prevIdx = (active - 1 + n) % n;
       const nextIdx = (active + 1) % n;
       slotPrev.innerHTML = cardHTML(STORIES[prevIdx], 'prev');
       slotActive.innerHTML = cardHTML(STORIES[active], 'active');
       slotNext.innerHTML = cardHTML(STORIES[nextIdx], 'next');
-      if (dotsWrap) $$('button', dotsWrap).forEach((d, i) => { d.classList.toggle('is-active', i === active); d.setAttribute('aria-selected', i === active ? 'true' : 'false'); });
     }
 
     function goTo(i, dir) {
@@ -391,7 +387,6 @@
     root.addEventListener('focusin', stop);
     root.addEventListener('focusout', start);
 
-    buildDots();
     render();
     start();
   }
