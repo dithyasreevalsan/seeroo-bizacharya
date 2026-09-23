@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true">
+  <defs>
+    <pattern id="gitDots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1.4" cy="1.4" r="1.4" fill="#07579A" fill-opacity="0.12"/>
+    </pattern>
+    <linearGradient id="gitDotMask" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="0.6" stop-color="#fff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="gitDotFade">
+      <rect width="600" height="600" fill="url(#gitDotMask)"/>
+    </mask>
+  </defs>
+
+  <!-- dot grid, fading out toward the bottom-left so it stays a corner accent -->
+  <rect width="600" height="600" fill="url(#gitDots)" mask="url(#gitDotFade)"/>
+
+  <!-- concentric rings bleeding off the top-right corner -->
+  <g fill="none" stroke="#07579A" stroke-opacity="0.1">
+    <circle cx="560" cy="40" r="90" stroke-width="1.5"/>
+    <circle cx="560" cy="40" r="150" stroke-width="1.5"/>
+    <circle cx="560" cy="40" r="215" stroke-width="1.5"/>
+  </g>
+
+  <!-- two thin flowing arcs -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M40 560 C 220 500, 340 380, 400 180" stroke="#1A9A8C" stroke-opacity="0.16" stroke-width="1.5"/>
+    <path d="M90 580 C 260 530, 380 410, 460 220" stroke="#07579A" stroke-opacity="0.12" stroke-width="1.5"/>
+  </g>
+
+  <!-- teal node accents on the arcs -->
+  <g fill="#1A9A8C">
+    <circle cx="400" cy="180" r="4" fill-opacity="0.35"/>
+    <circle cx="460" cy="220" r="3" fill-opacity="0.25"/>
+  </g>
+</svg>
