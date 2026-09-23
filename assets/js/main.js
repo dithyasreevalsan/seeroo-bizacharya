@@ -100,6 +100,53 @@
     nodes.forEach((n) => io.observe(n));
   }
 
+  /* ---------- Listing pages (Opportunities / Services): highlight the row currently in view ---------- */
+  function initListingTimeline() {
+    const lists = $$('.listing__list');
+    if (!lists.length || reducedMotion || !('IntersectionObserver' in window)) return;
+    lists.forEach((list) => {
+      const rows = $$('li', list);
+      if (!rows.length) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { en.target.classList.toggle('is-active', en.isIntersecting); });
+      }, { threshold: 0.5 });
+      rows.forEach((r) => io.observe(r));
+    });
+  }
+
+  /* ---------- Our Journey (About page): scroll-reveal each milestone, grow the connector
+     line to match how far the visitor has read. Independent of initJourney(), which drives
+     the unrelated homepage entrepreneur-journey roadmap. ---------- */
+  function initCompanyTimeline() {
+    const list = $('[data-timeline]');
+    if (!list) return;
+    const items = $$('.timeline__item', list);
+    if (!items.length) return;
+    const total = items.length;
+
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      items.forEach((it) => it.classList.add('is-in'));
+      list.style.setProperty('--progress', '1');
+      return;
+    }
+
+    let maxSeen = -1;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const item = en.target;
+        item.classList.add('is-in');
+        const idx = items.indexOf(item);
+        if (idx > maxSeen) {
+          maxSeen = idx;
+          list.style.setProperty('--progress', String((idx + 1) / total));
+        }
+        io.unobserve(item);
+      });
+    }, { threshold: 0.4, rootMargin: '0px 0px -80px 0px' });
+    items.forEach((it) => io.observe(it));
+  }
+
   /* ---------- Back to top ---------- */
   function initBackToTop() {
     const btn = $('#backToTop');
@@ -118,8 +165,8 @@
     const stages = $$('.journey-stage', jm);
     if (!stages.length) return;
 
-    // Number visible, then crossfades into the settled image; timings follow the brief's suggested ranges.
-    const TIMING = { numberIn: 300, hold: 500, crossfade: 400, pause: 200, line: 400 };
+    // Number visible, then crossfades into the settled image; 2x the original pace (halved throughout).
+    const TIMING = { numberIn: 150, hold: 250, crossfade: 200, pause: 100, line: 200 };
 
     const showFinalState = () => {
       stages.forEach((s) => s.classList.add('is-in', 'show-image'));
@@ -150,7 +197,7 @@
     const runSequence = () => {
       reset();
       const token = runToken;
-      let t = 80;
+      let t = 40;
       stages.forEach((stage, i) => {
         timers.push(setTimeout(() => { if (runToken === token) stage.classList.add('is-in', 'is-current'); }, t));
         t += TIMING.numberIn + TIMING.hold;
@@ -173,43 +220,34 @@
     io.observe(jm);
   }
 
-  /* ---------- Upcoming events: fade-up feature rows, staggered, run once ---------- */
-  function initEvents() {
-    const ev = $('[data-events]');
-    if (!ev) return;
-    const cards = $$('.event-feature', ev);
-    if (!cards.length) return;
-
-    if (reducedMotion || !('IntersectionObserver' in window)) {
-      cards.forEach((c) => c.classList.add('is-in'));
-      return;
-    }
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (!en.isIntersecting) return;
-        cards.forEach((c) => c.classList.add('is-in'));
-        io.unobserve(en.target);
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-    io.observe(ev);
-  }
-
-  /* ---------- Vision & Mission slide-in ---------- */
+  /* ---------- Vision & Mission: connected infographic reveal ---------- */
   function initVisionMission() {
-    const vm = $('[data-vm]');
+    const vm = $('[data-vm2]');
     if (!vm) return;
-    const panels = $$('.vm__panel', vm);
-    if (reducedMotion || !('IntersectionObserver' in window)) { panels.forEach((p) => p.classList.add('is-in')); return; }
+    const lines = $$('.vm2__connector-line', vm);
+    lines.forEach((line) => {
+      const len = Math.ceil(line.getTotalLength());
+      line.style.setProperty('--len', len);
+    });
+    if (reducedMotion || !('IntersectionObserver' in window)) { vm.classList.add('is-in'); return; }
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) { panels.forEach((p) => p.classList.add('is-in')); io.disconnect(); } });
-    }, { threshold: 0.3 });
+      entries.forEach((en) => { if (en.isIntersecting) { vm.classList.add('is-in'); io.disconnect(); } });
+    }, { threshold: 0.25 });
     io.observe(vm);
   }
 
   /* ---------- Swiper carousels ---------- */
   function initCarousels() {
     if (typeof Swiper === 'undefined') return;
+    $$('[data-events-carousel]').forEach((el) => {
+      new Swiper(el, {
+        slidesPerView: 1, loop: true, speed: 600, grabCursor: true,
+        autoplay: reducedMotion ? false : { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
+        navigation: { nextEl: $('.events-carousel__next', el.closest('.events-carousel')), prevEl: $('.events-carousel__prev', el.closest('.events-carousel')) },
+        pagination: { el: $('.events-carousel__dots', el.closest('.events-carousel')), clickable: true },
+        a11y: { enabled: true }, keyboard: { enabled: true }
+      });
+    });
     $$('[data-stories]').forEach((el) => {
       const wrap = el.closest('.stories');
       const cur = $('[data-story-current]', wrap), bar = $('[data-story-progress]', wrap);
@@ -238,6 +276,124 @@
         thumbs: thumbs ? { swiper: thumbs } : undefined, a11y: { enabled: true }, keyboard: { enabled: true }
       });
     }
+  }
+
+  /* ---------- Success Stories: layered "prev / active / next" testimonial deck ----------
+     Data-driven — add a story by adding an entry to STORIES; the three card slots and the
+     pagination dots are all built generically from this array, nothing is hard-coded per story.
+     Only the approved example stories from the project document are listed here. */
+  var STORIES = [
+    {
+      image: null,
+      name: 'From Homemaker to Business Owner',
+      designation: 'Home-based food products, Thrissur',
+      company: '',
+      testimonial: 'With guidance from Bizacharya, I transformed my passion for homemade food products into a registered business. Today, my products reach customers across Kerala through retail outlets and online platforms. The mentorship, branding support, and business planning provided by Bizacharya gave me the confidence to grow my dream into reality.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    },
+    {
+      image: null,
+      name: 'Building an Agri Enterprise',
+      designation: 'Value-added agri products, Palakkad',
+      company: '',
+      testimonial: 'I always wanted to expand beyond traditional farming but wasn\'t sure where to begin. Bizacharya helped me identify opportunities in value-added agricultural products, prepare a business plan, and understand market requirements. Today, my enterprise supplies packaged products to regional distributors and continues to grow.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    }
+  ];
+
+  function initStoryShow() {
+    const root = $('[data-story-deck]');
+    if (!root || !STORIES.length) return;
+    const track = $('.story-deck__track', root);
+    const slotPrev = $('.story-deck__card--prev', root);
+    const slotActive = $('.story-deck__card--active', root);
+    const slotNext = $('.story-deck__card--next', root);
+    const dotsWrap = $('.story-deck__dots', root);
+    if (!track || !slotPrev || !slotActive || !slotNext) return;
+
+    const avatarSvg = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>';
+    const arrowSvg = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+
+    const cardHTML = (story, role) => {
+      const showCta = role === 'active';
+      return (
+        '<span class="story-deck__quote-mark" aria-hidden="true">&ldquo;</span>' +
+        '<span class="story-deck__avatar" role="img" aria-label="Portrait for ' + story.name + '">' + avatarSvg + '</span>' +
+        '<h3>' + story.name + '</h3>' +
+        (story.designation ? '<p class="story-deck__role">' + story.designation + '</p>' : '') +
+        '<blockquote>' + story.testimonial + '</blockquote>' +
+        '<span class="tag story-deck__tag">' + story.category + '</span>' +
+        (showCta ? '<a class="story-deck__cta" href="' + story.storyLink + '">Read Full Story ' + arrowSvg + '</a>' : '')
+      );
+    };
+
+    let active = 0;
+    let timer = null;
+    const n = STORIES.length;
+
+    function buildDots() {
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      STORIES.forEach((story, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', 'Show story: ' + story.name);
+        dot.setAttribute('aria-selected', i === active ? 'true' : 'false');
+        if (i === active) dot.classList.add('is-active');
+        dot.addEventListener('click', () => { goTo(i); restart(); });
+        dotsWrap.appendChild(dot);
+      });
+    }
+
+    function render() {
+      const prevIdx = (active - 1 + n) % n;
+      const nextIdx = (active + 1) % n;
+      slotPrev.innerHTML = cardHTML(STORIES[prevIdx], 'prev');
+      slotActive.innerHTML = cardHTML(STORIES[active], 'active');
+      slotNext.innerHTML = cardHTML(STORIES[nextIdx], 'next');
+      if (dotsWrap) $$('button', dotsWrap).forEach((d, i) => { d.classList.toggle('is-active', i === active); d.setAttribute('aria-selected', i === active ? 'true' : 'false'); });
+    }
+
+    function goTo(i, dir) {
+      if (n < 2) return;
+      const next = ((i % n) + n) % n;
+      if (next === active) return;
+      const direction = dir || (next === (active + 1) % n ? 'next' : 'prev');
+      active = next;
+      if (reducedMotion) { render(); return; }
+      track.classList.add(direction === 'next' ? 'is-going-next' : 'is-going-prev');
+      setTimeout(() => {
+        render();
+        track.classList.remove('is-going-next', 'is-going-prev');
+      }, 320);
+    }
+
+    if (slotPrev) slotPrev.addEventListener('click', () => { goTo(active - 1, 'prev'); restart(); });
+    if (slotNext) slotNext.addEventListener('click', () => { goTo(active + 1, 'next'); restart(); });
+    const prevBtn = $('.story-deck__prev-btn', root), nextBtn = $('.story-deck__next-btn', root);
+    if (prevBtn) prevBtn.addEventListener('click', () => { goTo(active - 1, 'prev'); restart(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { goTo(active + 1, 'next'); restart(); });
+
+    function stepNext() { goTo(active + 1, 'next'); }
+    function start() {
+      if (reducedMotion || n < 2) return;
+      stop();
+      timer = setInterval(stepNext, 5500);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function restart() { stop(); start(); }
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+
+    buildDots();
+    render();
+    start();
   }
 
   /* ---------- Custom multi-select (Services) ---------- */
@@ -485,8 +641,8 @@
 
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
-    initHeader(); initDropdowns(); initDrawer(); initReveal(); initBackToTop();
-    initJourney(); initEvents(); initVisionMission(); initCarousels(); initMultiselect();
+    initHeader(); initDropdowns(); initDrawer(); initReveal(); initListingTimeline(); initBackToTop();
+    initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
     initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });

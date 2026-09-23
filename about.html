@@ -27,8 +27,6 @@
       <a href="mailto:info@bizacharya.com"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>info@bizacharya.com</span></a>
     </div>
     <div class="topbar__right">
-      <!-- Phase 2 placeholders: entrepreneur / business associate portals -->
-      <div class="topbar__auth"><a href="login.html">Sign in</a><span aria-hidden="true">/</span><a href="signup.html">Sign up</a></div>
       <ul class="social social--cells" aria-label="Social media"><li><a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Bizacharya on Facebook"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a></li><li><a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Bizacharya on Instagram"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a></li><li><a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Bizacharya on LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a></li><li><a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="Bizacharya on YouTube"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a></li><li><a href="https://x.com/" target="_blank" rel="noopener" aria-label="Bizacharya on X"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4l11.733 16H20L8.267 4H4z"/><path d="M4 20 10.768 13.2"/><path d="M13.23 10.8 20 4"/></svg></a></li></ul>
     </div>
   </div>
@@ -53,7 +51,7 @@
         <!-- <li class="nav__item"><a class="nav__link" href="learning-hub.html">Learning Hub</a></li> -->
         <li class="nav__item"><a class="nav__link" href="community.html">Community</a></li>
         <!-- <li class="nav__item"><a class="nav__link" href="success-stories.html">Success Stories</a></li> -->
-        <!-- <li class="nav__item"><a class="nav__link" href="careers.html">Careers</a></li> -->
+        <li class="nav__item"><a class="nav__link" href="careers.html">Careers</a></li>
         <li class="nav__item"><a class="nav__link" href="contact.html">Contact</a></li>
       </ul>
     </nav>
@@ -79,10 +77,8 @@
       <!-- <a href="learning-hub.html">Learning Hub</a> -->
       <a href="community.html">Community</a>
       <!-- <a href="success-stories.html">Success Stories</a> -->
-      <!-- <a href="careers.html">Careers</a> -->
+      <a href="careers.html">Careers</a>
       <a href="contact.html">Contact</a>
-      <a href="login.html">Sign in <span class="tag tag--teal">Phase 2</span></a>
-      <a href="signup.html">Sign up <span class="tag tag--teal">Phase 2</span></a>
     </nav>
     <div class="drawer__foot">
       <a class="btn btn--primary" href="tel:+919207780808"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Book a Consultation</a>
@@ -95,45 +91,101 @@
 <!-- About: layout modelled on the Copora "About" page -->
 <section class="about-hero">
   <div class="container">
-    <div class="about-hero__head" data-reveal>
-      <p class="eyebrow">About Bizacharya</p>
-      <h1>From Corporate Consulting to Kerala's Entrepreneurship Ecosystem</h1>
-      <p class="lead">Bizacharya began as a specialized corporate business consulting firm, serving organizations across the BFSI sector. Over the years, we partnered with 54+ NBFCs, Small Finance Banks, Cooperative Institutions, and Financial Organizations, helping them establish, strengthen, and scale their operations through strategic consulting and regulatory excellence.</p>
+    <div class="about-hero__grid" data-stagger>
+      <div class="about-hero__head" data-reveal>
+        <p class="eyebrow">About Bizacharya</p>
+        <h1>From Corporate Consulting to Kerala's <span class="listing-accent">Entrepreneurship Ecosystem</span></h1>
+        <p class="lead">Bizacharya began as a specialized corporate business consulting firm, serving organizations across the BFSI sector. Over the years, we partnered with 54+ NBFCs, Small Finance Banks, Cooperative Institutions, and Financial Organizations, helping them establish, strengthen, and scale their operations through strategic consulting and regulatory excellence.</p>
+        <p class="about-hero__accent"><span aria-hidden="true"></span>Strategy&nbsp;&nbsp;People&nbsp;&nbsp;Growth</p>
+      </div>
+      <div class="about-hero__media" data-reveal>
+        <span class="about-hero__shape" aria-hidden="true"></span>
+        <figure class="ph ph--banner"><img src="assets/img/about/hero-banner.jpg" alt="Bizacharya advisors with entrepreneurs at a business consultation" width="1600" height="700" loading="lazy" onerror="this.remove()"></figure>
+        <div class="about-hero__badge about-hero__badge--top" data-reveal>
+          <span class="about-hero__badge-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg></span>
+          <span>54+ Financial Institutions</span>
+        </div>
+        <div class="about-hero__badge about-hero__badge--bottom" data-reveal>
+          <span class="about-hero__badge-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></span>
+          <span>Kerala's Entrepreneurship Ecosystem</span>
+        </div>
+      </div>
     </div>
-    <div class="about-hero__media" data-reveal><figure class="ph ph--none ph--banner"><img src="assets/img/no-image.svg" alt="Bizacharya advisors with entrepreneurs at a business consultation in Thrissur" width="160" height="120" loading="lazy"></figure></div>
-    <div class="about-hero__cards" data-stagger>
-      <div class="about-card about-card--photo" data-reveal>
-        <figure class="ph ph--none"><img src="assets/img/no-image.svg" alt="Financial institutions supported by Bizacharya" width="160" height="120" loading="lazy"></figure>
-        <div class="about-card__body"><span class="stat__pill">Institutions served</span><span class="about-card__value">54+</span><p>NBFCs, Small Finance Banks, Cooperative Institutions and Financial Organizations.</p></div>
-      </div>
-      <div class="about-card about-card--navy" data-reveal>
-        <h3>Rooted in Kerala, serving <span>entrepreneurs nationally</span></h3>
-        <a class="btn btn--white" href="contact.html#enquiry"><span class="btn__label"><span class="btn__t">Partner With Bizacharya</span><span class="btn__t btn__t--alt" aria-hidden="true">Partner With Bizacharya</span></span></a>
-      </div>
-      <div class="about-card about-card--light" data-reveal>
-        <span class="stat__pill">Combined AUM</span><span class="about-card__value">₹30,000 Cr+</span><p>Businesses transformed through strategic consulting and regulatory excellence.</p>
-      </div>
+  </div>
+</section>
+
+<!-- Our Journey: company history timeline (distinct from the homepage's entrepreneur-journey
+     roadmap in index.html — different component, different content, its own scoped classes). -->
+<section class="section our-journey" id="our-journey">
+  <div class="container">
+    <div class="section-head section-head--center" data-reveal>
+      <p class="eyebrow">Our Journey</p>
+      <h2>Our Journey</h2>
+    </div>
+    <div class="timeline">
+      <ol class="timeline__list" data-timeline>
+        <li class="timeline__item" style="--i:0">
+          <span class="timeline__marker" aria-hidden="true"></span>
+          <div class="timeline__content">
+            <span class="timeline__value">17+ Years</span>
+            <p>Business Consulting &amp; Advisory Experience</p>
+          </div>
+        </li>
+        <li class="timeline__item" style="--i:1">
+          <span class="timeline__marker" aria-hidden="true"></span>
+          <div class="timeline__content">
+            <span class="timeline__value">54+ Financial Institutions</span>
+            <p>Consulting experience across NBFCs, banks, cooperatives and financial organizations.</p>
+          </div>
+        </li>
+        <li class="timeline__item" style="--i:2">
+          <span class="timeline__marker" aria-hidden="true"></span>
+          <div class="timeline__content">
+            <span class="timeline__value">&#8377;30,000+ Crore</span>
+            <p>Combined AUM of organizations supported.</p>
+          </div>
+        </li>
+        <li class="timeline__item timeline__item--today" style="--i:3">
+          <span class="timeline__marker" aria-hidden="true"></span>
+          <div class="timeline__content">
+            <span class="timeline__value">Today</span>
+            <p>Building an integrated entrepreneurship ecosystem for aspiring entrepreneurs, startups, SMEs/MSMEs and established businesses.</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
 
 <section class="section section--light know">
   <div class="container">
-    <h2 data-reveal>Beyond Corporate Advisory — Get to know us</h2>
+    <p class="eyebrow" data-reveal>Our Ecosystem</p>
+    <h2 data-reveal>Beyond Corporate Advisory</h2>
     <div class="know__grid">
       <div data-reveal>
         <p class="know__lead">Bizacharya has now expanded its mission beyond corporate advisory. Today, we are building one of Kerala's most comprehensive entrepreneurship ecosystems—designed to help individuals confidently start, manage, scale, and sustain successful businesses.</p>
+        <p class="mv__label know__empower-label">Today, we empower:</p>
+        <ul class="audience know__audience">
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>Aspiring Entrepreneurs</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>Startups</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>SME/MSMEs</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>Women Entrepreneurs</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Farmers &amp; Agri-Businesses</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>Students &amp; Working Professionals</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>Business Owners</li>
+          <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>Investors &amp; Family Businesses</li>
+        </ul>
         <p class="know__text">Our integrated platform brings together business consulting, expert mentoring, regulatory support, funding guidance, technology solutions, market access, branding, leadership development, and implementation support, all under one roof. Unlike conventional consulting firms, Bizacharya partners with businesses from idea validation and business registration to funding, compliance, expansion, and long-term growth, helping entrepreneurs build sustainable, successful enterprises.</p>
       </div>
       <div class="know__media" data-reveal>
+        <span class="know__shape" aria-hidden="true"></span>
         <div class="know__photos">
-          <figure class="ph ph--none"><img src="assets/img/no-image.svg" alt="Bizacharya team reviewing a business plan with a client" width="160" height="120" loading="lazy"></figure>
-          <figure class="ph ph--none"><img src="assets/img/no-image.svg" alt="Entrepreneurship training session in a Kerala town" width="160" height="120" loading="lazy"></figure>
+          <figure class="ph"><img src="assets/img/about/team-review.jpg" alt="Bizacharya team reviewing a business plan with a client" width="700" height="520" loading="lazy" onerror="this.remove()"></figure>
+          <figure class="ph"><img src="assets/img/about/training-session.jpg" alt="Entrepreneurship training session" width="700" height="520" loading="lazy" onerror="this.remove()"></figure>
         </div>
-        <div class="know__sign">
-          <span class="know__signature" aria-hidden="true">Ajayghosh</span>
-          <strong>Dr. Ajayghosh G</strong>
-          <span class="muted">Managing Director, Bizacharya Consulting Pvt. Ltd.</span>
+        <div class="know__badge" data-reveal>
+          <span class="know__badge-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <span>8 Entrepreneur Segments Empowered</span>
         </div>
       </div>
     </div>
@@ -160,37 +212,16 @@
   </div>
 </section>
 
-<section class="section section--tight" id="vision-mission">
-  <div class="container">
-    <div class="mv" data-stagger>
-      <div class="mv__card" data-reveal>
-        <h2>Our Mission</h2>
-        <p>To help entrepreneurs transform ideas into successful businesses through expert guidance, business registration, funding support, and sustainable growth strategies.</p>
-      </div>
-      <div class="mv__photo" data-reveal>
-        <figure class="ph ph--none"><img src="assets/img/no-image.svg" alt="Entrepreneurs at a Bizacharya community event" width="160" height="120" loading="lazy"></figure>
-        <div class="mv__overlay">
-          <h2>Our Vision</h2>
-          <p>To build India's leading entrepreneurship ecosystem that empowers businesses to start, grow, and succeed.</p>
-          <p class="mv__label">Today, we empower:</p>
-          <ul class="mv__list"><li>Aspiring Entrepreneurs</li><li>Startups</li><li>SME/MSMEs</li><li>Women Entrepreneurs</li><li>Farmers &amp; Agri-Businesses</li><li>Students &amp; Working Professionals</li><li>Business Owners</li><li>Investors &amp; Family Businesses</li></ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="section" id="leadership">
   <div class="container">
     <div class="section-head section-head--center" data-reveal>
-      <p class="eyebrow">Our team</p>
+      <p class="eyebrow">Our Leadership</p>
       <h2>Leadership</h2>
-      <p>The vision and experience guiding Bizacharya.</p>
     </div>
     <div class="leader">
       <div class="leader__photo" data-reveal>
         <div class="team-card">
-          <figure class="ph ph--none ph--portrait"><img src="assets/img/no-image.svg" alt="Portrait of Dr. Ajayghosh G, Managing Director" width="160" height="120" loading="lazy"></figure>
+          <div class="team-card__avatar" aria-hidden="true"><span class="team-card__initials">AG</span></div>
           <div class="team-card__label"><strong>Dr. Ajayghosh G</strong><span>Managing Director</span></div>
         </div>
       </div>
