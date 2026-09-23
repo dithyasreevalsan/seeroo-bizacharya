@@ -103,6 +103,26 @@
     nodes.forEach((n) => io.observe(n));
   }
 
+  /* ---------- Decorative art: very slight scroll drift (e.g. Contact page hero/section art) ---------- */
+  function initParallax() {
+    const nodes = $$('[data-parallax]');
+    if (!nodes.length || reducedMotion) return;
+    let ticking = false;
+    const update = () => {
+      const mid = window.innerHeight / 2;
+      nodes.forEach((el) => {
+        const factor = parseFloat(el.dataset.parallax) || 0.05;
+        const offset = (el.getBoundingClientRect().top - mid) * factor;
+        el.style.transform = `translateY(${offset}px)`;
+      });
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  }
+
   /* ---------- Listing pages (Opportunities / Services): highlight the row currently in view ---------- */
   function initListingTimeline() {
     const lists = $$('.listing__list');
@@ -636,7 +656,7 @@
 
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
-    initHeader(); initDropdowns(); initDrawer(); initReveal(); initListingTimeline(); initBackToTop();
+    initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
     initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');

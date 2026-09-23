@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1000" width="1800" height="1000" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true">
+  <defs>
+    <linearGradient id="chFade" x1="0" y1="0" x2="1" y2="0.3">
+      <stop offset="0" stop-color="#07579A" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#07579A" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#07579A" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="chFadeTeal" x1="0" y1="0" x2="1" y2="-0.2">
+      <stop offset="0" stop-color="#1A9A8C" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#1A9A8C" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#1A9A8C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- organic curved lines, wide and unhurried -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M-40 260 C 420 120, 900 340, 1380 140 S 1900 40 2000 -20" stroke="url(#chFade)" stroke-width="1.5"/>
+    <path d="M-60 520 C 480 640, 940 380, 1460 560 S 1980 520 2040 480" stroke="url(#chFadeTeal)" stroke-width="1.5"/>
+    <path d="M-40 860 C 500 760, 1000 960, 1560 780 S 2000 700 2060 760" stroke="url(#chFade)" stroke-width="1.5" opacity="0.7"/>
+  </g>
+
+  <!-- minimal geometric accents -->
+  <g fill="none" stroke="#07579A" stroke-opacity="0.12">
+    <circle cx="1560" cy="120" r="120" stroke-width="1.5"/>
+    <circle cx="1560" cy="120" r="180" stroke-width="1.5"/>
+  </g>
+  <g fill="none" stroke="#1A9A8C" stroke-opacity="0.14">
+    <circle cx="160" cy="820" r="90" stroke-width="1.5"/>
+  </g>
+  <g fill="#1A9A8C">
+    <circle cx="1380" cy="140" r="4" fill-opacity="0.4"/>
+    <circle cx="1460" cy="560" r="3.5" fill-opacity="0.35"/>
+  </g>
+  <g fill="#07579A">
+    <circle cx="1000" cy="960" r="3" fill-opacity="0.3"/>
+    <circle cx="900" cy="340" r="3.5" fill-opacity="0.3"/>
+  </g>
+</svg>

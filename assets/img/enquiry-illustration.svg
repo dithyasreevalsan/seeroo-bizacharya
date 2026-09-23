@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="presentation" aria-hidden="true">
+  <!-- soft backdrop rings -->
+  <circle cx="200" cy="205" r="168" fill="#ffffff" fill-opacity="0.035"/>
+  <circle cx="200" cy="205" r="168" fill="none" stroke="#ffffff" stroke-opacity="0.09" stroke-width="1.5"/>
+  <circle cx="200" cy="205" r="120" fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1.5"/>
+
+  <!-- scattered accent dots -->
+  <g fill="#4FC3B5">
+    <circle cx="88" cy="118" r="4" fill-opacity="0.5"/>
+    <circle cx="322" cy="270" r="5" fill-opacity="0.35"/>
+    <circle cx="110" cy="308" r="3.5" fill-opacity="0.4"/>
+    <circle cx="300" cy="120" r="3" fill-opacity="0.4"/>
+  </g>
+
+  <!-- envelope -->
+  <rect x="95" y="150" width="210" height="148" rx="16" fill="#0F3B63" stroke="#4FC3B5" stroke-opacity="0.55" stroke-width="2"/>
+  <path d="M95 166 L200 248 L305 166" fill="none" stroke="#4FC3B5" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- "sent" badge -->
+  <circle cx="296" cy="158" r="38" fill="#1A9A8C" stroke="#0A2540" stroke-width="6"/>
+  <path d="M280 158 L292 170 L314 142" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

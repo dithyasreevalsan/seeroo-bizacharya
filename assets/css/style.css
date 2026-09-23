@@ -50,11 +50,19 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
   --header-h: 80px;
   --gutter: 30px;
+  /* Single source of truth for button height — .btn and every size modifier (sm/lg) share it,
+     so height stays consistent everywhere; only horizontal padding/font-size vary by size. */
+  --button-height: clamp(44px, 4vw + 30px, 60px);
 }
 
 /* ---------- 2. Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* overflow-x here (not just on body) matters: <html> is the actual scrolling root in standards
+   mode, and a fixed-position element wider than the viewport (e.g. the off-canvas nav drawer,
+   translated out of view but still in the layout tree) can otherwise force the document wider
+   than the viewport on narrow screens, clipping in-flow content at the right edge instead of
+   wrapping it. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
   margin: 0; font-family: var(--font); font-size: var(--font-body); line-height: 1.65; color: var(--text); background: #fff;
   -webkit-font-smoothing: antialiased; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh;
@@ -118,7 +126,8 @@ strong { font-weight: 600; color: var(--ink); }
 
 /* ---------- 4. Buttons (reference: Copora — static colour, label rolls up on hover) ---------- */
 .btn {
-  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; padding: 1rem 2rem; border-radius: 50px;
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  min-height: var(--button-height); padding: 0 2rem; border-radius: 50px;
   border: 1px solid transparent; font-weight: 500; font-size: var(--font-button); line-height: 1.5; white-space: nowrap; cursor: pointer;
   transition: background .15s cubic-bezier(.4, 0, .2, 1), color .15s, border-color .15s;
 }
@@ -136,14 +145,16 @@ strong { font-weight: 600; color: var(--ink); }
 .btn--outline:hover { color: var(--ink); border-color: #B9CAD9; }
 .btn--light, .btn--white { background: #fff; color: var(--black); border-color: #fff; }
 .btn--light:hover, .btn--white:hover { color: var(--black); }
-.btn--sm { padding: .6rem 1.15rem; font-size: .875rem; }
-.btn--lg { padding: 1.25rem 2.5rem; font-size: 1rem; }
+.btn--sm { padding: 0 1.15rem; font-size: .875rem; }
+.btn--lg { padding: 0 2.5rem; font-size: 1rem; }
 .btn--wa { background: #25D366; color: #073b1e; border-color: #25D366; }
 .btn--wa:hover { color: #073b1e; }
 .btn-group { display: flex; flex-wrap: wrap; gap: .75rem; }
+/* Contact page enquiry form: Submit sits 10px shorter than the sitewide standard height. */
+#enquiry button[type="submit"] { min-height: calc(var(--button-height) - 10px); }
 @media (max-width: 575.98px) {
   .btn { white-space: normal; text-align: center; }
-  .btn--lg { padding: 1rem 1.4rem; }
+  .btn--lg { padding: 0 1.4rem; }
   .btn__label { height: auto; overflow: visible; line-height: 1.4; }
   .btn__t--alt { display: none; }
   .btn:hover .btn__t { transform: none; }
@@ -1749,14 +1760,28 @@ fieldset[disabled] { opacity: .6; }
 @media (min-width: 576px) { .associate-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 992px) { .associate-grid { grid-template-columns: repeat(4, 1fr); } }
 /* Contact */
-.get-in-touch { display: grid; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.get-in-touch { display: grid; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--brand-2); border-radius: var(--radius); }
 .get-in-touch__intro {
-  position: relative; padding: clamp(2rem, 4vw, 3rem); border-bottom: 1px solid var(--line);
-  background-image: url("../img/get-in-touch-bg.svg"); background-repeat: no-repeat; background-position: top right; background-size: 340px auto;
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(2rem, 4vw, 3rem); border-bottom: 1px solid var(--line);
+}
+/* Bold diagonal accent blocks, angled with clip-path — z-index:-1 + isolation:isolate on the
+   panel keeps them behind the text regardless of DOM order. */
+.get-in-touch__intro::before {
+  content: ""; position: absolute; z-index: -1; top: -70px; right: -70px; width: 240px; height: 240px;
+  background: var(--brand-2); opacity: .14; clip-path: polygon(35% 0%, 100% 0%, 100% 65%);
+}
+.get-in-touch__intro::after {
+  content: ""; position: absolute; z-index: -1; bottom: -50px; left: -50px; width: 170px; height: 170px;
+  background: var(--primary); opacity: .1; clip-path: polygon(0 35%, 65% 100%, 0 100%);
 }
 .get-in-touch__details {
-  position: relative; padding: clamp(2rem, 4vw, 3rem); display: grid; gap: 1.5rem; align-content: start;
-  background-image: url("../img/get-in-touch-bg.svg"); background-repeat: no-repeat; background-position: bottom left; background-size: 300px auto;
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(2rem, 4vw, 3rem); display: grid; gap: 1.5rem; align-content: start;
+}
+.get-in-touch__details::before {
+  content: ""; position: absolute; z-index: -1; top: -40px; right: -40px; width: 130px; height: 130px;
+  background: var(--black); opacity: .06; clip-path: polygon(30% 0%, 100% 0%, 100% 70%);
 }
 .get-in-touch__row { display: flex; gap: 1rem; align-items: flex-start; }
 .get-in-touch__row + .get-in-touch__row { padding-top: 1.5rem; border-top: 1px solid var(--line); }
@@ -1769,6 +1794,23 @@ fieldset[disabled] { opacity: .6; }
   .get-in-touch { grid-template-columns: 1.15fr 1fr; }
   .get-in-touch__intro { border-bottom: 0; border-right: 1px solid var(--line); }
 }
+
+/* Split-screen enquiry form: a coloured illustration panel beside the form, one card. */
+.enquiry-split { display: grid; grid-template-columns: 1fr; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.enquiry-split__illustration {
+  display: flex; flex-direction: column; align-items: center; gap: .5rem; text-align: center;
+  padding: clamp(2rem, 4vw, 3rem); background: var(--black);
+}
+.enquiry-split__illustration .eyebrow { color: #4FC3B5; margin-bottom: 0; }
+.enquiry-split__illustration h2 { color: #fff; margin-bottom: 0; }
+.enquiry-split__illustration p { color: var(--on-dark); max-width: 320px; margin: 0; }
+.enquiry-split__art { width: 100%; max-width: 240px; height: auto; margin-top: 1.5rem; }
+.enquiry-split__form { padding: clamp(2rem, 4vw, 3rem); }
+@media (min-width: 992px) {
+  .enquiry-split { grid-template-columns: 1fr 1.35fr; }
+  .enquiry-split__art { max-width: 280px; margin-top: auto; }
+}
+
 .map { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); height: clamp(320px, 42vw, 480px); }
 .map iframe { width: 100%; height: 100%; border: 0; display: block; }
 
