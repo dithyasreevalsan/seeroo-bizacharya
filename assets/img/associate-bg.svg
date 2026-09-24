@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 900" width="1800" height="900" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true">
+  <!-- minimal corner accent: a few concentric rings, nothing else -->
+  <g fill="none" stroke="#07579A" stroke-opacity="0.1">
+    <circle cx="1720" cy="60" r="110" stroke-width="1.5"/>
+    <circle cx="1720" cy="60" r="170" stroke-width="1.5"/>
+  </g>
+  <g fill="none" stroke="#1A9A8C" stroke-opacity="0.12">
+    <circle cx="60" cy="860" r="90" stroke-width="1.5"/>
+  </g>
+</svg>

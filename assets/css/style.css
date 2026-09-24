@@ -150,8 +150,6 @@ strong { font-weight: 600; color: var(--ink); }
 .btn--wa { background: #25D366; color: #073b1e; border-color: #25D366; }
 .btn--wa:hover { color: #073b1e; }
 .btn-group { display: flex; flex-wrap: wrap; gap: .75rem; }
-/* Contact page enquiry form: Submit sits 10px shorter than the sitewide standard height. */
-#enquiry button[type="submit"] { min-height: calc(var(--button-height) - 10px); }
 @media (max-width: 575.98px) {
   .btn { white-space: normal; text-align: center; }
   .btn--lg { padding: 0 1.4rem; }
@@ -1745,73 +1743,114 @@ fieldset[disabled] { opacity: .6; }
 .back-link { display: inline-flex; align-items: center; gap: .4rem; font-weight: 500; font-size: .9rem; color: var(--muted); margin-bottom: 1.25rem; }
 .back-link:hover { color: var(--black); }
 .back-link .icon { width: 16px; height: 16px; }
+/* Minimal corner-ring accent on the section's light-blue backdrop — kept deliberately sparse so
+   it reads as texture, not decoration competing with the cards. */
+#associate { position: relative; overflow: hidden; isolation: isolate; }
+#associate::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: url("../img/associate-bg.svg");
+  background-repeat: no-repeat; background-position: center; background-size: cover;
+}
 .associate-intro { max-width: 640px; margin: 0 auto 3rem; text-align: center; }
 .associate-intro .lead { margin: 0 auto; }
 .associate-grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; margin-bottom: 2.75rem; }
-.associate-card { padding: 1.75rem 1.5rem; border: 1px solid rgba(255, 255, 255, .14); border-radius: var(--radius); background: rgba(255, 255, 255, .04); transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease); }
-.associate-card:hover { border-color: rgba(255, 255, 255, .3); background: rgba(255, 255, 255, .07); transform: translateY(-4px); }
-.associate-card__icon { width: 48px; height: 48px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; background: rgba(79, 195, 181, .14); color: #4FC3B5; margin-bottom: 1.1rem; }
+.associate-card { padding: 1.75rem 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: 0 18px 40px -28px rgba(10, 37, 64, .25); transition: border-color .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease); }
+.associate-card:hover { border-color: #A1A1AA; box-shadow: 0 24px 48px -24px rgba(10, 37, 64, .3); transform: translateY(-4px); }
+.associate-card__icon { width: 48px; height: 48px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; background: rgba(26, 154, 140, .12); color: var(--brand-2-ink); margin-bottom: 1.1rem; }
 .associate-card__icon .icon { width: 22px; height: 22px; }
-.associate-card h3 { color: #fff; font-size: 1.05rem; margin-bottom: .4rem; }
-.associate-card p { color: var(--on-dark); font-size: .9rem; margin: 0; }
+.associate-card h3 { color: var(--ink); font-size: 1.05rem; margin-bottom: .4rem; }
+.associate-card p { color: var(--muted); font-size: .9rem; margin: 0; }
 .associate-cta { text-align: center; }
-.associate-cta .btn--accent { background: #fff; color: var(--black); border-color: #fff; }
-.associate-cta .btn--accent:hover { color: var(--black); }
 @media (min-width: 576px) { .associate-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 992px) { .associate-grid { grid-template-columns: repeat(4, 1fr); } }
-/* Contact */
-.get-in-touch { display: grid; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--brand-2); border-radius: var(--radius); }
-.get-in-touch__intro {
-  position: relative; isolation: isolate; overflow: hidden;
-  padding: clamp(2rem, 4vw, 3rem); border-bottom: 1px solid var(--line);
+/* Contact — modern take on the Kinsey (ThemeForest) consulting-theme contact pattern: soft
+   gradient glows instead of flat fills, floating/overlapping cards, deep soft shadows instead of
+   hairline borders, and underlined form fields. Glows are native CSS radial-gradient layers, not
+   baked into SVGs — a gradient-filled SVG shape rasterizes with a hard rectangular edge when used
+   as a CSS background-image (confirmed earlier), so every glow here is plain CSS. Same brand
+   palette as the rest of the site (navy/blue/teal) in place of the reference's indigo. */
+.eyebrow-arrow { display: inline-flex; align-items: center; gap: .4rem; }
+.eyebrow-arrow .icon { width: 16px; height: 16px; color: var(--brand-2); flex: none; }
+.heading-soft { display: block; color: var(--muted); font-weight: inherit; }
+.contact-facts-band .heading-soft { color: rgba(255, 255, 255, .55); }
+
+/* Photo + form card — glassmorphism: one continuous card, a full-bleed photo with a frosted,
+   blurred glass panel over the form half, and a full-width submit bar spanning the whole card
+   (photo + panel) at the bottom. Modelled on a reference Kinsey (ThemeForest) contact-form shot. */
+.contact-card { position: relative; border-radius: 28px; overflow: hidden; box-shadow: 0 50px 90px -40px rgba(10, 37, 64, .35); }
+.contact-card--glass { min-height: 620px; }
+.contact-card__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.contact-card__glass-panel {
+  position: relative; z-index: 1; width: 100%; min-height: 100%; margin-left: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .18) 0%, rgba(10, 37, 64, .72) 100%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border-left: 1px solid rgba(255, 255, 255, .18);
+  padding-bottom: 5.5rem;
 }
-/* Bold diagonal accent blocks, angled with clip-path — z-index:-1 + isolation:isolate on the
-   panel keeps them behind the text regardless of DOM order. */
-.get-in-touch__intro::before {
-  content: ""; position: absolute; z-index: -1; top: -70px; right: -70px; width: 240px; height: 240px;
-  background: var(--brand-2); opacity: .14; clip-path: polygon(35% 0%, 100% 0%, 100% 65%);
+.contact-card__form-inner { padding: clamp(1.75rem, 3vw, 2.75rem) clamp(1.75rem, 3vw, 2.75rem) .5rem; }
+.contact-card__form-inner h2 { margin-bottom: 0; color: #fff; }
+.contact-card__glass-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.contact-card__glass-head .eyebrow { margin-bottom: 0; font-size: 1rem; color: #4FC3B5; }
+.contact-card__sparkle { width: 22px; height: 22px; color: rgba(255, 255, 255, .45); }
+.contact-card__submit { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; }
+.contact-card__submit .btn { width: 100%; border-radius: 0; justify-content: space-between; padding: 1.15rem 2rem; }
+
+/* Glass fields: boxed with a translucent white border instead of underlined, for legibility over
+   a busy photo — the sitewide .field/.field__error contract is untouched, only colours change. */
+.contact-card--glass .field { position: relative; margin-bottom: 1.1rem; }
+.contact-card--glass .field label, .contact-card--glass .field .field__label {
+  display: block; font-size: .78rem; font-weight: 500; letter-spacing: .02em; color: rgba(255, 255, 255, .75); margin-bottom: .4rem;
 }
-.get-in-touch__intro::after {
-  content: ""; position: absolute; z-index: -1; bottom: -50px; left: -50px; width: 170px; height: 170px;
-  background: var(--primary); opacity: .1; clip-path: polygon(0 35%, 65% 100%, 0 100%);
+.contact-card--glass .field input, .contact-card--glass .field select, .contact-card--glass .multiselect__toggle {
+  background-color: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35); border-radius: 10px; color: #fff;
 }
-.get-in-touch__details {
-  position: relative; isolation: isolate; overflow: hidden;
-  padding: clamp(2rem, 4vw, 3rem); display: grid; gap: 1.5rem; align-content: start;
+.contact-card--glass .field input::placeholder { color: rgba(255, 255, 255, .55); }
+.contact-card--glass .field input:focus, .contact-card--glass .field select:focus { outline: none; border-color: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, .15); }
+.contact-card--glass .field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .9rem center; background-size: 16px;
 }
-.get-in-touch__details::before {
-  content: ""; position: absolute; z-index: -1; top: -40px; right: -40px; width: 130px; height: 130px;
-  background: var(--black); opacity: .06; clip-path: polygon(30% 0%, 100% 0%, 100% 70%);
-}
-.get-in-touch__row { display: flex; gap: 1rem; align-items: flex-start; }
-.get-in-touch__row + .get-in-touch__row { padding-top: 1.5rem; border-top: 1px solid var(--line); }
-.get-in-touch__row .card-x__icon { margin: 0; width: 44px; height: 44px; background: #fff; }
-.get-in-touch__row h3 { font-size: 1rem; margin-bottom: .35rem; }
-.get-in-touch__row p { margin: 0; color: var(--muted); font-size: .95rem; }
-.get-in-touch__row a { color: var(--ink); font-weight: 500; }
-.get-in-touch__row a:hover { color: var(--brand); }
+.contact-card--glass .field select option { color: var(--ink); }
+.contact-card--glass .field__error { color: #ffb4b4; }
+.contact-card--glass .field__hint { color: rgba(255, 255, 255, .6); }
+.contact-card--glass .multiselect__toggle > .icon { color: rgba(255, 255, 255, .75); }
+.contact-card--glass .multiselect__chips { color: rgba(255, 255, 255, .55); }
 @media (min-width: 992px) {
-  .get-in-touch { grid-template-columns: 1.15fr 1fr; }
-  .get-in-touch__intro { border-bottom: 0; border-right: 1px solid var(--line); }
+  .contact-card__glass-panel { width: 56%; }
 }
 
-/* Split-screen enquiry form: a coloured illustration panel beside the form, one card. */
-.enquiry-split { display: grid; grid-template-columns: 1fr; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.enquiry-split__illustration {
-  display: flex; flex-direction: column; align-items: center; gap: .5rem; text-align: center;
-  padding: clamp(2rem, 4vw, 3rem); background: var(--black);
+/* Dark facts strip — gradient field + glows instead of a flat fill, chip-style facts. */
+.contact-facts-band { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--black) 0%, var(--black-2) 100%); color: var(--on-dark); border-radius: 28px; padding: clamp(2.25rem, 4vw, 3.5rem); }
+.contact-facts-band::before {
+  content: ""; position: absolute; z-index: -1; inset: -20% -10% auto auto; width: 60%; aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(26, 154, 140, .28) 0%, rgba(26, 154, 140, 0) 70%);
 }
-.enquiry-split__illustration .eyebrow { color: #4FC3B5; margin-bottom: 0; }
-.enquiry-split__illustration h2 { color: #fff; margin-bottom: 0; }
-.enquiry-split__illustration p { color: var(--on-dark); max-width: 320px; margin: 0; }
-.enquiry-split__art { width: 100%; max-width: 240px; height: auto; margin-top: 1.5rem; }
-.enquiry-split__form { padding: clamp(2rem, 4vw, 3rem); }
-@media (min-width: 992px) {
-  .enquiry-split { grid-template-columns: 1fr 1.35fr; }
-  .enquiry-split__art { max-width: 280px; margin-top: auto; }
+.contact-facts-band::after {
+  content: ""; position: absolute; z-index: -1; inset: auto auto -30% -10%; width: 50%; aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(31, 109, 174, .22) 0%, rgba(31, 109, 174, 0) 70%);
+}
+.contact-facts-band__inner { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+.contact-facts-band h2 { color: #fff; margin-bottom: 1rem; }
+.contact-facts-band p { margin-bottom: 1.5rem; }
+.contact-facts-band .eyebrow { color: #4FC3B5; }
+.contact-facts-band .eyebrow-arrow .icon { color: #4FC3B5; }
+.contact-facts { display: grid; gap: 1rem; grid-template-columns: 1fr; align-content: start; }
+.contact-facts__item {
+  display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); border-radius: 16px;
+  transition: background .25s var(--ease), border-color .25s var(--ease);
+}
+.contact-facts__item:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .2); }
+.contact-facts__item .card-x__icon { margin: 0; width: 44px; height: 44px; background: rgba(255, 255, 255, .1); color: #4FC3B5; flex: none; }
+.contact-facts dt { font-size: .74rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: rgba(255, 255, 255, .5); margin-bottom: .2rem; }
+.contact-facts dd { margin: 0; font-size: 1.05rem; font-weight: 500; color: #fff; line-height: 1.35; }
+.contact-facts dd a { color: #fff; }
+.contact-facts dd a:hover { color: #4FC3B5; }
+@media (min-width: 768px) {
+  .contact-facts-band__inner { grid-template-columns: 1.1fr 1fr; gap: 3rem; }
 }
 
-.map { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); height: clamp(320px, 42vw, 480px); }
+.map { border-radius: 28px; overflow: hidden; border: 1px solid var(--line); height: clamp(320px, 42vw, 480px); box-shadow: 0 40px 70px -40px rgba(10, 37, 64, .25); }
 .map iframe { width: 100%; height: 100%; border: 0; display: block; }
 
 /* About (editorial two-column intro, modelled on the approved reference layout) */
