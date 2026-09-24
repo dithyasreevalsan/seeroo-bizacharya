@@ -1491,11 +1491,29 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .article .checklist li { font-size: .95rem; }
 .article h2 { font-size: 1.6rem; margin-top: 2.25rem; }
 .article h3 { margin-top: 1.75rem; }
-.detail-banner .ph { aspect-ratio: 21 / 9; border-radius: 0; min-height: 220px; }
-.detail-head { padding: 2.5rem 0 1.5rem; }
+.article > *:first-child { margin-top: 0; }
+/* Editorial full-bleed hero: one photo carries the back-link, tags, title and meta, instead of a
+   flat navy title band sitting above a separate placeholder image. A bottom-weighted scrim keeps
+   the overlaid text readable over any photo without flattening the image with a flat dark fill. */
+.detail-hero { position: relative; overflow: hidden; isolation: isolate; display: flex; align-items: flex-end; min-height: clamp(420px, 46vw, 580px); }
+.detail-hero__media { position: absolute; inset: 0; margin: 0; z-index: -2; border-radius: 0; aspect-ratio: auto; }
+.detail-hero__media:not(.ph--none) img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.detail-hero__scrim {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(10, 37, 64, .1) 0%, rgba(10, 37, 64, .35) 45%, rgba(10, 37, 64, .94) 100%);
+}
+.detail-hero__content { position: relative; z-index: 1; padding: clamp(3rem, 9vw, 5.5rem) 0 clamp(2.25rem, 4vw, 3rem); color: #fff; }
+.detail-hero__content .back-link { color: rgba(255, 255, 255, .78); }
+.detail-hero__content .back-link:hover { color: #fff; }
+.detail-hero__content .tag { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .3); color: #fff; }
+.detail-hero__content h1 { color: #fff; max-width: 22ch; margin: 0 0 1rem; }
+.detail-hero__content .meta-row { color: rgba(255, 255, 255, .82); margin: 0; }
+.detail-hero__content .meta-row .icon { color: rgba(255, 255, 255, .85); }
 .meta-row { display: flex; flex-wrap: wrap; gap: .75rem 1.75rem; margin: 1.25rem 0; color: var(--muted); font-size: .95rem; }
 .meta-row span { display: inline-flex; align-items: center; gap: .5rem; }
 .meta-row .icon { width: 18px; height: 18px; color: var(--black); }
+/* Lead paragraph reads as a pull quote — a quiet editorial flourish at the top of the article. */
+.article .lead { padding-left: 1.25rem; border-left: 3px solid var(--brand-2); font-size: 1.2rem; color: var(--ink); }
 .share { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 .share span { font-weight: 500; font-size: .875rem; color: var(--ink); margin-right: .5rem; }
 .share a { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink); }
@@ -1508,8 +1526,20 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .sidebar-card a { color: var(--ink); font-weight: 500; font-size: .92rem; display: block; }
 .sidebar-card a:hover { color: var(--brand); }
 .sidebar-card small { color: var(--muted); font-size: .78rem; }
-.job-apply-card { background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--brand-2); }
-.job-apply-card .card-x__icon { margin-bottom: 1.1rem; }
+.detail-cta-card { background: linear-gradient(165deg, #fff 0%, var(--surface) 100%); border: 1px solid var(--line); border-top: 3px solid var(--brand-2); box-shadow: 0 30px 50px -34px rgba(10, 37, 64, .3); }
+.detail-cta-card .card-x__icon { margin-bottom: 1.1rem; }
+/* Label/value facts (event date, venue…) — same divider rhythm as .sidebar-card li, but a
+   stacked strong+span instead of a link, so it reads as reference info, not a nav list. */
+.fact-list li { display: flex; gap: .75rem; align-items: flex-start; }
+.fact-list .icon { width: 18px; height: 18px; color: var(--brand-2-ink); margin-top: .15rem; flex: none; }
+.fact-list strong { display: block; font-size: .75rem; font-weight: 500; color: var(--muted); margin-bottom: .3rem; }
+.fact-list span { display: block; font-size: .92rem; color: var(--ink); }
+.sidebar-card > ul + .btn, .sidebar-card > ul + [data-register-cta] { margin-top: 1.25rem; }
+.sidebar-card > [data-register-cta] + .btn { margin-top: .75rem; }
+/* Gallery now lives in its own full-width section below the article/sidebar row, so it can be
+   centred on the page instead of pinned to the left inside the narrower article column. */
+.gallery-section { max-width: 900px; margin: 0 auto; text-align: center; }
+.gallery-section h2 { margin-bottom: 1.5rem; }
 .gallery .swiper-slide .ph { aspect-ratio: 16 / 9; border-radius: var(--radius); }
 .gallery-thumbs { margin-top: .75rem; }
 .gallery-thumbs .swiper-slide { width: 120px; cursor: pointer; opacity: .5; transition: opacity .2s; }
@@ -1518,7 +1548,7 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .gallery-thumbs .ph .ph__label { display: none; }
 .gallery__video { position: absolute; inset: 0; margin: auto; width: 60px; height: 60px; border-radius: 50%; background: #fff; color: var(--black); display: inline-flex; align-items: center; justify-content: center; z-index: 1; }
 .gallery__video .icon { fill: currentColor; stroke: none; margin-left: 3px; }
-.gallery__nav { display: flex; gap: .5rem; justify-content: flex-end; margin-top: .75rem; }
+.gallery__nav { display: flex; gap: .5rem; justify-content: center; margin-top: .75rem; }
 .sticky-cta { position: sticky; top: calc(var(--header-h) + 1rem); }
 
 /* ---------- Service detail pages: one reading column + a sticky sidebar ----------

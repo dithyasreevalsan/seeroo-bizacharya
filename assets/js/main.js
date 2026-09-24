@@ -302,7 +302,7 @@
     const thumbsEl = $('[data-gallery-thumbs]');
     const galleryEl = $('[data-gallery]');
     if (galleryEl) {
-      const thumbs = thumbsEl ? new Swiper(thumbsEl, { slidesPerView: 'auto', spaceBetween: 10, watchSlidesProgress: true, freeMode: true }) : null;
+      const thumbs = thumbsEl ? new Swiper(thumbsEl, { slidesPerView: 'auto', spaceBetween: 10, watchSlidesProgress: true, freeMode: true, centeredSlides: false, centerInsufficientSlides: true }) : null;
       new Swiper(galleryEl, {
         slidesPerView: 1, spaceBetween: 16, loop: true, speed: 500, grabCursor: true,
         navigation: { nextEl: '.gallery__next', prevEl: '.gallery__prev' },
