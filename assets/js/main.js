@@ -312,9 +312,9 @@
   }
 
   /* ---------- Success Stories: layered "prev / active / next" testimonial deck ----------
-     Data-driven — add a story by adding an entry to STORIES; the three card slots and the
-     pagination dots are all built generically from this array, nothing is hard-coded per story.
-     Only the approved example stories from the project document are listed here. */
+     Data-driven — add a story by adding an entry to STORIES; the three card slots are built
+     generically from this array. The card itself (position/size/gradient/shadow) never moves —
+     only the inner .story-deck__content fades/slides/scales when the story changes. */
   var STORIES = [
     {
       image: null,
@@ -331,6 +331,42 @@
       designation: 'Value-added agri products, Palakkad',
       company: '',
       testimonial: 'I always wanted to expand beyond traditional farming but wasn\'t sure where to begin. Bizacharya helped me identify opportunities in value-added agricultural products, prepare a business plan, and understand market requirements. Today, my enterprise supplies packaged products to regional distributors and continues to grow.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    },
+    {
+      image: null,
+      name: 'A Startup Registered in Weeks, Not Months',
+      designation: 'SaaS startup founder, Kochi',
+      company: '',
+      testimonial: 'Choosing the right structure, company registration and compliance were all handled with clarity. We could focus on building the product while Bizacharya guided the paperwork.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    },
+    {
+      image: null,
+      name: 'Funding-Ready with a Credible Project Report',
+      designation: 'Small manufacturing unit, Kozhikode',
+      company: '',
+      testimonial: 'The project report and financial projections prepared with Bizacharya gave our bank discussions a professional footing. We understood our own numbers better than ever before.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    },
+    {
+      image: null,
+      name: 'A Financial Consultancy Built on Trust',
+      designation: 'Loan facilitation business, Kollam',
+      company: '',
+      testimonial: 'From compliance to branding, Bizacharya helped me set up a financial services business that clients trust. The ongoing mentoring keeps me focused on sustainable growth.',
+      category: 'Success Story',
+      storyLink: 'success-stories.html'
+    },
+    {
+      image: null,
+      name: 'Taking a Rural Handicraft Brand Online',
+      designation: 'Handicraft enterprise, Wayanad',
+      company: '',
+      testimonial: 'Bizacharya connected our self-help group with the right marketplaces and helped us with branding and packaging. Our products now travel far beyond our village.',
       category: 'Success Story',
       storyLink: 'success-stories.html'
     }
@@ -351,13 +387,15 @@
     const cardHTML = (story, role) => {
       const showCta = role === 'active';
       return (
+        '<div class="story-deck__content">' +
         '<span class="story-deck__quote-mark" aria-hidden="true">&ldquo;</span>' +
         '<span class="story-deck__avatar" role="img" aria-label="Portrait for ' + story.name + '">' + avatarSvg + '</span>' +
         '<h3>' + story.name + '</h3>' +
         (story.designation ? '<p class="story-deck__role">' + story.designation + '</p>' : '') +
         '<blockquote>' + story.testimonial + '</blockquote>' +
         '<span class="tag story-deck__tag">' + story.category + '</span>' +
-        (showCta ? '<a class="story-deck__cta" href="' + story.storyLink + '">Read Full Story ' + arrowSvg + '</a>' : '')
+        (showCta ? '<a class="story-deck__cta" href="' + story.storyLink + '">Read Full Story ' + arrowSvg + '</a>' : '') +
+        '</div>'
       );
     };
 
@@ -373,27 +411,29 @@
       slotNext.innerHTML = cardHTML(STORIES[nextIdx], 'next');
     }
 
-    function goTo(i, dir) {
+    // Content fades/slides/scales out, swaps underneath, then fades/slides/scales back in — the
+    // card itself (outer box, position, size, gradient, shadow) never animates or resizes.
+    function goTo(i) {
       if (n < 2) return;
       const next = ((i % n) + n) % n;
       if (next === active) return;
-      const direction = dir || (next === (active + 1) % n ? 'next' : 'prev');
       active = next;
       if (reducedMotion) { render(); return; }
-      track.classList.add(direction === 'next' ? 'is-going-next' : 'is-going-prev');
+      track.classList.add('is-swapping');
       setTimeout(() => {
         render();
-        track.classList.remove('is-going-next', 'is-going-prev');
+        void track.offsetWidth; // force layout so the new content's "hidden" state paints first
+        track.classList.remove('is-swapping');
       }, 320);
     }
 
-    if (slotPrev) slotPrev.addEventListener('click', () => { goTo(active - 1, 'prev'); restart(); });
-    if (slotNext) slotNext.addEventListener('click', () => { goTo(active + 1, 'next'); restart(); });
+    if (slotPrev) slotPrev.addEventListener('click', () => { goTo(active - 1); restart(); });
+    if (slotNext) slotNext.addEventListener('click', () => { goTo(active + 1); restart(); });
     const prevBtn = $('.story-deck__prev-btn', root), nextBtn = $('.story-deck__next-btn', root);
-    if (prevBtn) prevBtn.addEventListener('click', () => { goTo(active - 1, 'prev'); restart(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { goTo(active + 1, 'next'); restart(); });
+    if (prevBtn) prevBtn.addEventListener('click', () => { goTo(active - 1); restart(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { goTo(active + 1); restart(); });
 
-    function stepNext() { goTo(active + 1, 'next'); }
+    function stepNext() { goTo(active + 1); }
     function start() {
       if (reducedMotion || n < 2) return;
       stop();

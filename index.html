@@ -193,6 +193,7 @@
 
 <!-- 3. Journey roadmap (serpentine, connectors drawn step by step) -->
 <section class="section journey" id="journey">
+  <img class="journey__watermark" src="assets/img/logo-mark.png" alt="" aria-hidden="true" loading="lazy">
   <div class="container">
     <div class="section-head section-head--center" data-reveal>
       <p class="eyebrow">The Bizacharya Journey</p>
@@ -282,7 +283,7 @@
 </section>
 
 <!-- 4. Sectors: alternating zigzag flow — organic blob icons + colour-coded type, no boxes/cards -->
-<section class="section section--light sectors" id="sectors">
+<section class="section section--tight sectors" id="sectors">
   <div class="container">
     <div class="section-head section-head--center" data-reveal>
       <p class="eyebrow">What we support</p>
@@ -354,8 +355,8 @@
   </div>
 </section>
 
-<!-- 5. Services: row list -->
-<section class="section" id="services">
+<!-- 5. Services: horizontal scrolling tile carousel -->
+<section class="section services-sec" id="services">
   <div class="container">
     <div class="row grid-gap">
       <div class="col-lg-4" data-reveal>
@@ -369,35 +370,107 @@
         </div>
       </div>
       <div class="col-lg-8">
-        <div class="row-list" data-stagger>
-          <a class="row-item" href="services/entrepreneurship-training.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">01</span><div><h3 class="row-item__title">Entrepreneurship Training</h3><p>Build the practical skills and business knowledge needed to launch and grow a successful venture.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/business-registration.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">02</span><div><h3 class="row-item__title">Business Registration</h3><p>Get expert help with company registration, GST registration, and essential business documentation.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/compliance.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">03</span><div><h3 class="row-item__title">Legal &amp; Regulatory Compliance</h3><p>Stay compliant with tax, legal, and regulatory requirements through expert SME/ MSME and startup compliance guidance.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/funding-readiness.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">04</span><div><h3 class="row-item__title">Funding Readiness</h3><p>Prepare your business to secure loans, investments, and government funding schemes.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/branding-marketing.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">05</span><div><h3 class="row-item__title">Branding &amp; Marketing</h3><p>Build a strong brand identity and reach your target audience with effective digital marketing strategies.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/market-access.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">06</span><div><h3 class="row-item__title">Market Access</h3><p>Connect your business with the right customers, partners, and new market opportunities.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
-          <a class="row-item" href="services/business-mentoring.html" data-reveal>
-            <span class="row-item__num" aria-hidden="true">07</span><div><h3 class="row-item__title">Business Mentoring</h3><p>Receive ongoing guidance from experienced mentors to overcome challenges and achieve sustainable business growth.</p></div>
-            <span class="row-item__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-          </a>
+        <div class="marquee service-marquee" data-reveal>
+          <div class="marquee__track">
+            <a class="service-tile" href="services/entrepreneurship-training.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">01</span>
+              <h3 class="service-tile__title">Entrepreneurship Training</h3>
+              <p>Build the practical skills and business knowledge needed to launch and grow a successful venture.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/business-registration.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">02</span>
+              <h3 class="service-tile__title">Business Registration</h3>
+              <p>Get expert help with company registration, GST registration, and essential business documentation.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/compliance.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">03</span>
+              <h3 class="service-tile__title">Legal &amp; Regulatory Compliance</h3>
+              <p>Stay compliant with tax, legal, and regulatory requirements through expert SME/ MSME and startup compliance guidance.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/funding-readiness.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">04</span>
+              <h3 class="service-tile__title">Funding Readiness</h3>
+              <p>Prepare your business to secure loans, investments, and government funding schemes.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/branding-marketing.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">05</span>
+              <h3 class="service-tile__title">Branding &amp; Marketing</h3>
+              <p>Build a strong brand identity and reach your target audience with effective digital marketing strategies.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/market-access.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">06</span>
+              <h3 class="service-tile__title">Market Access</h3>
+              <p>Connect your business with the right customers, partners, and new market opportunities.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/business-mentoring.html">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">07</span>
+              <h3 class="service-tile__title">Business Mentoring</h3>
+              <p>Receive ongoing guidance from experienced mentors to overcome challenges and achieve sustainable business growth.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/entrepreneurship-training.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">01</span>
+              <h3 class="service-tile__title">Entrepreneurship Training</h3>
+              <p>Build the practical skills and business knowledge needed to launch and grow a successful venture.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/business-registration.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">02</span>
+              <h3 class="service-tile__title">Business Registration</h3>
+              <p>Get expert help with company registration, GST registration, and essential business documentation.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/compliance.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">03</span>
+              <h3 class="service-tile__title">Legal &amp; Regulatory Compliance</h3>
+              <p>Stay compliant with tax, legal, and regulatory requirements through expert SME/ MSME and startup compliance guidance.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/funding-readiness.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">04</span>
+              <h3 class="service-tile__title">Funding Readiness</h3>
+              <p>Prepare your business to secure loans, investments, and government funding schemes.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/branding-marketing.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">05</span>
+              <h3 class="service-tile__title">Branding &amp; Marketing</h3>
+              <p>Build a strong brand identity and reach your target audience with effective digital marketing strategies.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/market-access.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">06</span>
+              <h3 class="service-tile__title">Market Access</h3>
+              <p>Connect your business with the right customers, partners, and new market opportunities.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+            <a class="service-tile" href="services/business-mentoring.html" aria-hidden="true" tabindex="-1">
+              <span class="service-tile__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="service-tile__num" aria-hidden="true">07</span>
+              <h3 class="service-tile__title">Business Mentoring</h3>
+              <p>Receive ongoing guidance from experienced mentors to overcome challenges and achieve sustainable business growth.</p>
+              <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

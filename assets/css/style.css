@@ -53,6 +53,9 @@
   /* Single source of truth for button height — .btn and every size modifier (sm/lg) share it,
      so height stays consistent everywhere; only horizontal padding/font-size vary by size. */
   --button-height: clamp(44px, 4vw + 30px, 60px);
+  /* Default duration for continuous marquee sliders (.marquee) — override per-instance or at a
+     breakpoint to change speed without touching the animation logic. */
+  --slider-speed: 30s;
 }
 
 /* ---------- 2. Base ---------- */
@@ -100,9 +103,11 @@ strong { font-weight: 600; color: var(--ink); }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- 3. Layout ---------- */
-.container { --bs-gutter-x: calc(var(--gutter) * 2); }
-@media (min-width: 576px) { .container { max-width: none; } }
-@media (min-width: 1200px) { .container { max-width: 1440px; } }
+.container {
+  --bs-gutter-x: calc(var(--gutter) * 2);
+  width: 100%; max-width: 1280px; margin: 0 auto;
+  padding-left: clamp(20px, 5vw, 80px); padding-right: clamp(20px, 5vw, 80px);
+}
 .section { padding: clamp(4rem, 7vw, 6.5rem) 0; position: relative; }
 .section--tight { padding: clamp(2.5rem, 4.5vw, 4rem) 0; }
 .section--light { background: var(--surface); }
@@ -334,16 +339,34 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .ph--none img { position: absolute; inset: 0; margin: auto; width: min(46%, 150px); height: auto; max-height: 60%; object-fit: contain; display: block; }
 
 /* ---------- 9. Hero (home): real background-image, HTML content on top ---------- */
-.hero { position: relative; overflow: hidden; min-height: 760px; background: var(--black); display: flex; align-items: center; }
+/* min-height (not height) so the box can never clip content — if the heading/description/CTAs/
+   stats need more room than the clamp gives, the flex layout grows the section to fit them
+   instead of cutting them off. The clamp keeps it viewport-relative without depending on the
+   header's exact height like the old `100vh - 120px` calc did. */
+.hero { position: relative; overflow: hidden; min-height: clamp(700px, 100vh, 900px); background: var(--black); display: flex; align-items: center; }
 .hero .container { width: 100%; }
-@media (min-width: 992px) { .hero { min-height: max(760px, calc(100vh - 120px)); } }
 /* assets/img/hero_bg.png is the full composited visual (board, hand, callouts, glow path, script
    line, curve). The gradient here only adds extra legibility for the text on the left, per the
    brief's formula — it's not what's carrying the brand colour, the photo already is. */
+/* `cover` crops the sides to fill the box, and how much it crops (and therefore how far the
+   board reaches left, into the text column) shifts with the container's own aspect ratio. Sizing
+   by width instead shows the composition intact at a consistent proportion of the box regardless
+   of viewport, so the board stays clear of the text at every breakpoint. Anchored to the bottom
+   (not centered) so the curve baked into the bottom of the photo stays flush with the hero's
+   bottom edge — centering it left a gap under the image that pulled the curve up into the
+   feature-stat row instead. */
+/* The middle gradient layer is sized/positioned exactly like the photo (not the box) so it fades
+   from solid navy to transparent right over the photo's own top edge — softening the hard
+   rectangular seam where the image starts, instead of a generic fade across the whole section. */
 .hero__bg {
   position: absolute; inset: 0; z-index: 0;
-  background-image: linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%), url("../img/hero_bg.png");
-  background-size: cover; background-position: center right; background-repeat: no-repeat;
+  background-image:
+    linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%),
+    linear-gradient(to bottom, rgba(10, 37, 64, 1) 0%, rgba(10, 37, 64, 0) 22%),
+    url("../img/hero_bg.png");
+  background-size: cover, 92% auto, 92% auto;
+  background-position: center, right bottom, right bottom;
+  background-repeat: no-repeat, no-repeat, no-repeat;
   opacity: 0; transform: scale(1.01); animation: hero-bg-in 1.3s var(--ease) forwards;
 }
 @keyframes hero-bg-in { to { opacity: 1; transform: scale(1); } }
@@ -389,6 +412,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
   .hero__bg {
     background-image: linear-gradient(180deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .82) 45%, rgba(10, 37, 64, .94) 100%), url("../img/hero_bg.png");
     background-position: 62% 30%;
+    background-size: cover;
   }
 }
 /* Stats row (pill label + big number + note) */
@@ -417,6 +441,18 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 /* Sectors We Support: alternating zigzag flow — organic gradient "blob" icons, colour-coded
    titles and a colour fade divider. No filled containers/cards/borders around each item, so it
    reads as a flowing list, not a box/tile grid, and not a clone of the Services row-list below. */
+.sectors { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--surface) 0%, rgba(7, 87, 154, .07) 45%, rgba(26, 154, 140, .09) 100%); }
+/* Full-bleed decorative background image, scaled to cover the section, at low opacity so the
+   section content stays the visual focus. */
+.sectors::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .04;
+  background-image: url("../img/sectors-bg-full.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.sectors .container { position: relative; z-index: 1; }
+.sectors .section-head { margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
 .sector-flow { list-style: none; padding: 0; margin: 0; max-width: 980px; margin-inline: auto; }
 .sector-flow > li:nth-child(1) { --accent: var(--primary); --accent-2: var(--primary-2); }
 .sector-flow > li:nth-child(2) { --accent: var(--brand-2); --accent-2: #0F6B5F; }
@@ -426,7 +462,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .sector-flow > li:nth-child(6) { --accent: var(--primary); --accent-2: var(--brand-2); }
 
 .sector-line__row {
-  position: relative; display: flex; align-items: center; gap: 1.75rem; padding: 2.1rem 0; color: inherit;
+  position: relative; display: flex; align-items: center; gap: 1.75rem; padding: 1.4rem 0; color: inherit;
 }
 .sector-line__row::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
@@ -436,14 +472,19 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .sector-flow > li.sector-line--rev .sector-line__row::after { background: linear-gradient(270deg, var(--accent) 0%, transparent 78%); }
 
 .sector-line__blob {
-  order: 1; flex: none; width: 74px; height: 74px; display: inline-flex; align-items: center; justify-content: center; color: #fff;
+  order: 1; flex: none; width: 84px; height: 84px; position: relative; display: inline-flex; align-items: center; justify-content: center; color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
-  transition: border-radius .6s var(--ease), transform .5s cubic-bezier(.34, 1.56, .64, 1);
+  box-shadow: 0 20px 36px -18px var(--accent);
+  transition: border-radius .6s var(--ease), transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .5s var(--ease);
 }
-.sector-line__blob .icon { width: 30px; height: 30px; }
+/* Inner ring — turns the flat icon into a two-layer badge instead of a single flat glyph. */
+.sector-line__blob::before {
+  content: ""; position: absolute; inset: 7px; border: 1.5px solid rgba(255, 255, 255, .4); border-radius: inherit; pointer-events: none;
+}
+.sector-line__blob .icon { position: relative; z-index: 1; width: 34px; height: 34px; }
 .sector-line__row:hover .sector-line__blob, .sector-line__row:focus-visible .sector-line__blob {
-  border-radius: 58% 42% 35% 65% / 55% 60% 40% 45%; transform: scale(1.06);
+  border-radius: 58% 42% 35% 65% / 55% 60% 40% 45%; transform: scale(1.06); box-shadow: 0 26px 44px -16px var(--accent);
 }
 
 .sector-line__body { order: 2; flex: 1 1 auto; min-width: 0; }
@@ -462,8 +503,8 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 
 @media (max-width: 767.98px) {
   .sector-line__row { gap: 1.1rem; padding: 1.6rem 0; }
-  .sector-line__blob { width: 56px; height: 56px; }
-  .sector-line__blob .icon { width: 24px; height: 24px; }
+  .sector-line__blob { width: 64px; height: 64px; }
+  .sector-line__blob .icon { width: 26px; height: 26px; }
   .sector-line--rev .sector-line__blob { order: 1; }
   .sector-line--rev .sector-line__arrow { order: 3; }
   .sector-line--rev .sector-line__body { text-align: left; }
@@ -503,6 +544,177 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 }
 .row-item:hover .row-item__num { color: var(--primary); transform: translateY(-2px); }
 @media (max-width: 575.98px) { .row-item { margin: 0; padding: 1.4rem .75rem; gap: .5rem 1rem; } .row-item:hover { transform: none; } .row-item__num { font-size: 1.6rem; } }
+
+/* Generic continuous marquee: overflow-hidden viewport + a flex track holding the real items
+   followed by an identical, aria-hidden duplicate set. Animating the track from 0 to -50% always
+   lands exactly on the duplicate's first item — regardless of item count, width or gap — so the
+   loop point is seamless. transform-only, so it stays smooth/GPU-friendly. */
+.marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.marquee__track { display: flex; width: max-content; animation: marquee-scroll var(--slider-speed) linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Home "Services We Offer": a continuous marquee instead of a stacked plain-text list — the list
+   read as a wall of white space; colour-blocked tiles drifting past read as interactive instead.
+   Accent colours cycle the same palette as the Sectors flow above it. */
+.services-sec { background: linear-gradient(180deg, #fff 0%, var(--surface) 100%); }
+.service-marquee { padding: .25rem .25rem 1rem; margin: -.25rem; }
+.service-marquee .marquee__track { --slider-speed: 34s; gap: 1.5rem; align-items: stretch; }
+.service-tile:nth-child(7n+1) { --accent: var(--primary); --accent-2: var(--primary-2); }
+.service-tile:nth-child(7n+2) { --accent: var(--brand-2); --accent-2: #0F6B5F; }
+.service-tile:nth-child(7n+3) { --accent: var(--black-2); --accent-2: var(--black); }
+.service-tile:nth-child(7n+4) { --accent: var(--primary-2); --accent-2: var(--primary); }
+.service-tile:nth-child(7n+5) { --accent: #0F6B5F; --accent-2: var(--brand-2); }
+.service-tile:nth-child(7n+6) { --accent: var(--primary); --accent-2: var(--brand-2); }
+.service-tile:nth-child(7n+7) { --accent: var(--brand-2); --accent-2: var(--primary); }
+.service-tile {
+  position: relative; display: flex; flex-direction: column; flex: none; width: min(320px, 78vw); height: auto; min-height: 260px; color: inherit;
+  padding: 2rem 1.75rem 1.75rem; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--accent);
+  border-radius: var(--radius-lg); box-shadow: 0 24px 48px -32px rgba(10, 37, 64, .28);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s;
+}
+.service-tile:hover { transform: translateY(-6px); box-shadow: 0 34px 60px -28px rgba(10, 37, 64, .32); }
+.service-tile__icon {
+  width: 56px; height: 56px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; margin-bottom: 1.25rem; flex: none;
+  box-shadow: 0 16px 28px -16px var(--accent);
+}
+.service-tile__icon .icon { width: 26px; height: 26px; }
+.service-tile__num {
+  position: absolute; top: 1.75rem; right: 1.75rem; font-size: .8rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--line); font-variant-numeric: tabular-nums;
+}
+.service-tile__title { font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 0 0 .5rem; letter-spacing: -0.01em; }
+.service-tile p { color: var(--muted); font-size: .92rem; margin: 0 0 1.5rem; flex: 1; }
+.service-tile__arrow {
+  display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex: none;
+  border-radius: 50%; border: 1px solid var(--line); color: var(--accent);
+  transition: background .25s, color .25s, transform .3s, border-color .25s;
+}
+.service-tile__arrow .icon { width: 18px; height: 18px; }
+.service-tile:hover .service-tile__arrow { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateX(4px); }
+@media (max-width: 575.98px) {
+  .service-marquee .marquee__track { --slider-speed: 22s; gap: 1rem; }
+  .service-tile { width: min(280px, 78vw); padding: 1.6rem 1.4rem 1.4rem; min-height: 220px; }
+  .service-tile__num { top: 1.4rem; right: 1.4rem; }
+}
+
+/* Homepage "layered testimonial deck" — scoped entirely to .stories--deck so the shared
+   .stories / .story-card rules above (also used by success-stories.html's own carousel and grid)
+   stay untouched. Three fixed slots (prev / active / next); JS re-renders each slot's content from
+   the STORIES data array on navigate, so the DOM never has to be physically reshuffled. The card
+   itself (position, size, gradient, colours, shapes, arrows) never moves or resizes — only the
+   inner .story-deck__content fades/slides/scales when the story changes. */
+.stories--deck .stories__watermark { display: none; }
+.stories--deck .section-head h2 { line-height: 1.15; }
+
+.story-deck { position: relative; max-width: 1000px; margin: 0 auto; padding: 1.5rem 0 .5rem; }
+
+.story-deck__shape { position: absolute; border-radius: 50%; border: 1px solid rgba(26, 154, 140, .28); pointer-events: none; z-index: 0; }
+.story-deck__shape--a { width: 90px; height: 90px; top: -10px; left: 2%; }
+.story-deck__shape--b { width: 46px; height: 46px; bottom: 6%; right: 4%; border-color: rgba(7, 87, 154, .25); }
+.story-deck__curve { position: absolute; top: 8%; right: -2%; width: 220px; height: 110px; opacity: .35; pointer-events: none; z-index: 0; }
+
+.story-deck__track { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.7fr 1fr; align-items: stretch; }
+
+.story-deck__card {
+  position: relative; border-radius: var(--radius-lg); padding: 2.25rem 2rem 2rem;
+  display: flex; flex-direction: column; align-items: center; text-align: center; overflow: hidden;
+  transition: transform .6s var(--ease), opacity .55s var(--ease), filter .55s var(--ease), box-shadow .55s var(--ease);
+}
+.story-deck__card--prev, .story-deck__card--next {
+  background: rgba(255, 255, 255, .7); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+  transform: scale(.8); opacity: .55; filter: blur(1.5px); box-shadow: 0 20px 36px -28px rgba(10, 37, 64, .25);
+  z-index: 1; max-height: 340px;
+}
+.story-deck__card--prev { margin-right: -2.75rem; }
+.story-deck__card--next { margin-left: -2.75rem; }
+.story-deck__card--prev:hover, .story-deck__card--next:hover { opacity: .8; filter: blur(.5px); transform: scale(.84) translateY(-3px); }
+.story-deck__card--prev .story-deck__cta, .story-deck__card--next .story-deck__cta { display: none; }
+
+.story-deck__card--active {
+  background: linear-gradient(150deg, var(--black) 0%, var(--primary) 55%, var(--brand-2) 100%);
+  color: #fff; z-index: 2; box-shadow: 0 42px 70px -28px rgba(10, 37, 64, .5); padding: 3rem 2.75rem 2.75rem;
+}
+
+/* Content swap: fades/slides/scales in place, independent of the card's own position, size,
+   background and shadow (all of which stay exactly as they are, untouched, during a transition). */
+.story-deck__content { width: 100%; display: flex; flex-direction: column; align-items: center; transition: opacity .32s var(--ease), transform .32s var(--ease); }
+.story-deck__track.is-swapping .story-deck__content { opacity: 0; transform: translateY(-10px) scale(.97); }
+
+.story-deck__quote-mark {
+  position: absolute; top: .5rem; left: 50%; transform: translateX(-50%); font-family: Georgia, "Times New Roman", serif;
+  font-size: 4.5rem; line-height: 1; font-weight: 700; color: #fff; opacity: .14; pointer-events: none;
+}
+.story-deck__card--prev .story-deck__quote-mark, .story-deck__card--next .story-deck__quote-mark { color: var(--brand-2); opacity: .18; }
+
+.story-deck__avatar {
+  position: relative; z-index: 1; width: 64px; height: 64px; border-radius: 50%; flex: none;
+  display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.1rem;
+  background: rgba(255, 255, 255, .16); color: #fff; border: 2px solid rgba(255, 255, 255, .5);
+}
+.story-deck__card--prev .story-deck__avatar, .story-deck__card--next .story-deck__avatar {
+  background: var(--surface); color: var(--muted); border-color: var(--line); width: 52px; height: 52px;
+}
+.story-deck__avatar .icon { width: 26px; height: 26px; }
+.story-deck__card--prev .story-deck__avatar .icon, .story-deck__card--next .story-deck__avatar .icon { width: 22px; height: 22px; }
+
+.story-deck__card h3 { position: relative; z-index: 1; margin: 0 0 .2rem; font-size: 1.15rem; font-weight: 600; color: inherit; }
+.story-deck__role { position: relative; z-index: 1; margin: 0 0 1.1rem; font-size: .85rem; color: rgba(255, 255, 255, .78); }
+.story-deck__card--prev .story-deck__role, .story-deck__card--next .story-deck__role { color: var(--muted); }
+.story-deck__card blockquote { position: relative; z-index: 1; margin: 0 0 1.25rem; font-size: 1.02rem; line-height: 1.65; color: inherit; }
+.story-deck__card--prev blockquote, .story-deck__card--next blockquote { font-size: .92rem; -webkit-line-clamp: 4; line-clamp: 4; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.story-deck__card--active blockquote { max-width: 480px; }
+
+.story-deck__tag { position: relative; z-index: 1; background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .4); color: #fff; margin-bottom: 1.4rem; }
+.story-deck__card--prev .story-deck__tag, .story-deck__card--next .story-deck__tag { background: #fff; }
+.story-deck__cta { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .92rem; color: #fff; }
+.story-deck__cta .icon { width: 16px; height: 16px; transition: transform .3s var(--ease); }
+.story-deck__cta:hover .icon { transform: translateX(3px); }
+
+.story-deck__prev-btn, .story-deck__next-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--line); background: #fff; color: var(--black); display: inline-flex; align-items: center; justify-content: center;
+  transition: background .25s, color .25s, border-color .25s, transform .3s var(--ease);
+}
+.story-deck__prev-btn { left: -6px; }
+.story-deck__next-btn { right: -6px; }
+.story-deck__prev-btn:hover, .story-deck__next-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.story-deck__prev-btn .icon, .story-deck__next-btn .icon { width: 18px; height: 18px; }
+
+/* Entrance: driven by the generic [data-reveal] system (.story-deck carries that attribute) */
+@media (max-width: 991.98px) {
+  .story-deck__track { grid-template-columns: .55fr 2fr .55fr; }
+  .story-deck__card--prev, .story-deck__card--next { padding: 1.6rem 1rem; max-height: 300px; }
+  .story-deck__card--prev blockquote, .story-deck__card--next blockquote,
+  .story-deck__card--prev .story-deck__role, .story-deck__card--next .story-deck__role,
+  .story-deck__card--prev .story-deck__tag, .story-deck__card--next .story-deck__tag,
+  .story-deck__card--prev h3, .story-deck__card--next h3 { display: none; }
+  .story-deck__card--active { padding: 2.5rem 1.75rem 2.25rem; }
+  .story-deck__prev-btn { left: -4px; }
+  .story-deck__next-btn { right: -4px; }
+}
+@media (max-width: 767.98px) {
+  .story-deck__track { display: block; position: relative; min-height: 420px; }
+  .story-deck__card { position: absolute; inset: 0; width: 100%; }
+  .story-deck__card--prev, .story-deck__card--next {
+    z-index: 0; opacity: .35; transform: scale(.86) translateX(0); max-height: none; margin: 0;
+    pointer-events: none;
+  }
+  .story-deck__card--prev { transform: scale(.9) translateX(-14px); }
+  .story-deck__card--next { transform: scale(.9) translateX(14px); }
+  .story-deck__card--active { position: relative; padding: 2.75rem 1.6rem 2.25rem; }
+  /* Arrows drop below the deck here, so the deck reserves the room for them itself. */
+  .story-deck { padding-bottom: 4.5rem; }
+  .story-deck__prev-btn, .story-deck__next-btn { top: auto; bottom: .75rem; transform: none; }
+  .story-deck__prev-btn { left: 38%; }
+  .story-deck__next-btn { right: 38%; }
+}
 
 /* ---------- Listing pages (Opportunities / Services): timeline, icon, content, arrow, image ----------
    Scoped to .row-list--glyph so the homepage's own row-list (Services section) is untouched.
@@ -630,10 +842,9 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .tag--white { background: #fff; color: var(--ink); }
 
 /* Grey CTA strip */
-/* Closing CTA under the stories deck. Deliberately a dark brand band rather than another pale
+/* Closing CTA under the stories section. Deliberately a dark brand band rather than another pale
    panel: it's the last thing in the section, so it should read as a decisive action, not as more
-   content. Same navy/teal language as .cta-band, and the faint ring echoes .story-deck__shape
-   directly above it. */
+   content. Same navy/teal language as .cta-band. */
 /* Full-bleed: the band is its own <section>, so the colour runs edge to edge and only the
    content is held in the container. Vertical padding comes from .section--tight. */
 .strip-cta {
@@ -674,8 +885,14 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 }
 
 /* ---------- 11. Journey roadmap (reference: bizacharya-omega) ---------- */
-.journey { background: #fff; }
+.journey { position: relative; overflow: hidden; isolation: isolate; background: #fff; }
 .journey .section-head p { max-width: 720px; }
+/* Bizacharya mark (logo without the wordmark), faint in the background — decorative only. */
+.journey__watermark {
+  position: absolute; top: 50%; left: 50%; z-index: 0; pointer-events: none; user-select: none;
+  width: clamp(280px, 34vw, 560px); height: auto; opacity: .05; transform: translate(-50%, -50%);
+}
+.journey .container { position: relative; z-index: 1; }
 .roadmap__cta { text-align: center; margin-top: clamp(2rem, 4vw, 3.5rem); }
 .roadmap__cta .btn { box-shadow: 0 10px 24px -12px rgba(1, 82, 147, .6); }
 
@@ -775,7 +992,15 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
    monthyear/time/title/description/location/cta) are the only things to edit. Presented as a
    Swiper carousel (initCarousels() in main.js): one ticket active at a time, swipeable, with
    arrow buttons and pagination dots — see .events-carousel* below. ---------- */
-.events { overflow-x: hidden; }
+.events { position: relative; overflow-x: hidden; isolation: isolate; }
+.events::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .05;
+  background-image: url("../img/events-bg-full.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.events .container { position: relative; z-index: 1; }
 .events-carousel { position: relative; max-width: 760px; margin: 0 auto; padding-top: .5rem; }
 .events-carousel .swiper { overflow: hidden; }
 .events-carousel .swiper-slide { height: auto; padding: 10px 4px 30px; }
@@ -1049,119 +1274,6 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .story-grid .story-card::before { opacity: 1; }
 .story-grid blockquote { -webkit-line-clamp: unset; line-clamp: unset; display: block; }
 
-/* Homepage "layered testimonial deck" variant — scoped entirely to .stories--deck so the shared
-   .stories / .story-card rules above (also used by success-stories.html's own carousel and grid)
-   stay untouched. Three fixed slots (prev / active / next); JS re-renders each slot's content from
-   the STORIES data array on navigate, so the DOM never has to be physically reshuffled. */
-.stories--deck .stories__watermark { display: none; }
-.stories--deck .section-head h2 { line-height: 1.15; }
-
-.story-deck { position: relative; max-width: 1000px; margin: 0 auto; padding: 1.5rem 0 .5rem; }
-
-.story-deck__shape { position: absolute; border-radius: 50%; border: 1px solid rgba(26, 154, 140, .28); pointer-events: none; z-index: 0; }
-.story-deck__shape--a { width: 90px; height: 90px; top: -10px; left: 2%; }
-.story-deck__shape--b { width: 46px; height: 46px; bottom: 6%; right: 4%; border-color: rgba(7, 87, 154, .25); }
-.story-deck__curve { position: absolute; top: 8%; right: -2%; width: 220px; height: 110px; opacity: .35; pointer-events: none; z-index: 0; }
-
-.story-deck__track { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.7fr 1fr; align-items: stretch; }
-
-.story-deck__card {
-  position: relative; border-radius: var(--radius-lg); padding: 2.25rem 2rem 2rem;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-  transition: transform .6s var(--ease), opacity .55s var(--ease), filter .55s var(--ease), box-shadow .55s var(--ease);
-}
-.story-deck__card--prev, .story-deck__card--next {
-  background: rgba(255, 255, 255, .7); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-  border: 1px solid var(--line); color: var(--muted); cursor: pointer;
-  transform: scale(.8); opacity: .55; filter: blur(1.5px); box-shadow: 0 20px 36px -28px rgba(10, 37, 64, .25);
-  z-index: 1; max-height: 340px; overflow: hidden;
-}
-.story-deck__card--prev { margin-right: -2.75rem; }
-.story-deck__card--next { margin-left: -2.75rem; }
-.story-deck__card--prev:hover, .story-deck__card--next:hover { opacity: .8; filter: blur(.5px); transform: scale(.84) translateY(-3px); }
-.story-deck__card--prev .story-deck__cta, .story-deck__card--next .story-deck__cta { display: none; }
-
-.story-deck__card--active {
-  background: linear-gradient(150deg, var(--black) 0%, var(--primary) 55%, var(--brand-2) 100%);
-  color: #fff; z-index: 2; box-shadow: 0 42px 70px -28px rgba(10, 37, 64, .5); padding: 3rem 2.75rem 2.75rem;
-}
-.story-deck__track.is-going-next .story-deck__card--active,
-.story-deck__track.is-going-prev .story-deck__card--active { transform: scale(.95); opacity: .72; }
-.story-deck__track.is-going-next .story-deck__card--prev,
-.story-deck__track.is-going-next .story-deck__card--next,
-.story-deck__track.is-going-prev .story-deck__card--prev,
-.story-deck__track.is-going-prev .story-deck__card--next { opacity: .3; transform: scale(.76); }
-
-.story-deck__quote-mark {
-  position: absolute; top: .5rem; left: 50%; transform: translateX(-50%); font-family: Georgia, "Times New Roman", serif;
-  font-size: 4.5rem; line-height: 1; font-weight: 700; color: #fff; opacity: .14; pointer-events: none;
-}
-.story-deck__card--prev .story-deck__quote-mark, .story-deck__card--next .story-deck__quote-mark { color: var(--brand-2); opacity: .18; }
-
-.story-deck__avatar {
-  position: relative; z-index: 1; width: 64px; height: 64px; border-radius: 50%; flex: none;
-  display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.1rem;
-  background: rgba(255, 255, 255, .16); color: #fff; border: 2px solid rgba(255, 255, 255, .5);
-}
-.story-deck__card--prev .story-deck__avatar, .story-deck__card--next .story-deck__avatar {
-  background: var(--surface); color: var(--muted); border-color: var(--line); width: 52px; height: 52px;
-}
-.story-deck__avatar .icon { width: 26px; height: 26px; }
-.story-deck__card--prev .story-deck__avatar .icon, .story-deck__card--next .story-deck__avatar .icon { width: 22px; height: 22px; }
-
-.story-deck__card h3 { position: relative; z-index: 1; margin: 0 0 .2rem; font-size: 1.15rem; font-weight: 600; color: inherit; }
-.story-deck__role { position: relative; z-index: 1; margin: 0 0 1.1rem; font-size: .85rem; color: rgba(255, 255, 255, .78); }
-.story-deck__card--prev .story-deck__role, .story-deck__card--next .story-deck__role { color: var(--muted); }
-.story-deck__card blockquote { position: relative; z-index: 1; margin: 0 0 1.25rem; font-size: 1.02rem; line-height: 1.65; color: inherit; }
-.story-deck__card--prev blockquote, .story-deck__card--next blockquote { font-size: .92rem; -webkit-line-clamp: 4; line-clamp: 4; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
-.story-deck__card--active blockquote { max-width: 480px; }
-
-.story-deck__tag { position: relative; z-index: 1; background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .4); color: #fff; margin-bottom: 1.4rem; }
-.story-deck__card--prev .story-deck__tag, .story-deck__card--next .story-deck__tag { background: #fff; }
-.story-deck__cta { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .92rem; color: #fff; }
-.story-deck__cta .icon { width: 16px; height: 16px; transition: transform .3s var(--ease); }
-.story-deck__cta:hover .icon { transform: translateX(3px); }
-
-.story-deck__prev-btn, .story-deck__next-btn {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 46px; height: 46px; border-radius: 50%;
-  border: 1px solid var(--line); background: #fff; color: var(--black); display: inline-flex; align-items: center; justify-content: center;
-  transition: background .25s, color .25s, border-color .25s, transform .3s var(--ease);
-}
-.story-deck__prev-btn { left: -6px; }
-.story-deck__next-btn { right: -6px; }
-.story-deck__prev-btn:hover, .story-deck__next-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-.story-deck__prev-btn .icon, .story-deck__next-btn .icon { width: 18px; height: 18px; }
-
-/* Entrance: driven by the generic [data-reveal] system (.story-deck carries that attribute) */
-@media (max-width: 991.98px) {
-  .story-deck__track { grid-template-columns: .55fr 2fr .55fr; }
-  .story-deck__card--prev, .story-deck__card--next { padding: 1.6rem 1rem; max-height: 300px; }
-  .story-deck__card--prev blockquote, .story-deck__card--next blockquote,
-  .story-deck__card--prev .story-deck__role, .story-deck__card--next .story-deck__role,
-  .story-deck__card--prev .story-deck__tag, .story-deck__card--next .story-deck__tag,
-  .story-deck__card--prev h3, .story-deck__card--next h3 { display: none; }
-  .story-deck__card--active { padding: 2.5rem 1.75rem 2.25rem; }
-  .story-deck__prev-btn { left: -4px; }
-  .story-deck__next-btn { right: -4px; }
-}
-@media (max-width: 767.98px) {
-  .story-deck__track { display: block; position: relative; min-height: 420px; }
-  .story-deck__card { position: absolute; inset: 0; width: 100%; }
-  .story-deck__card--prev, .story-deck__card--next {
-    z-index: 0; opacity: .35; transform: scale(.86) translateX(0); max-height: none; margin: 0;
-    pointer-events: none;
-  }
-  .story-deck__card--prev { transform: scale(.9) translateX(-14px); }
-  .story-deck__card--next { transform: scale(.9) translateX(14px); }
-  .story-deck__card--active { position: relative; padding: 2.75rem 1.6rem 2.25rem; }
-  /* Arrows drop below the deck here, so the deck reserves the room for them itself — the dot row
-     used to hold that space open. */
-  .story-deck { padding-bottom: 4.5rem; }
-  .story-deck__prev-btn, .story-deck__next-btn { top: auto; bottom: .75rem; transform: none; }
-  .story-deck__prev-btn { left: 38%; }
-  .story-deck__next-btn { right: 38%; }
-}
-
 /* ---------- 14. Media cards (events / posts / videos) ---------- */
 .media-card { display: flex; flex-direction: column; height: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color .2s var(--ease); }
 .media-card:hover { border-color: #A1A1AA; }
@@ -1429,8 +1541,6 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .leader__badge .icon { width: 20px; height: 20px; color: var(--black); }
 @media (min-width: 992px) { .leader { grid-template-columns: 380px 1fr; gap: 4rem; } }
 .intro-block { max-width: 760px; }
-.sector-photo { width: 100%; max-width: 400px; aspect-ratio: 1; margin: 0 auto; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.sector-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .sector-intro {
   position: relative; overflow: hidden; display: grid; gap: 2rem;
   padding: clamp(2rem, 4vw, 3rem); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
@@ -1439,7 +1549,51 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .sector-intro__media { display: flex; align-items: center; }
 .sector-intro__photo { position: relative; width: 100%; aspect-ratio: 830 / 440; margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .sector-intro__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Source photos for most sectors are square (320x320) — a wide 830:440 crop would upscale and
+   soften them, so this modifier keeps the frame square instead of forcing the landscape ratio. */
+.sector-intro--square .sector-intro__photo { aspect-ratio: 1; max-width: 400px; margin: 0 auto; }
 @media (min-width: 992px) { .sector-intro { grid-template-columns: 1.15fr 1fr; align-items: center; } }
+/* Section wash: a soft brand-colour gradient plus the site's existing line-art SVG (unused
+   elsewhere, tuned for light surfaces) sitting low-opacity behind the circle-photo layout below. */
+.financial-intro {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: linear-gradient(135deg, rgba(7, 87, 154, .08) 0%, rgba(26, 154, 140, .12) 100%), var(--surface);
+}
+.financial-intro::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .6;
+  background-image: url("../img/contact-hero-art.svg");
+  background-repeat: no-repeat; background-position: center; background-size: cover;
+}
+/* "Knowledge is power" reference layout, in our palette: a circular photo on a soft brand-tint
+   blob, with a small solid-colour badge overlapping its top-right corner — in place of the
+   reference's second overlapping photo (we only have one real photo per sector) and its "20+
+   Years of Experience" stat (unverified for Bizacharya), the badge instead names the sector. */
+.about-split__media { position: relative; max-width: 380px; margin: 0 auto; aspect-ratio: 1; }
+/* Flush with the container's left edge on desktop, so the circle lines up with the page-banner
+   heading above instead of floating indented in the middle of its column. */
+@media (min-width: 992px) { .about-split__media { margin: 0; } }
+.about-split__blob {
+  position: absolute; inset: -8%; z-index: 0; border-radius: 50%;
+  background: linear-gradient(155deg, rgba(7, 87, 154, .12) 0%, rgba(26, 154, 140, .16) 100%);
+}
+.about-split__photo {
+  position: relative; z-index: 1; width: 100%; height: 100%; margin: 0; border-radius: 50%; overflow: hidden;
+  border: 6px solid #fff; box-shadow: 0 30px 60px -30px rgba(10, 37, 64, .4);
+}
+.about-split__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-split__badge {
+  position: absolute; z-index: 2; top: -1rem; right: -1rem; width: 128px; height: 128px; border-radius: 50%;
+  background: var(--primary); color: #fff; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: .35rem; padding: 1rem;
+  box-shadow: 0 20px 40px -16px rgba(7, 87, 154, .55); font-weight: 600; font-size: .78rem; line-height: 1.25;
+  animation: about-split-badge-float 3.4s ease-in-out infinite;
+}
+.about-split__badge .icon { width: 26px; height: 26px; }
+/* Small, slow bob — a "minor" idle motion, not an attention-grabbing bounce. */
+@keyframes about-split-badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 .checklist { display: grid; gap: .6rem; }
 .checklist li { display: flex; gap: .75rem; align-items: flex-start; padding: .9rem 1rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: .95rem; color: var(--ink); }
 .checklist .icon { width: 20px; height: 20px; color: var(--brand); flex: none; margin-top: .15rem; }
@@ -2142,8 +2296,10 @@ fieldset[disabled] { opacity: .6; }
   .row-item__image img { transform: none; }
   .row-list--glyph .row-item > div { opacity: 1; transform: none; }
   .row-list--glyph .row-item__icon, .row-item__more-text { opacity: 1; }
+  .marquee__track { animation: none; transform: none; }
   .story-deck__card { transition: none; }
-  .story-deck__track.is-going-next .story-deck__card, .story-deck__track.is-going-prev .story-deck__card { transform: none; opacity: inherit; }
+  .story-deck__content { transition: none; }
+  .story-deck__track.is-swapping .story-deck__content { transform: none; }
   .listing__list::after { transform: none; }
   .listing__list > li::before { transform: translate(-50%, -50%) scale(1); }
 }
