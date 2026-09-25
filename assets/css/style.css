@@ -64,11 +64,15 @@
    mode, and a fixed-position element wider than the viewport (e.g. the off-canvas nav drawer,
    translated out of view but still in the layout tree) can otherwise force the document wider
    than the viewport on narrow screens, clipping in-flow content at the right edge instead of
-   wrapping it. */
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+   wrapping it.
+   `clip` rather than `hidden`: `hidden` makes the element a scroll container, which silently
+   breaks `position: sticky` on everything inside it — the sticky header then anchors to a
+   container that never scrolls and just scrolls away with the page. `clip` cuts off the same
+   overflow without establishing a scrollport, so the header keeps sticking. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; overflow-x: clip; }
 body {
   margin: 0; font-family: var(--font); font-size: var(--font-body); line-height: 1.65; color: var(--text); background: #fff;
-  -webkit-font-smoothing: antialiased; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden; overflow-x: clip; display: flex; flex-direction: column; min-height: 100vh;
 }
 body.is-locked { overflow: hidden; }
 main { flex: 1; }
@@ -108,6 +112,9 @@ strong { font-weight: 600; color: var(--ink); }
   width: 100%; max-width: 1280px; margin: 0 auto;
   padding-left: clamp(20px, 5vw, 80px); padding-right: clamp(20px, 5vw, 80px);
 }
+/* On large displays the 1280px cap leaves a lot of empty gutter, so let the content breathe.
+   Gated at 1600px rather than applied outright, so every layout below that is unchanged. */
+@media (min-width: 1600px) { .container { max-width: 1440px; } }
 .section { padding: clamp(4rem, 7vw, 6.5rem) 0; position: relative; }
 .section--tight { padding: clamp(2.5rem, 4.5vw, 4rem) 0; }
 .section--light { background: var(--surface); }
@@ -337,36 +344,28 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .ph--none { margin: 0; background: #EEF2F6; border: 1px solid var(--line); display: block; }
 .ph--none::after { display: none; }
 .ph--none img { position: absolute; inset: 0; margin: auto; width: min(46%, 150px); height: auto; max-height: 60%; object-fit: contain; display: block; }
-
 /* ---------- 9. Hero (home): real background-image, HTML content on top ---------- */
 /* min-height (not height) so the box can never clip content — if the heading/description/CTAs/
-   stats need more room than the clamp gives, the flex layout grows the section to fit them
-   instead of cutting them off. The clamp keeps it viewport-relative without depending on the
-   header's exact height like the old `100vh - 120px` calc did. */
-.hero { position: relative; overflow: hidden; min-height: clamp(700px, 100vh, 900px); background: var(--black); display: flex; align-items: center; }
+   stats need more room, the flex layout grows the section to fit them instead of cutting them
+   off. Matches the deployed build: a 760px floor, and on desktop the viewport minus the header
+   so the hero fills the first screen without pushing the next section entirely out of view. */
+.hero { position: relative; overflow: hidden; min-height: 760px; background: var(--black); display: flex; align-items: center; }
+@media (min-width: 992px) { .hero { min-height: max(760px, calc(100vh - 120px)); } }
 .hero .container { width: 100%; }
 /* assets/img/hero_bg.png is the full composited visual (board, hand, callouts, glow path, script
    line, curve). The gradient here only adds extra legibility for the text on the left, per the
    brief's formula — it's not what's carrying the brand colour, the photo already is. */
-/* `cover` crops the sides to fill the box, and how much it crops (and therefore how far the
-   board reaches left, into the text column) shifts with the container's own aspect ratio. Sizing
-   by width instead shows the composition intact at a consistent proportion of the box regardless
-   of viewport, so the board stays clear of the text at every breakpoint. Anchored to the bottom
-   (not centered) so the curve baked into the bottom of the photo stays flush with the hero's
-   bottom edge — centering it left a gap under the image that pulled the curve up into the
-   feature-stat row instead. */
-/* The middle gradient layer is sized/positioned exactly like the photo (not the box) so it fades
-   from solid navy to transparent right over the photo's own top edge — softening the hard
-   rectangular seam where the image starts, instead of a generic fade across the whole section. */
+/* `cover` fills the whole box, so the photo has no edges of its own inside the hero and there is
+   no seam to hide — anchored right so the board and the hand stay in frame while the left side,
+   which the crop eats into first, is the dark area the text sits on. */
 .hero__bg {
   position: absolute; inset: 0; z-index: 0;
   background-image:
     linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%),
-    linear-gradient(to bottom, rgba(10, 37, 64, 1) 0%, rgba(10, 37, 64, 0) 22%),
     url("../img/hero_bg.png");
-  background-size: cover, 92% auto, 92% auto;
-  background-position: center, right bottom, right bottom;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: cover;
+  background-position: right 80% center;
+  background-repeat: no-repeat;
   opacity: 0; transform: scale(1.01); animation: hero-bg-in 1.3s var(--ease) forwards;
 }
 @keyframes hero-bg-in { to { opacity: 1; transform: scale(1); } }
@@ -392,8 +391,12 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .hero .btn--outline:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, .08); }
 @media (min-width: 992px) {
   /* Container stays centred (so the hero lines up with every other section's left gutter);
-     the grid track is what narrows to the dark half and sits at the container's left edge. */
-  .hero__inner { grid-template-columns: minmax(0, 50%); justify-content: start; }
+     the grid track is what narrows to the dark half and sits at the container's left edge.
+     62% (694px against this container) rather than half: the deployed build gives the hero
+     copy a 690px column, and at 50% (560px here) the two CTAs (614px) and the four feature
+     stats (624px) both overflow and wrap, which pushed the hero ~160px taller than it should
+     be and, because the photo is `cover`, scaled the board up with it. */
+  .hero__inner { grid-template-columns: minmax(0, 62%); justify-content: start; }
 }
 
 /* Stat row under the CTAs */
@@ -442,24 +445,32 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
    titles and a colour fade divider. No filled containers/cards/borders around each item, so it
    reads as a flowing list, not a box/tile grid, and not a clone of the Services row-list below. */
 .sectors { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--surface) 0%, rgba(7, 87, 154, .07) 45%, rgba(26, 154, 140, .09) 100%); }
-/* Full-bleed decorative background image, scaled to cover the section, at low opacity so the
-   section content stays the visual focus. */
+/* Full-bleed background image, scaled to cover the section. */
 .sectors::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .04;
-  background-image: url("../img/sectors-bg-full.jpg");
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: url("../img/bg_support.webp");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 .sectors .container { position: relative; z-index: 1; }
 .sectors .section-head { margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
+/* Section head on the dark ground — same treatment .section--navy gives its own headings. */
+.sectors .section-head h2 { color: #fff; }
+.sectors .section-head p { color: var(--on-dark); }
+.sectors .eyebrow { color: #4FC3B5; }
 .sector-flow { list-style: none; padding: 0; margin: 0; max-width: 980px; margin-inline: auto; }
-.sector-flow > li:nth-child(1) { --accent: var(--primary); --accent-2: var(--primary-2); }
-.sector-flow > li:nth-child(2) { --accent: var(--brand-2); --accent-2: #0F6B5F; }
-.sector-flow > li:nth-child(3) { --accent: var(--black-2); --accent-2: var(--black); }
-.sector-flow > li:nth-child(4) { --accent: var(--primary-2); --accent-2: var(--primary); }
-.sector-flow > li:nth-child(5) { --accent: #0F6B5F; --accent-2: var(--brand-2); }
-.sector-flow > li:nth-child(6) { --accent: var(--primary); --accent-2: var(--brand-2); }
+/* The section sits on a dark navy photo, so text and decoration run on the on-dark scale.
+   Two accents per row, not one: --accent tints the things drawn AS colour on the dark ground
+   (title, arrow, divider), so it has to be a light tint; --blob fills the icon badge, which
+   still carries a white glyph and therefore has to stay saturated. Sharing one variable made
+   the navy rows invisible as titles or the badges washed out, depending which way it was set. */
+.sector-flow > li:nth-child(1) { --accent: #5FB0F2; --blob: var(--primary);   --blob-2: var(--primary-2); }
+.sector-flow > li:nth-child(2) { --accent: #4FC3B5; --blob: var(--brand-2);   --blob-2: #0F6B5F; }
+.sector-flow > li:nth-child(3) { --accent: #A9C6E4; --blob: #2C5F96;          --blob-2: #1B4372; }
+.sector-flow > li:nth-child(4) { --accent: #7FC1F5; --blob: var(--primary-2); --blob-2: var(--primary); }
+.sector-flow > li:nth-child(5) { --accent: #5FD0C2; --blob: #0F6B5F;          --blob-2: var(--brand-2); }
+.sector-flow > li:nth-child(6) { --accent: #5FB0F2; --blob: var(--primary);   --blob-2: var(--brand-2); }
 
 .sector-line__row {
   position: relative; display: flex; align-items: center; gap: 1.75rem; padding: 1.4rem 0; color: inherit;
@@ -473,9 +484,9 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 
 .sector-line__blob {
   order: 1; flex: none; width: 84px; height: 84px; position: relative; display: inline-flex; align-items: center; justify-content: center; color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(135deg, var(--blob), var(--blob-2));
   border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
-  box-shadow: 0 20px 36px -18px var(--accent);
+  box-shadow: 0 20px 36px -18px rgba(0, 0, 0, .45);
   transition: border-radius .6s var(--ease), transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .5s var(--ease);
 }
 /* Inner ring — turns the flat icon into a two-layer badge instead of a single flat glyph. */
@@ -484,14 +495,14 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 }
 .sector-line__blob .icon { position: relative; z-index: 1; width: 34px; height: 34px; }
 .sector-line__row:hover .sector-line__blob, .sector-line__row:focus-visible .sector-line__blob {
-  border-radius: 58% 42% 35% 65% / 55% 60% 40% 45%; transform: scale(1.06); box-shadow: 0 26px 44px -16px var(--accent);
+  border-radius: 58% 42% 35% 65% / 55% 60% 40% 45%; transform: scale(1.06); box-shadow: 0 26px 44px -16px rgba(0, 0, 0, .55);
 }
 
 .sector-line__body { order: 2; flex: 1 1 auto; min-width: 0; }
 .sector-line--rev .sector-line__body { text-align: right; }
 .sector-line__title { display: block; font-size: clamp(1.2rem, 1.8vw, 1.55rem); font-weight: 600; letter-spacing: -0.01em; margin: 0 0 .4rem; color: var(--accent); transition: opacity .3s; }
 .sector-line__row:hover .sector-line__title { opacity: .82; }
-.sector-line__desc { display: block; margin: 0; color: var(--muted); font-size: .95rem; max-width: 480px; }
+.sector-line__desc { display: block; margin: 0; color: rgba(255, 255, 255, .72); font-size: .95rem; max-width: 480px; }
 .sector-line--rev .sector-line__desc { margin-left: auto; }
 
 .sector-line__arrow { order: 3; flex: none; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; color: var(--accent); }
@@ -887,10 +898,13 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 /* ---------- 11. Journey roadmap (reference: bizacharya-omega) ---------- */
 .journey { position: relative; overflow: hidden; isolation: isolate; background: #fff; }
 .journey .section-head p { max-width: 720px; }
-/* Bizacharya mark (logo without the wordmark), faint in the background — decorative only. */
+/* Bizacharya mark (logo without the wordmark), faint in the background — decorative only.
+   Anchored past the top-right corner and rotated, so the section's overflow:hidden crops it
+   into the corner instead of leaving a complete shape floating in the layout. */
 .journey__watermark {
-  position: absolute; top: 50%; left: 50%; z-index: 0; pointer-events: none; user-select: none;
-  width: clamp(280px, 34vw, 560px); height: auto; opacity: .05; transform: translate(-50%, -50%);
+  position: absolute; top: -10%; right: -10%; z-index: 0; pointer-events: none; user-select: none;
+  width: clamp(180px, 20vw, 340px); height: auto; opacity: .06;
+  transform: rotate(320deg); transform-origin: center;
 }
 .journey .container { position: relative; z-index: 1; }
 .roadmap__cta { text-align: center; margin-top: clamp(2rem, 4vw, 3.5rem); }
@@ -1092,6 +1106,30 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
   background-image:
     radial-gradient(38% 55% at 100% 12%, rgba(7, 87, 154, .05) 0%, rgba(7, 87, 154, 0) 70%),
     radial-gradient(34% 48% at 4% 96%, rgba(26, 154, 140, .05) 0%, rgba(26, 154, 140, 0) 70%);
+}
+/* Ring graphic in the top-left corner. It goes on ::after because ::before already carries this
+   section's colour glow, and at z-index 0 it stays under .container (z-index 1) so no content is
+   covered. back_curcle.jpg has a solid white background rather than an alpha channel, so it is
+   composited with multiply: white leaves the pale surface untouched and only the ring strokes
+   darken it. Sized by width with the file's own 896:1223 ratio so it scales without distorting,
+   and the section's overflow:hidden crops whatever runs past the corner. */
+.vm2-sec::after {
+  content: ""; position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none;
+  width: clamp(340px, 44vw, 820px); aspect-ratio: 896 / 1223;
+  background-image: url("../img/back_curcle.jpg");
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: contain;
+  mix-blend-mode: multiply;
+  /* Settles in from off the corner: scaled down, nudged out and rotated slightly, easing back to
+     rest. transform-origin is the corner it is anchored to, so it grows out of that corner rather
+     than drifting across the section. */
+  opacity: 0; transform-origin: left top;
+  animation: vm2-ring-in 1.6s var(--ease) .2s forwards;
+}
+@keyframes vm2-ring-in {
+  from { opacity: 0; transform: translate(-14%, -10%) scale(.82) rotate(-8deg); }
+  to   { opacity: 1; transform: none; }
 }
 .vm2-sec .container { position: relative; z-index: 1; }
 .vm2-accent { color: var(--brand-2); }
@@ -1405,6 +1443,20 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .connect__side .btn { margin-top: auto; align-self: flex-start; }
 @media (min-width: 992px) { .connect { grid-template-columns: 1.5fr 1fr; gap: 2rem; } }
 
+/* Enquiry section: dotted texture over the plain white. dotted_bg.png carries real alpha
+   (palette + tRNS), so it drops straight on with no blend mode. isolation:isolate is what makes
+   the z-index:-1 layer work — without a stacking context here the pseudo sinks behind the page
+   background and disappears; with it, the dots paint above the section's background and below
+   all content, so the form and the contact panel stay untouched. Scaled to cover rather than
+   tiled, because the file has a slightly denser patch that would seam on repeat. */
+#connect { isolation: isolate; }
+#connect::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: url("../img/dotted_bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
 /* ---------- 16. Inner page banner (light, typographic) ---------- */
 /* Shared heading system for every interior page (About, Opportunities, Services, Learning Hub,
    Community, Success Stories, Careers, Contact, detail pages, etc.) — one centered, responsive
@@ -2290,6 +2342,7 @@ fieldset[disabled] { opacity: .6; }
   .timeline__content { opacity: 1; transform: none; }
   .timeline__list::after { transform: none; }
   .hero__bg { opacity: 1; animation: none; transform: none; }
+  .vm2-sec::after { opacity: 1; animation: none; transform: none; }
   .hero h1, .hero__sub, .hero p.lead, .hero .btn-group, .hero__stats { opacity: 1; animation: none; transform: none; }
   .row-item__glyph, .row-item__image { opacity: 1; transform: none; }
   .row-item__glyph .icon { transform: none; }
