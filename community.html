@@ -99,14 +99,22 @@
     <p>Upcoming events, networking meetups, mentoring sessions, workshops and bootcamps from Bizacharya, happening across Kerala.</p>
   </div>
 </section>
-<section class="section">
+<section class="section cm-events">
+  <!-- Decorative backdrop: soft brand glows, a dot field and two faint rings -->
+  <span class="cm-events__deco cm-events__deco--dots" aria-hidden="true"></span>
+  <span class="cm-events__deco cm-events__deco--ring" aria-hidden="true"></span>
+  <span class="cm-events__deco cm-events__deco--ring-sm" aria-hidden="true"></span>
   <div class="container">
-    <div class="filter-tabs" data-filter-group="event-grid" role="group" aria-label="Filter events">
-      <button class="filter-tab is-active" type="button" data-filter="all" aria-pressed="true">All</button>
-      <button class="filter-tab" type="button" data-filter="upcoming" aria-pressed="false">Upcoming Events</button>
-      <button class="filter-tab" type="button" data-filter="meetup" aria-pressed="false">Networking Meetups</button>
-      <button class="filter-tab" type="button" data-filter="mentoring" aria-pressed="false">Mentoring Sessions</button>
-      <button class="filter-tab" type="button" data-filter="workshop" aria-pressed="false">Workshops &amp; Bootcamps</button>
+    <!-- Premium tab bar: the indicator pill is positioned by initFilters() -->
+    <div class="cm-tabs" data-reveal>
+      <div class="filter-tabs filter-tabs--pro" data-filter-group="event-grid" role="group" aria-label="Filter events">
+        <span class="filter-tabs__indicator" aria-hidden="true"></span>
+        <button class="filter-tab is-active" type="button" data-filter="all" aria-pressed="true"><span class="filter-tab__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg></span><span class="filter-tab__label">All</span></button>
+        <button class="filter-tab" type="button" data-filter="upcoming" aria-pressed="false"><span class="filter-tab__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span><span class="filter-tab__label">Upcoming Events</span></button>
+        <button class="filter-tab" type="button" data-filter="meetup" aria-pressed="false"><span class="filter-tab__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="filter-tab__label">Networking Meetups</span></button>
+        <button class="filter-tab" type="button" data-filter="mentoring" aria-pressed="false"><span class="filter-tab__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></span><span class="filter-tab__label">Mentoring Sessions</span></button>
+        <button class="filter-tab" type="button" data-filter="workshop" aria-pressed="false"><span class="filter-tab__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="filter-tab__label">Workshops &amp; Bootcamps</span></button>
+      </div>
     </div>
     <div class="row grid-gap news-grid" id="event-grid" data-stagger>
       <!-- PLACEHOLDER: sample event -->

@@ -635,16 +635,70 @@
       if (!target) return;
       const items = $$('[data-category]', target);
       const empty = $('.filter-empty', target.parentElement);
-      tabs.forEach((tab) => tab.addEventListener('click', () => {
-        tabs.forEach((t) => { t.classList.toggle('is-active', t === tab); t.setAttribute('aria-pressed', String(t === tab)); });
-        const key = tab.dataset.filter;
+      const matches = (it, key) => key === 'all' || it.dataset.category.split(/\s+/).includes(key);
+      const apply = (key) => {
         let shown = 0;
         items.forEach((it) => {
-          const match = key === 'all' || it.dataset.category.split(/\s+/).includes(key);
+          const match = matches(it, key);
           it.classList.toggle('is-hidden', !match); if (match) shown++;
         });
         if (empty) empty.hidden = shown > 0;
+      };
+
+      // Premium variant (Community page): sliding indicator and fade/slide swap.
+      const pro = group.classList.contains('filter-tabs--pro');
+      const indicator = pro ? $('.filter-tabs__indicator', group) : null;
+      const moveIndicator = () => {
+        const active = $('.filter-tab.is-active', group);
+        if (!indicator || !active) return;
+        // Sub-pixel rects (offset* values round) measured from the group's padding box.
+        const g = group.getBoundingClientRect();
+        const r = active.getBoundingClientRect();
+        const x = r.left - g.left - group.clientLeft + group.scrollLeft;
+        const y = r.top - g.top - group.clientTop;
+        indicator.style.width = r.width + 'px';
+        indicator.style.height = r.height + 'px';
+        indicator.style.transform = `translate(${x}px, ${y}px)`;
+      };
+      if (pro) {
+        moveIndicator();
+        requestAnimationFrame(() => group.classList.add('is-ready')); // enable the slide only after first placement
+        window.addEventListener('resize', moveIndicator, { passive: true });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
+      }
+
+      let swapTimer;
+      tabs.forEach((tab) => tab.addEventListener('click', () => {
+        if (pro && tab.classList.contains('is-active')) return;
+        tabs.forEach((t) => { t.classList.toggle('is-active', t === tab); t.setAttribute('aria-pressed', String(t === tab)); });
+        const key = tab.dataset.filter;
+        if (!pro) { apply(key); return; }
+
+        moveIndicator();
+        // Keep the chosen tab in view when the bar is scrolling horizontally (phones).
+        if (group.scrollWidth > group.clientWidth) {
+          group.scrollTo({ left: tab.offsetLeft - (group.clientWidth - tab.offsetWidth) / 2, behavior: reducedMotion ? 'auto' : 'smooth' });
+        }
+        if (reducedMotion) { apply(key); return; }
+
+        // Quick fade-out of the current set, then swap and stagger the new set in.
+        clearTimeout(swapTimer);
+        target.classList.add('is-leaving');
+        swapTimer = setTimeout(() => {
+          apply(key);
+          target.classList.remove('is-leaving');
+          let i = 0;
+          items.forEach((it) => {
+            it.classList.remove('is-entering');
+            if (it.classList.contains('is-hidden')) return;
+            it.classList.add('is-visible'); // swapped-in cards should not wait on the scroll reveal
+            it.style.setProperty('--i', i++);
+            void it.offsetWidth; // restart the animation
+            it.classList.add('is-entering');
+          });
+        }, 200);
       }));
+      items.forEach((it) => it.addEventListener('animationend', () => it.classList.remove('is-entering')));
     });
   }
 
