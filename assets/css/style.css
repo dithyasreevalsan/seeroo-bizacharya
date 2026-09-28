@@ -353,7 +353,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 /* Width-driven, not viewport-height-driven like the old `calc(100vh - 120px)` was — keeps the
    hero's proportions predictable across very tall/short browser windows instead of stretching
    with viewport height. */
-@media (min-width: 992px) { .hero { min-height: clamp(620px, 54vw, 820px); } }
+@media (min-width: 1200px) { .hero { min-height: clamp(620px, 54vw, 820px); } }
 .hero .container { width: 100%; }
 /* Panel, not full-bleed: this photo (assets/img/hero_bg.png) carries its own baked-in left-edge
    dissolve — the pixels themselves fade to this section's navy before "Foundation", the leftmost
@@ -391,7 +391,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
    Between 992 and 1280 the copy column and the photo want more room than the viewport has, and
    the photo's first caption ("Foundation") would land on the paragraph — so the panel gives way
    there. Above 1600 there's room for both and the photo takes the larger share. */
-@media (min-width: 992px) and (max-width: 1279.98px) { .hero__bg { left: 53%; } }
+@media (min-width: 1200px) and (max-width: 1279.98px) { .hero__bg { left: 53%; } }
 @media (min-width: 1600px) { .hero__bg { left: 40%; } }
 /* Nav — only ever appears once initHeroSlider() finds a second slide to switch to. One compact
    cluster (prev, dots, next, all inline) anchored bottom-right, inside the photo itself and well
@@ -433,7 +433,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .chip-label { display: inline-flex; align-items: center; gap: .5rem; background: #fff; color: var(--ink); padding: .65rem 1rem; border-radius: var(--radius-sm); font-weight: 500; font-size: .95rem; box-shadow: 0 6px 20px -10px rgba(0, 0, 0, .3); }
 .hero .btn--outline { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .4); }
 .hero .btn--outline:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, .08); }
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   /* Container stays centred (so the hero lines up with every other section's left gutter);
      the grid track is what narrows to the dark half and sits at the container's left edge.
      62% (694px against this container) rather than half: the deployed build gives the hero
@@ -452,17 +452,44 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .hero__stats .icon { width: 22px; height: 22px; flex: none; color: #4FC3B5; }
 
 @keyframes hero-fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 991.98px) {
-  .hero { flex-direction: column; align-items: stretch; }
-  .hero__inner { grid-template-columns: 1fr; }
-  /* Single column now, so the photo can't sit beside the text — it becomes a full-width strip
-     above the copy instead. Still `contain`, so the whole frame (and every caption) survives —
-     and the nav cluster drops to the strip's own bottom-right, same as desktop. */
+/* Phones and tablets (incl. iPad landscape, 1024px): stacked layout. Below 1200px the side-by-side
+   layout left the photo as a small box stuck in the bottom-right with empty space above it. */
+@media (max-width: 1199.98px) {
+  .hero { flex-direction: column; align-items: stretch; min-height: 0; }
+  .hero__inner { grid-template-columns: 1fr; padding-top: clamp(1.75rem, 5vw, 3rem); }
+  /* Single column, so the photo becomes a full-width strip above the copy. Its height follows the
+     photo's own aspect ratio (so on phones the whole frame fills the width instead of shrinking
+     into a corner), capped on tablets. Still `contain` and right-anchored — the photo's baked
+     left-edge dissolve blends into the navy, and every caption survives. */
   .hero__bg {
     position: relative; inset: auto;
-    width: 100%; height: clamp(230px, 48vw, 400px);
+    width: 100%; height: min(calc(100vw * 1160 / 1404), 440px); aspect-ratio: auto;
   }
-  .hero__bg-slide { background-position: right center; }
+  .hero__bg-slide { background-position: right bottom; }
+  /* Four stats don't fit on one line in a single narrowish column — a tidy 2×2 grid instead */
+  .hero__stats { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 1.25rem 2.5rem; }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .hero__stats { grid-template-columns: repeat(4, max-content); gap: 1.25rem 2rem; }
+}
+/* Phones: the photo covers the whole hero, behind the copy. A navy scrim keeps the top of the
+   photo (hand + king) visible and deepens behind the text so it stays readable; the copy starts
+   a little lower to leave that top band clear. */
+@media (max-width: 767.98px) {
+  .hero__bg { position: absolute; inset: 0; width: auto; height: auto; }
+  .hero__bg-slide { background-size: cover; background-position: 88% top; }
+  .hero__bg::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg,
+      rgba(10, 37, 64, .1) 0%, rgba(10, 37, 64, .4) 12%,
+      rgba(10, 37, 64, .82) 26%, rgba(10, 37, 64, .9) 100%);
+  }
+  .hero__inner { padding-top: clamp(7rem, 30vw, 9.5rem); }
+}
+@media (max-width: 575.98px) {
+  .hero .btn-group { flex-direction: column; }
+  .hero .btn-group .btn { width: 100%; justify-content: center; }
+  .hero__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.1rem 1rem; margin-top: 1.75rem; }
 }
 /* Stats row (pill label + big number + note) */
 .stats { display: grid; gap: 2rem; padding: clamp(2rem, 4vw, 3rem) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -961,11 +988,19 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .strip-cta .btn-group { flex: none; }
 .strip-cta .btn--white { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .42); }
 .strip-cta .btn--white:hover { background: #fff; color: var(--black); border-color: #fff; }
-@media (max-width: 767.98px) {
-  .strip-cta__inner { flex-direction: column; align-items: flex-start; text-align: left; }
+/* Tablets and phones: stacked and centred */
+@media (max-width: 991.98px) {
+  .strip-cta__inner { flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; }
   .strip-cta::after { display: none; }
-  .strip-cta .btn-group { width: 100%; }
-  .strip-cta .btn { flex: 1 1 auto; }
+  /* In a column the desktop flex-basis (300px) turns into a height, leaving an empty gap under
+     the copy — let the copy size to its text and span the full width instead. */
+  .strip-cta__copy { flex: none; width: 100%; }
+  .strip-cta .btn-group { justify-content: center; }
+}
+@media (max-width: 767.98px) {
+  .strip-cta__icon { width: 48px; height: 48px; }
+  .strip-cta .btn-group { width: 100%; flex-direction: column; gap: .65rem; }
+  .strip-cta .btn { width: 100%; justify-content: center; }
 }
 
 /* ---------- 11. Journey roadmap (reference: bizacharya-omega) ---------- */
