@@ -91,11 +91,16 @@
 <main id="main">
 <!-- 1. Hero -->
 <section class="hero" id="hero">
-  <!-- assets/img/hero_bg.png is the full composited background (board, hand, callouts, glow path,
-       script line and curve are all already part of the photo) — it's a real CSS background-image,
-       not a flattened whole-hero image. Every piece of actual content (logo, nav, heading, copy,
-       CTAs, feature list) stays real HTML text, positioned in the dark space on the left of it. -->
-  <div class="hero__bg" aria-hidden="true"></div>
+  <!-- Slider: one .hero__bg-slide per background photo, full-bleed and cross-fading via
+       .is-active (see initHeroSlider in main.js). Only one slide today, so it just sits there —
+       add another .hero__bg-slide div with its own background-image and the arrows/dots appear
+       on their own, no CSS or JS changes needed. The scrim (.hero__bg::after) is shared by every
+       slide rather than baked per-image, since it only has to track the text column, not each
+       photo's own content. The copy stays real HTML text, over the scrim, never baked into any
+       slide itself. -->
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__bg-slide is-active" style="background-image: url('assets/img/hero_bg.png')"></div>
+  </div>
   <div class="container hero__inner">
     <div class="hero__content">
       <h1>Kerala&rsquo;s Entrepreneurship<br><span class="hero__heading-accent">Development Platform</span></h1>
@@ -192,7 +197,7 @@
 </section>
 
 <!-- 3. Journey roadmap (serpentine, connectors drawn step by step) -->
-<section class="section journey" id="journey">
+<section class="section journey" id="journey" data-no-watermark>
   <img class="journey__watermark" src="assets/img/logo-mark.png" alt="" aria-hidden="true" loading="lazy">
   <div class="container">
     <div class="section-head section-head--center" data-reveal>
@@ -471,6 +476,10 @@
               <span class="service-tile__arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
             </a>
           </div>
+        </div>
+        <div class="service-marquee__nav">
+          <button class="service-marquee__arrow" type="button" data-marquee-prev aria-label="Previous services"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button class="service-marquee__arrow" type="button" data-marquee-next aria-label="Next services"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
         </div>
       </div>
     </div>

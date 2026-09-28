@@ -748,11 +748,160 @@
     });
   }
 
+  /* ---------- Services marquee: manual prev/next ----------
+     The marquee auto-scrolls via CSS animation (see .marquee__track). The first click on either
+     arrow switches it to a plain scrollable track (adds .is-manual, which stops the animation)
+     so native scrollLeft can take over; every click after that just pages by one tile width. */
+  function initServiceMarqueeNav() {
+    const marquee = $('.service-marquee');
+    const track = marquee && $('.marquee__track', marquee);
+    const prevBtn = $('[data-marquee-prev]');
+    const nextBtn = $('[data-marquee-next]');
+    if (!marquee || !track || !prevBtn || !nextBtn) return;
+
+    const pageBy = (dir) => {
+      marquee.classList.add('is-manual');
+      const tile = $('.service-tile', track);
+      const step = tile ? tile.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || 0) : marquee.clientWidth * 0.8;
+      marquee.scrollBy({ left: dir * step, behavior: reducedMotion ? 'auto' : 'smooth' });
+    };
+    prevBtn.addEventListener('click', () => pageBy(-1));
+    nextBtn.addEventListener('click', () => pageBy(1));
+  }
+
+  /* ---------- Hero background slider ----------
+     With one slide (today) this does nothing — nav controls only get built once there's
+     something to switch to, so a single photo never shows a dead arrow or a lone dot. Add a
+     second `.hero__bg-slide` div in index.html (own background-image, no `is-active`) and this
+     wires itself up on the next load: dots, arrows, autoplay, all from the slide count alone. */
+  function initHeroSlider() {
+    const bg = $('.hero__bg');
+    const slides = bg ? $$('.hero__bg-slide', bg) : [];
+    if (slides.length < 2) return;
+
+    let active = Math.max(0, slides.findIndex((s) => s.classList.contains('is-active')));
+    slides.forEach((s, i) => s.classList.toggle('is-active', i === active));
+
+    // One cluster — prev, dots, next, all inline — so the DOM matches the visual left-to-right
+    // layout. See the CSS comment on .hero__bg-nav for why it's anchored bottom-right.
+    const nav = document.createElement('div');
+    nav.className = 'hero__bg-nav';
+
+    const arrow = (dir, label) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hero__bg-arrow';
+      btn.setAttribute('aria-label', label);
+      btn.innerHTML = dir < 0
+        ? '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 18-6-6 6-6"/></svg>'
+        : '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>';
+      btn.addEventListener('click', () => { go(active + dir); restart(); });
+      return btn;
+    };
+    nav.appendChild(arrow(-1, 'Previous background image'));
+    const dots = slides.map((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'hero__bg-dot' + (i === active ? ' is-active' : '');
+      dot.setAttribute('aria-label', `Show background image ${i + 1} of ${slides.length}`);
+      dot.addEventListener('click', () => { go(i); restart(); });
+      nav.appendChild(dot);
+      return dot;
+    });
+    nav.appendChild(arrow(1, 'Next background image'));
+    bg.appendChild(nav);
+
+    function go(i) {
+      slides[active].classList.remove('is-active');
+      dots[active].classList.remove('is-active');
+      active = (i + slides.length) % slides.length;
+      slides[active].classList.add('is-active');
+      dots[active].classList.add('is-active');
+    }
+
+    let timer;
+    function restart() {
+      clearInterval(timer);
+      if (reducedMotion) return;
+      timer = setInterval(() => go(active + 1), 6000);
+    }
+    restart();
+    bg.addEventListener('mouseenter', () => clearInterval(timer));
+    bg.addEventListener('mouseleave', restart);
+  }
+
+  /* ---------- Section watermarks: faint logo mark on plain white sections ----------
+     Walks every <section> once at boot rather than being hand-placed per page, so it reaches
+     every current page (27 templates) and anything added later without a matching edit here.
+     A section qualifies only when it paints no background of its own: no background-image (that
+     covers gradients too — .svc, .financial-intro etc already carry a deliberate colour tint and
+     are left alone) and no non-white background-color, checked on the section itself and on its
+     ::before/::after (several sections, e.g. #connect's dotted texture, paint their art on a
+     pseudo-element while the element's own background stays default). Sections under MIN_HEIGHT
+     are skipped so a slim strip never gets a mark it's too small to carry well.
+     Placement itself is plain centring (see .section-watermark) — no per-section measurement
+     needed for that anymore, unlike an earlier corner-anchored version of this. */
+  function initSectionWatermarks() {
+    const MIN_HEIGHT = 220;
+
+    const isWhite = (rgb) => {
+      const m = rgb && rgb.match(/[\d.]+/g);
+      if (!m) return false;
+      const a = m[3] !== undefined ? parseFloat(m[3]) : 1;
+      return a > 0 && Number(m[0]) > 250 && Number(m[1]) > 250 && Number(m[2]) > 250;
+    };
+    const paintsColor = (cs) => {
+      if (cs.backgroundImage !== 'none') return true;
+      const m = cs.backgroundColor.match(/[\d.]+/g);
+      const a = m && m[3] !== undefined ? parseFloat(m[3]) : (m ? 1 : 0);
+      return a > 0 && !isWhite(cs.backgroundColor);
+    };
+    const sitsOnPlainWhite = (section) => {
+      const own = getComputedStyle(section);
+      if (paintsColor(own)) return false;
+      for (const part of ['::before', '::after']) {
+        const cs = getComputedStyle(section, part);
+        if (cs.content !== 'none' && paintsColor(cs)) return false;
+      }
+      return true;
+    };
+
+    $$('section').forEach((section) => {
+      if (section.querySelector(':scope > .section-watermark')) return;
+      if (section.hasAttribute('data-no-watermark')) return;
+      if (section.offsetHeight < MIN_HEIGHT) return;
+      if (!sitsOnPlainWhite(section)) return;
+
+      const img = document.createElement('img');
+      // This file is shared by root pages and by services/… and opportunities/… subpages, which
+      // sit one level down and need "../assets/…" instead — so the asset path is read off the
+      // header's own logo image rather than hard-coded, and just has its filename swapped.
+      const brand = $('.header .brand img') || $('.brand img');
+      img.src = brand ? brand.getAttribute('src').replace(/logo\.png$/, 'logo-mark.png') : 'assets/img/logo-mark.png';
+      img.alt = '';
+      img.setAttribute('aria-hidden', 'true');
+      img.loading = 'lazy';
+      img.className = 'section-watermark';
+      section.insertBefore(img, section.firstChild);
+
+      // Lift the section's real content above the mark (z-index:0) without touching layout —
+      // position:relative with no offset doesn't move anything, it only opens a stacking context.
+      if (getComputedStyle(section).position === 'static') section.style.position = 'relative';
+      Array.from(section.children).forEach((child) => {
+        if (child === img) return;
+        const ccs = getComputedStyle(child);
+        if (ccs.position === 'static') child.style.position = 'relative';
+        if (ccs.zIndex === 'auto') child.style.zIndex = '1';
+      });
+    });
+  }
+
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
-    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs();
+    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs(); initServiceMarqueeNav();
+    initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });
 })();

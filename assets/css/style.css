@@ -350,25 +350,60 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
    off. Matches the deployed build: a 760px floor, and on desktop the viewport minus the header
    so the hero fills the first screen without pushing the next section entirely out of view. */
 .hero { position: relative; overflow: hidden; min-height: 760px; background: var(--black); display: flex; align-items: center; }
-@media (min-width: 992px) { .hero { min-height: max(760px, calc(100vh - 120px)); } }
+/* Width-driven, not viewport-height-driven like the old `calc(100vh - 120px)` was — keeps the
+   hero's proportions predictable across very tall/short browser windows instead of stretching
+   with viewport height. */
+@media (min-width: 992px) { .hero { min-height: clamp(620px, 54vw, 820px); } }
 .hero .container { width: 100%; }
-/* assets/img/hero_bg.png is the full composited visual (board, hand, callouts, glow path, script
-   line, curve). The gradient here only adds extra legibility for the text on the left, per the
-   brief's formula — it's not what's carrying the brand colour, the photo already is. */
-/* `cover` fills the whole box, so the photo has no edges of its own inside the hero and there is
-   no seam to hide — anchored right so the board and the hand stay in frame while the left side,
-   which the crop eats into first, is the dark area the text sits on. */
+/* Panel, not full-bleed: this photo (assets/img/hero_bg.png) carries its own baked-in left-edge
+   dissolve — the pixels themselves fade to this section's navy before "Foundation", the leftmost
+   caption — and that bake was measured against a box exactly this size (the right ~54–60% of the
+   hero, not the full width), so the box has to match or the caption lands somewhere else
+   entirely relative to the text column than where it was calibrated. A full-bleed version of this
+   layout exists for photos that need a live `cover` crop instead (see the 992–1279 and 1600+
+   overrides below for the same reasoning applied to panel width); this one just needs the panel
+   its dissolve was baked for. */
 .hero__bg {
-  position: absolute; inset: 0; z-index: 0;
-  background-image:
-    linear-gradient(90deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .68) 42%, rgba(10, 37, 64, .1) 100%),
-    url("../img/hero_bg.png");
-  background-size: cover;
-  background-position: right 80% center;
-  background-repeat: no-repeat;
+  position: absolute; top: 0; right: 0; bottom: 0; left: 46%; z-index: 0;
   opacity: 0; transform: scale(1.01); animation: hero-bg-in 1.3s var(--ease) forwards;
 }
 @keyframes hero-bg-in { to { opacity: 1; transform: scale(1); } }
+/* Each slide is a full-bleed layer inside the panel above; its own background-image comes from
+   an inline style on the HTML div (see index.html), not a CSS rule per slide, so adding a new
+   photo later is a one-line markup addition. `contain`, so the whole frame — every caption —
+   always survives regardless of the panel's exact size at a given width. */
+.hero__bg-slide {
+  position: absolute; inset: 0;
+  background-size: contain; background-position: center right; background-repeat: no-repeat;
+  opacity: 0; transition: opacity 1.1s var(--ease);
+}
+.hero__bg-slide.is-active { opacity: 1; }
+/* The panel is pinned to the viewport's right edge, so its left inset is what sizes the photo.
+   Between 992 and 1280 the copy column and the photo want more room than the viewport has, and
+   the photo's first caption ("Foundation") would land on the paragraph — so the panel gives way
+   there. Above 1600 there's room for both and the photo takes the larger share. */
+@media (min-width: 992px) and (max-width: 1279.98px) { .hero__bg { left: 53%; } }
+@media (min-width: 1600px) { .hero__bg { left: 40%; } }
+/* Nav — only ever appears once initHeroSlider() finds a second slide to switch to. One compact
+   cluster (prev, dots, next, all inline) anchored bottom-right, inside the photo itself and well
+   clear of the text column, which only ever occupies the left ~60% at most. */
+.hero__bg-nav {
+  position: absolute; right: 4%; bottom: 5%; z-index: 3;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .4rem .6rem; border-radius: 999px; background: rgba(10, 37, 64, .4); backdrop-filter: blur(3px);
+}
+.hero__bg-dot {
+  width: 7px; height: 7px; padding: 0; border: none; border-radius: 50%; background: rgba(255, 255, 255, .4); cursor: pointer;
+  transition: background .25s var(--ease), transform .25s var(--ease);
+}
+.hero__bg-dot.is-active { background: #fff; transform: scale(1.3); }
+.hero__bg-arrow {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .3); background: transparent; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background .25s var(--ease), border-color .25s var(--ease);
+}
+.hero__bg-arrow:hover { background: rgba(255, 255, 255, .15); border-color: rgba(255, 255, 255, .55); }
+.hero__bg-arrow .icon { width: 15px; height: 15px; }
 .hero .container { position: relative; z-index: 2; }
 .hero__inner { display: grid; gap: 2.5rem; padding-top: clamp(2.5rem, 6vw, 5.5rem); padding-bottom: clamp(3.5rem, 9vw, 7rem); align-items: center; }
 .hero__content { min-width: 0; }
@@ -409,14 +444,16 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 
 @keyframes hero-fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 991.98px) {
+  .hero { flex-direction: column; align-items: stretch; }
   .hero__inner { grid-template-columns: 1fr; }
-  /* Content now spans the full width, so the overlay goes stronger/more even (not just left-to-right)
-     and the crop shifts to keep the board's centre piece in frame instead of the far right edge. */
+  /* Single column now, so the photo can't sit beside the text — it becomes a full-width strip
+     above the copy instead. Still `contain`, so the whole frame (and every caption) survives —
+     and the nav cluster drops to the strip's own bottom-right, same as desktop. */
   .hero__bg {
-    background-image: linear-gradient(180deg, rgba(10, 37, 64, .9) 0%, rgba(10, 37, 64, .82) 45%, rgba(10, 37, 64, .94) 100%), url("../img/hero_bg.png");
-    background-position: 62% 30%;
-    background-size: cover;
+    position: relative; inset: auto;
+    width: 100%; height: clamp(230px, 48vw, 400px);
   }
+  .hero__bg-slide { background-position: right center; }
 }
 /* Stats row (pill label + big number + note) */
 .stats { display: grid; gap: 2rem; padding: clamp(2rem, 4vw, 3rem) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -444,33 +481,44 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 /* Sectors We Support: alternating zigzag flow — organic gradient "blob" icons, colour-coded
    titles and a colour fade divider. No filled containers/cards/borders around each item, so it
    reads as a flowing list, not a box/tile grid, and not a clone of the Services row-list below. */
-.sectors { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--surface) 0%, rgba(7, 87, 154, .07) 45%, rgba(26, 154, 140, .09) 100%); }
+/* Light section: a wash of the logo teal at low alpha over white, with the geometric artwork
+   faint on top of it. The negative z-index puts the image above this background but behind the
+   copy, which is why .container below is lifted back to z-index 1. */
+.sectors {
+  position: relative; overflow: hidden; isolation: isolate;
+  /* Flat wash at 12% — a single tone rather than the earlier 3-stop gradient, alpha shows
+     the white page through it so it reads as "white, tinted teal" rather than a filled panel. */
+  background-color: rgba(26, 145, 141, .12);
+}
 /* Full-bleed background image, scaled to cover the section. */
 .sectors::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background-image: url("../img/bg_support.webp");
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .16;
+  background-image: url("../img/sectors-bg-full.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
 .sectors .container { position: relative; z-index: 1; }
 .sectors .section-head { margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
-/* Section head on the dark ground — same treatment .section--navy gives its own headings. */
-.sectors .section-head h2 { color: #fff; }
-.sectors .section-head p { color: var(--on-dark); }
-.sectors .eyebrow { color: #4FC3B5; }
+/* Section head on the pale teal ground — the standard light-section treatment. */
+.sectors .section-head h2 { color: var(--black); }
+.sectors .section-head p { color: var(--text); }
+/* Matched through .section-head so it outranks the `.sectors .section-head p` rule above — the
+   eyebrow is itself a <p> in that block, so the plain `.sectors .eyebrow` loses to it.
+   Deeper than --brand-2-ink: that token is calibrated against --surface, but the teal wash here
+   lands the ground at ~#DDF1EF, where it only reaches 4.20:1. This clears 4.5:1 for small copy. */
+.sectors .section-head .eyebrow { color: #0F6B5F; }
 .sector-flow { list-style: none; padding: 0; margin: 0; max-width: 980px; margin-inline: auto; }
-/* The section sits on a dark navy photo, so text and decoration run on the on-dark scale.
-   Two accents per row, not one: --accent tints the things drawn AS colour on the dark ground
-   (title, arrow, divider), so it has to be a light tint; --blob fills the icon badge, which
-   still carries a white glyph and therefore has to stay saturated. Sharing one variable made
-   the navy rows invisible as titles or the badges washed out, depending which way it was set. */
-.sector-flow > li:nth-child(1) { --accent: #5FB0F2; --blob: var(--primary);   --blob-2: var(--primary-2); }
-.sector-flow > li:nth-child(2) { --accent: #4FC3B5; --blob: var(--brand-2);   --blob-2: #0F6B5F; }
-.sector-flow > li:nth-child(3) { --accent: #A9C6E4; --blob: #2C5F96;          --blob-2: #1B4372; }
-.sector-flow > li:nth-child(4) { --accent: #7FC1F5; --blob: var(--primary-2); --blob-2: var(--primary); }
-.sector-flow > li:nth-child(5) { --accent: #5FD0C2; --blob: #0F6B5F;          --blob-2: var(--brand-2); }
-.sector-flow > li:nth-child(6) { --accent: #5FB0F2; --blob: var(--primary);   --blob-2: var(--brand-2); }
+/* Two accents per row, not one: --accent tints the things drawn AS colour on the section ground
+   (title, arrow, divider), so on this pale teal it has to be a deep shade; --blob fills the icon
+   badge, which carries a white glyph and therefore stays saturated either way. Sharing one
+   variable made the titles wash out or the badges go muddy, depending which way it was set. */
+.sector-flow > li:nth-child(1) { --accent: var(--primary);      --blob: var(--primary);   --blob-2: var(--primary-2); }
+.sector-flow > li:nth-child(2) { --accent: var(--brand-2-ink);  --blob: var(--brand-2);   --blob-2: #0F6B5F; }
+.sector-flow > li:nth-child(3) { --accent: #2C5F96;             --blob: #2C5F96;          --blob-2: #1B4372; }
+.sector-flow > li:nth-child(4) { --accent: var(--primary-2);    --blob: var(--primary-2); --blob-2: var(--primary); }
+.sector-flow > li:nth-child(5) { --accent: #0F6B5F;             --blob: #0F6B5F;          --blob-2: var(--brand-2); }
+.sector-flow > li:nth-child(6) { --accent: var(--primary);      --blob: var(--primary);   --blob-2: var(--brand-2); }
 
 .sector-line__row {
   position: relative; display: flex; align-items: center; gap: 1.75rem; padding: 1.4rem 0; color: inherit;
@@ -502,7 +550,7 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .sector-line--rev .sector-line__body { text-align: right; }
 .sector-line__title { display: block; font-size: clamp(1.2rem, 1.8vw, 1.55rem); font-weight: 600; letter-spacing: -0.01em; margin: 0 0 .4rem; color: var(--accent); transition: opacity .3s; }
 .sector-line__row:hover .sector-line__title { opacity: .82; }
-.sector-line__desc { display: block; margin: 0; color: rgba(255, 255, 255, .72); font-size: .95rem; max-width: 480px; }
+.sector-line__desc { display: block; margin: 0; color: var(--text); font-size: .95rem; max-width: 480px; }
 .sector-line--rev .sector-line__desc { margin-left: auto; }
 
 .sector-line__arrow { order: 3; flex: none; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; color: var(--accent); }
@@ -585,10 +633,10 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
 .service-tile {
   position: relative; display: flex; flex-direction: column; flex: none; width: min(320px, 78vw); height: auto; min-height: 260px; color: inherit;
   padding: 2rem 1.75rem 1.75rem; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--accent);
-  border-radius: var(--radius-lg); box-shadow: 0 24px 48px -32px rgba(10, 37, 64, .28);
+  border-radius: var(--radius-lg); box-shadow: 0 12px 26px -22px rgba(10, 37, 64, .18);
   transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s;
 }
-.service-tile:hover { transform: translateY(-6px); box-shadow: 0 34px 60px -28px rgba(10, 37, 64, .32); }
+.service-tile:hover { transform: translateY(-6px); box-shadow: 0 20px 36px -22px rgba(10, 37, 64, .22); }
 .service-tile__icon {
   width: 56px; height: 56px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; margin-bottom: 1.25rem; flex: none;
@@ -613,6 +661,22 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
   .service-tile { width: min(280px, 78vw); padding: 1.6rem 1.4rem 1.4rem; min-height: 220px; }
   .service-tile__num { top: 1.4rem; right: 1.4rem; }
 }
+/* Manual prev/next controls for the services marquee — same round-arrow treatment as the events
+   carousel. Clicking either one hands the track over to JS (see initServiceMarqueeNav), which
+   stops the automatic scroll and pages it by one tile per click instead. */
+/* Parked in the section's bottom-right corner: it's the last block in the column, and the column's
+   right edge is the container's, so flex-end lands the pair flush with the section's content edge. */
+.service-marquee__nav { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; margin-top: 1rem; }
+.service-marquee__arrow {
+  flex: none; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: #fff; color: var(--black);
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background .25s, color .25s, border-color .25s, transform .3s var(--ease);
+}
+.service-marquee__arrow:hover { background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-2px); }
+.service-marquee__arrow .icon { width: 18px; height: 18px; }
+.service-marquee.is-manual { overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+.service-marquee.is-manual::-webkit-scrollbar { display: none; }
+.service-marquee.is-manual .marquee__track { animation: none; transform: none; }
 
 /* Homepage "layered testimonial deck" — scoped entirely to .stories--deck so the shared
    .stories / .story-card rules above (also used by success-stories.html's own carousel and grid)
@@ -909,6 +973,19 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 .journey .container { position: relative; z-index: 1; }
 .roadmap__cta { text-align: center; margin-top: clamp(2rem, 4vw, 3.5rem); }
 .roadmap__cta .btn { box-shadow: 0 10px 24px -12px rgba(1, 82, 147, .6); }
+
+/* Bizacharya mark (logo without the wordmark), faint in the bottom-right corner of every section
+   that sits on plain white — decorative only. Injected by initSectionWatermarks() in main.js,
+   which finds those sections automatically rather than this being hand-placed per page, so it
+   also covers any section added later. aspect-ratio matches the source file (225×241) so the box
+   has its final size immediately, with no layout jump once the image itself loads in.
+   Held upright (no rotation) — the mark reads as a still logo, not a decal on an angle. Static,
+   no animation: a plain watermark sitting quietly behind the content. */
+.section-watermark {
+  position: absolute; bottom: 6%; right: 5%; z-index: 0;
+  pointer-events: none; user-select: none;
+  width: clamp(68px, 6.5vw, 120px); aspect-ratio: 225 / 241; opacity: .1;
+}
 
 /* ---------- Journey map (individual circular milestones, real photos) ---------- */
 .journey-map { position: relative; }
