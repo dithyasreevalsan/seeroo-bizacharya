@@ -363,8 +363,17 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
    layout exists for photos that need a live `cover` crop instead (see the 992–1279 and 1600+
    overrides below for the same reasoning applied to panel width); this one just needs the panel
    its dissolve was baked for. */
+/* Sized to the photo's own aspect ratio (1404/1160) and anchored to the hero's bottom edge,
+   rather than stretched top-to-bottom or centered — either of those left a navy strip somewhere
+   around the photo whenever the hero's content-driven height didn't exactly match the photo's
+   natural render at that panel width (the hero's own background showing through). Bottom-anchored
+   means the photo is always flush with the bottom of the hero, so there's never a gap under the
+   copy; any size mismatch shows up as the photo running past the hero's top edge instead (clipped
+   by `overflow: hidden` on .hero), which only ever eats into the photo's blurred top padding/fade
+   zone, never the bottom signature that earlier work specifically preserved. */
 .hero__bg {
-  position: absolute; top: 0; right: 0; bottom: 0; left: 46%; z-index: 0;
+  position: absolute; bottom: 0; right: 0; left: 46%; z-index: 0;
+  aspect-ratio: 1404 / 1160;
   opacity: 0; transform: scale(1.01); animation: hero-bg-in 1.3s var(--ease) forwards;
 }
 @keyframes hero-bg-in { to { opacity: 1; transform: scale(1); } }
