@@ -971,29 +971,55 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 /* ---------- 11. Journey roadmap (reference: bizacharya-omega) ---------- */
 .journey { position: relative; overflow: hidden; isolation: isolate; background: #fff; }
 .journey .section-head p { max-width: 720px; }
-/* Bizacharya mark (logo without the wordmark), faint in the background — decorative only.
-   Anchored past the top-right corner and rotated, so the section's overflow:hidden crops it
-   into the corner instead of leaving a complete shape floating in the layout. */
-.journey__watermark {
-  position: absolute; top: -10%; right: -10%; z-index: 0; pointer-events: none; user-select: none;
-  width: clamp(180px, 20vw, 340px); height: auto; opacity: .06;
-  transform: rotate(320deg); transform-origin: center;
-}
 .journey .container { position: relative; z-index: 1; }
 .roadmap__cta { text-align: center; margin-top: clamp(2rem, 4vw, 3.5rem); }
 .roadmap__cta .btn { box-shadow: 0 10px 24px -12px rgba(1, 82, 147, .6); }
 
-/* Bizacharya mark (logo without the wordmark), faint in the bottom-right corner of every section
-   that sits on plain white — decorative only. Injected by initSectionWatermarks() in main.js,
-   which finds those sections automatically rather than this being hand-placed per page, so it
-   also covers any section added later. aspect-ratio matches the source file (225×241) so the box
-   has its final size immediately, with no layout jump once the image itself loads in.
-   Held upright (no rotation) — the mark reads as a still logo, not a decal on an angle. Static,
-   no animation: a plain watermark sitting quietly behind the content. */
+/* Bizacharya mark (logo without the wordmark) as a faint, curated watermark — decorative only.
+   Opt-in per section via data-watermark="<placement>" (see initSectionWatermarks() in main.js),
+   so it only sits in open white space, never behind forms, photo rows or dense copy.
+   The layer fills the section and clips the mark, so it can bleed off an edge and drift with
+   parallax without the section needing overflow:hidden. Upright by default; the Journey corner
+   mark is rotated (via `rotate`, which composes with the parallax transform).
+   --wm-y is the placement's own vertical anchor; --wm-shift is the parallax offset from JS.
+   aspect-ratio matches the source file (225×241) so there is no layout jump on load. */
 .section-watermark {
-  position: absolute; bottom: 6%; right: 5%; z-index: 0;
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
   pointer-events: none; user-select: none;
-  width: clamp(68px, 6.5vw, 120px); aspect-ratio: 225 / 241; opacity: .1;
+}
+.section-watermark__img {
+  position: absolute; height: auto; aspect-ratio: 225 / 241; opacity: .05;
+  transform: translate3d(0, calc(var(--wm-y, 0%) + var(--wm-shift, 0px)), 0);
+  transition: transform .15s linear;
+}
+/* Large, cropped into the top-right corner — for sections with a centred heading */
+.section-watermark--corner-tr .section-watermark__img {
+    top: -19%;
+    right: -13%;
+    width: clamp(240px, 28vw, 460px);
+    rotate: 314deg;
+}
+/* Medium, rotated, cropped into the top-left corner (What we offer) */
+.section-watermark--corner-tl .section-watermark__img {
+    top: -9%;
+    left: -6%;
+    width: clamp(150px, 28vw, 340px);
+    rotate: 133deg;
+}
+/* Large, bleeding off the left edge — fills the empty side of a centred timeline / list */
+.section-watermark--side-l .section-watermark__img { top: 50%; left: -9%; --wm-y: -50%; width: clamp(260px, 30vw, 480px); opacity: .045; }
+/* Medium, bleeding off the right edge — beside a narrow centred column */
+.section-watermark--side-r .section-watermark__img { top: 50%; right: -3%; --wm-y: -50%; width: clamp(200px, 19vw, 320px); }
+
+/* Phones: content runs full width, so side / bottom marks would sit behind text — keep only the
+   corner marks, smaller and further cropped, and leave the rest out. */
+@media (max-width: 767.98px) {
+  .section-watermark--corner-tl, .section-watermark--side-r { display: none; }
+  .section-watermark--corner-tr .section-watermark__img { top: -3%; right: -18%; width: 190px; opacity: .04; }
+  .section-watermark--side-l .section-watermark__img { top: -2%; left: auto; right: -18%; --wm-y: 0%; width: 190px; opacity: .04; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-watermark__img { transition: none; }
 }
 
 /* ---------- Journey map (individual circular milestones, real photos) ---------- */
@@ -2376,13 +2402,25 @@ fieldset[disabled] { opacity: .6; }
    deliberately not a card/tile grid. Scoped to .our-journey / .timeline*, entirely separate from
    the homepage's entrepreneur-journey roadmap (.journey / .journey-map / .journey-stage). */
 
-.timeline { position: relative; max-width: 860px; margin: clamp(2.5rem, 5vw, 4rem) auto 0; }
-.timeline__list { position: relative; list-style: none; margin: 0; padding: 0; }
-.timeline__list::before {
-  content: ""; position: absolute; top: 6px; bottom: 6px; left: 7px; width: 2px; background: var(--line);
+/* Brand arcs and dots sweeping into the bottom-right corner (transparent PNG over white).
+   Full-width on desktop; kept at a minimum width on phones so the arcs stay legible there. */
+.our-journey {
+  background: #fff url("../img/about/shape1.png") right bottom / max(100%, 720px) auto no-repeat;
 }
+
+/* --tl-value is the headline size; the marker is centred on that headline's first line.
+   The spine runs from the first marker's centre to the last marker's centre — initCompanyTimeline()
+   measures those and writes --line-top / --line-len (the fallbacks cover the no-JS case). */
+.timeline { --tl-value: clamp(1.6rem, 2.2vw, 2.1rem); --tl-dot: 16px; position: relative; max-width: 860px; margin: clamp(2.5rem, 5vw, 4rem) auto 0; }
+.timeline__list { position: relative; list-style: none; margin: 0; padding: 0; }
+.timeline__list::before, .timeline__list::after {
+  content: ""; position: absolute; z-index: 0; width: 2px;
+  left: calc(var(--tl-dot) / 2 - 1px);
+  top: var(--line-top, calc(var(--tl-value) * .55));
+  height: var(--line-len, calc(100% - var(--tl-value)));
+}
+.timeline__list::before { background: var(--line); }
 .timeline__list::after {
-  content: ""; position: absolute; top: 6px; left: 7px; width: 2px; height: calc(100% - 12px);
   background: linear-gradient(180deg, var(--primary), var(--brand-2));
   transform: scaleY(var(--progress, 0)); transform-origin: top center; transition: transform .6s var(--ease);
 }
@@ -2390,25 +2428,28 @@ fieldset[disabled] { opacity: .6; }
 
 .timeline__item { position: relative; padding-left: 2.75rem; padding-bottom: clamp(2.25rem, 4vw, 3.25rem); }
 .timeline__item:last-child { padding-bottom: 0; }
+/* z-index keeps the marker above the spine (the progress line is ::after, so it would otherwise paint on top) */
 .timeline__marker {
-  position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%;
+  position: absolute; z-index: 2; left: 0; top: calc(var(--tl-value) * .55 - var(--tl-dot) / 2);
+  width: var(--tl-dot); height: var(--tl-dot); border-radius: 50%;
   background: #fff; border: 2px solid var(--line); box-sizing: border-box;
   transition: border-color .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
 }
+.timeline__content { position: relative; z-index: 1; }
 .timeline__item.is-in .timeline__marker { border-color: var(--brand-2); background: var(--brand-2); box-shadow: 0 0 0 5px rgba(26, 154, 140, .15); }
 
 .timeline__content { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .timeline__item.is-in .timeline__content { opacity: 1; transform: none; }
 
-.timeline__value { display: block; margin-bottom: .5rem; font-size: clamp(1.6rem, 2.2vw, 2.1rem); font-weight: 600; letter-spacing: -0.03em; color: var(--black); line-height: 1.1; }
+.timeline__value { display: block; margin-bottom: .5rem; font-size: var(--tl-value); font-weight: 600; letter-spacing: -0.03em; color: var(--black); line-height: 1.1; }
 .timeline__content p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.6; max-width: 460px; }
 .timeline__item--today .timeline__value, .timeline__item--today .timeline__marker { color: var(--brand-2); }
 .timeline__item--today .timeline__marker { border-color: var(--brand-2); }
 
 /* Desktop: zigzag either side of a centred spine — more editorial than a single left rail */
 @media (min-width: 768px) {
-  .timeline__list::before, .timeline__list::after { left: 50%; }
-  .timeline__marker { left: 50%; transform: translateX(-50%); }
+  .timeline__list::before, .timeline__list::after { left: calc(50% - 1px); }
+  .timeline__marker { left: calc(50% - var(--tl-dot) / 2); }
   .timeline__item { padding-left: 0; padding-bottom: clamp(3rem, 5vw, 4rem); }
   .timeline__content { width: calc(50% - 3rem); }
   .timeline__item:nth-child(odd) .timeline__content { margin-right: auto; text-align: right; }

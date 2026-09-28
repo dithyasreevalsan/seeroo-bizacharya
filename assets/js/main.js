@@ -145,15 +145,38 @@
     if (!list) return;
     const items = $$('.timeline__item', list);
     if (!items.length) return;
-    const total = items.length;
+
+    // The spine runs exactly from the first marker's centre to the last marker's centre, and the
+    // progress fill stops on the marker of the latest item revealed — so both are measured from
+    // the markers themselves rather than assumed from the list height.
+    const markers = items.map((it) => $('.timeline__marker', it));
+    let centers = [];
+    let maxSeen = -1;
+    const setProgress = () => {
+      const len = centers[centers.length - 1] - centers[0];
+      const reached = maxSeen < 0 ? 0 : centers[maxSeen] - centers[0];
+      list.style.setProperty('--progress', len > 0 ? String(reached / len) : '0');
+    };
+    const measure = () => {
+      if (markers.some((m) => !m)) return;
+      const top = list.getBoundingClientRect().top;
+      // Markers carry no transform (only the content beside them animates), so their rects are stable.
+      centers = markers.map((m) => m.getBoundingClientRect().top - top + m.offsetHeight / 2);
+      list.style.setProperty('--line-top', centers[0] + 'px');
+      list.style.setProperty('--line-len', (centers[centers.length - 1] - centers[0]) + 'px');
+      setProgress();
+    };
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 
     if (reducedMotion || !('IntersectionObserver' in window)) {
       items.forEach((it) => it.classList.add('is-in'));
-      list.style.setProperty('--progress', '1');
+      maxSeen = items.length - 1;
+      setProgress();
       return;
     }
 
-    let maxSeen = -1;
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         if (!en.isIntersecting) return;
@@ -162,7 +185,7 @@
         const idx = items.indexOf(item);
         if (idx > maxSeen) {
           maxSeen = idx;
-          list.style.setProperty('--progress', String((idx + 1) / total));
+          setProgress();
         }
         io.unobserve(item);
       });
@@ -830,70 +853,88 @@
     bg.addEventListener('mouseleave', restart);
   }
 
-  /* ---------- Section watermarks: faint logo mark on plain white sections ----------
-     Walks every <section> once at boot rather than being hand-placed per page, so it reaches
-     every current page (27 templates) and anything added later without a matching edit here.
-     A section qualifies only when it paints no background of its own: no background-image (that
-     covers gradients too — .svc, .financial-intro etc already carry a deliberate colour tint and
-     are left alone) and no non-white background-color, checked on the section itself and on its
-     ::before/::after (several sections, e.g. #connect's dotted texture, paint their art on a
-     pseudo-element while the element's own background stays default). Sections under MIN_HEIGHT
-     are skipped so a slim strip never gets a mark it's too small to carry well.
-     Placement itself is plain centring (see .section-watermark) — no per-section measurement
-     needed for that anymore, unlike an earlier corner-anchored version of this. */
+  /* ---------- Section watermarks: curated logo mark, optional parallax ----------
+     Opt-in per section rather than automatic, so the mark only appears where it has open space
+     to sit in and adds interest — never behind forms, photo rows or dense copy.
+       <section data-watermark="corner-tr" data-watermark-parallax>
+     Placements (sizes / offsets live in CSS, see .section-watermark--*):
+       corner-tr  large, cropped into the top-right corner
+       corner-tl  large, rotated, cropped into the top-left corner
+       side-l     large, vertically centred, bleeding off the left edge
+       side-r     medium, vertically centred, bleeding off the right edge
+     data-watermark-parallax (optional value = speed, default 0.14) makes the mark trail the page
+     slightly; it is skipped for reduced motion and below 768px, where it reads as jitter. */
   function initSectionWatermarks() {
-    const MIN_HEIGHT = 220;
+    const sections = $$('section[data-watermark]');
+    if (!sections.length) return;
 
-    const isWhite = (rgb) => {
-      const m = rgb && rgb.match(/[\d.]+/g);
-      if (!m) return false;
-      const a = m[3] !== undefined ? parseFloat(m[3]) : 1;
-      return a > 0 && Number(m[0]) > 250 && Number(m[1]) > 250 && Number(m[2]) > 250;
-    };
-    const paintsColor = (cs) => {
-      if (cs.backgroundImage !== 'none') return true;
-      const m = cs.backgroundColor.match(/[\d.]+/g);
-      const a = m && m[3] !== undefined ? parseFloat(m[3]) : (m ? 1 : 0);
-      return a > 0 && !isWhite(cs.backgroundColor);
-    };
-    const sitsOnPlainWhite = (section) => {
-      const own = getComputedStyle(section);
-      if (paintsColor(own)) return false;
-      for (const part of ['::before', '::after']) {
-        const cs = getComputedStyle(section, part);
-        if (cs.content !== 'none' && paintsColor(cs)) return false;
-      }
-      return true;
-    };
+    // This file is shared by root pages and by services/… and opportunities/… subpages, which
+    // sit one level down and need "../assets/…" instead — so the asset path is read off the
+    // header's own logo image rather than hard-coded, and just has its filename swapped.
+    const brand = $('.header .brand img') || $('.brand img');
+    const src = brand ? brand.getAttribute('src').replace(/logo\.png$/, 'logo-mark.png') : 'assets/img/logo-mark.png';
 
-    $$('section').forEach((section) => {
+    const moving = [];
+    sections.forEach((section) => {
       if (section.querySelector(':scope > .section-watermark')) return;
-      if (section.hasAttribute('data-no-watermark')) return;
-      if (section.offsetHeight < MIN_HEIGHT) return;
-      if (!sitsOnPlainWhite(section)) return;
 
+      // The mark sits in its own clipping layer, so it can bleed off the edge and drift without
+      // the section needing overflow:hidden (which would break sticky children).
+      const layer = document.createElement('span');
+      layer.className = `section-watermark section-watermark--${section.dataset.watermark || 'corner-tr'}`;
+      layer.setAttribute('aria-hidden', 'true');
       const img = document.createElement('img');
-      // This file is shared by root pages and by services/… and opportunities/… subpages, which
-      // sit one level down and need "../assets/…" instead — so the asset path is read off the
-      // header's own logo image rather than hard-coded, and just has its filename swapped.
-      const brand = $('.header .brand img') || $('.brand img');
-      img.src = brand ? brand.getAttribute('src').replace(/logo\.png$/, 'logo-mark.png') : 'assets/img/logo-mark.png';
+      img.src = src;
       img.alt = '';
-      img.setAttribute('aria-hidden', 'true');
       img.loading = 'lazy';
-      img.className = 'section-watermark';
-      section.insertBefore(img, section.firstChild);
+      img.className = 'section-watermark__img';
+      layer.appendChild(img);
+      section.insertBefore(layer, section.firstChild);
 
       // Lift the section's real content above the mark (z-index:0) without touching layout —
       // position:relative with no offset doesn't move anything, it only opens a stacking context.
       if (getComputedStyle(section).position === 'static') section.style.position = 'relative';
       Array.from(section.children).forEach((child) => {
-        if (child === img) return;
+        if (child === layer) return;
         const ccs = getComputedStyle(child);
         if (ccs.position === 'static') child.style.position = 'relative';
         if (ccs.zIndex === 'auto') child.style.zIndex = '1';
       });
+
+      if (section.hasAttribute('data-watermark-parallax')) {
+        moving.push({ layer, speed: parseFloat(section.dataset.watermarkParallax) || 0.14 });
+      }
     });
+
+    // Parallax: as a section scrolls up past the viewport centre the mark is pushed down by a
+    // fraction of that distance, so it trails the content. Only on-screen layers are updated.
+    if (!moving.length || reducedMotion) return;
+    const wide = window.matchMedia('(min-width: 768px)');
+    const visible = new Set();
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const mid = window.innerHeight / 2;
+      moving.forEach(({ layer, speed }) => {
+        if (!wide.matches) { layer.style.removeProperty('--wm-shift'); return; }
+        if (!visible.has(layer)) return;
+        const r = layer.getBoundingClientRect();
+        layer.style.setProperty('--wm-shift', ((mid - (r.top + r.height / 2)) * speed).toFixed(1) + 'px');
+      });
+    };
+    const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target)));
+        request();
+      }, { rootMargin: '15% 0px' });
+      moving.forEach(({ layer }) => io.observe(layer));
+    } else {
+      moving.forEach(({ layer }) => visible.add(layer));
+    }
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+    request();
   }
 
   /* ---------- Boot ---------- */
