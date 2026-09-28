@@ -179,7 +179,7 @@ strong { font-weight: 600; color: var(--ink); }
 .topbar { background: #fff; border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
 .topbar__inner { display: flex; align-items: stretch; justify-content: space-between; min-height: 42px; gap: 1rem; }
 .topbar__info { display: flex; align-items: stretch; }
-.topbar__info > * { display: inline-flex; align-items: center; gap: .5rem; padding: 0 1.1rem; border-right: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.topbar__info > * { display: inline-flex; align-items: center; gap: .5rem; padding: 0 1.1rem; border-right: 1px solid var(--line); color: var(--text); font-weight: 500; white-space: nowrap; }
 .topbar__info > *:first-child { padding-left: 0; }
 .topbar__info a:hover { color: var(--primary); }
 .topbar__info .icon { width: 14px; height: 14px; color: var(--primary); }
@@ -188,7 +188,7 @@ strong { font-weight: 600; color: var(--ink); }
 .topbar__auth a { color: var(--ink); }
 .topbar__auth a:hover { color: var(--primary); }
 .social--cells { gap: 0; }
-.social--cells a { width: 40px; height: auto; border-radius: 0; border-left: 1px solid var(--line); color: var(--muted); }
+.social--cells a { width: 40px; height: auto; border-radius: 0; border-left: 1px solid var(--line); color: var(--text); }
 .social--cells li:last-child a { border-right: 1px solid var(--line); }
 .social--cells a:hover { background: var(--surface); color: var(--primary); }
 .social--cells .icon { width: 15px; height: 15px; }
@@ -248,16 +248,19 @@ strong { font-weight: 600; color: var(--ink); }
 /* Homepage only: header integrated into the dark hero instead of a separate white bar.
    The logo has no light/white asset in the project, so it's inverted via filter here —
    the file itself is untouched, this only affects how it renders on the dark header. */
-body.has-hero .topbar { background: var(--black); border-bottom-color: rgba(255, 255, 255, .06); }
+/* A shade deeper than the header's navy so the strip reads as its own band, with bright text,
+   teal icons and visible (but soft) cell dividers. */
+body.has-hero .topbar { background: #061A2E; border-bottom-color: rgba(255, 255, 255, .1); }
 /* The cell dividers inherit the light-theme --line (#D9E4EE), which reads as a hard bright
-   rule against the dark hero header — drop them to a faint white so they just separate
-   rather than draw the eye. */
-body.has-hero .topbar__info > * { border-right-color: rgba(255, 255, 255, .07); }
-body.has-hero .topbar__auth { border-left-color: rgba(255, 255, 255, .07); }
-body.has-hero .social--cells a { border-left-color: rgba(255, 255, 255, .07); }
-body.has-hero .social--cells li:last-child a { border-right-color: rgba(255, 255, 255, .07); }
-body.has-hero .topbar__info a, body.has-hero .topbar__right a { color: rgba(255, 255, 255, .78); }
+   rule against the dark hero header — a soft white separates without drawing the eye. */
+body.has-hero .topbar__info > * { border-right-color: rgba(255, 255, 255, .12); }
+body.has-hero .topbar__auth { border-left-color: rgba(255, 255, 255, .12); }
+body.has-hero .social--cells a { border-left-color: rgba(255, 255, 255, .12); }
+body.has-hero .social--cells li:last-child a { border-right-color: rgba(255, 255, 255, .12); }
+body.has-hero .topbar__info a, body.has-hero .topbar__right a { color: rgba(255, 255, 255, .92); }
+body.has-hero .topbar__info .icon { color: #4FC3B5; }
 body.has-hero .topbar__info a:hover, body.has-hero .topbar__right a:hover { color: #fff; }
+body.has-hero .social--cells a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
 body.has-hero .topbar__auth span { color: rgba(255, 255, 255, .35); }
 body.has-hero .header { background: var(--black); box-shadow: 0 2px 20px rgba(0, 0, 0, .3); }
 body.has-hero .header.is-scrolled { box-shadow: 0 6px 24px -10px rgba(0, 0, 0, .5); }
@@ -2333,6 +2336,21 @@ fieldset[disabled] { opacity: .6; }
 .contact-card--glass .field__hint { color: rgba(255, 255, 255, .6); }
 .contact-card--glass .multiselect__toggle > .icon { color: rgba(255, 255, 255, .75); }
 .contact-card--glass .multiselect__chips { color: rgba(255, 255, 255, .55); }
+/* Service dropdown on the glass card. The card clips its contents (overflow:hidden, for the
+   rounded photo) and the full-width submit bar sits above the glass panel, so a menu dropping
+   downward was cut off and hidden behind "Send Message". Open it upward over the fields above
+   instead, and give the options dark text — the glass form's white label colour made them
+   invisible on the white menu. */
+.contact-card--glass .multiselect__menu { top: auto; bottom: calc(100% + 6px); max-height: min(320px, 55vh); }
+/* .field label (the glass form's label style) also matches these option labels — out-specify it */
+.contact-card--glass .field label.multiselect__option {
+  display: flex; align-items: center; gap: .65rem; color: var(--ink);
+  font-size: .92rem; font-weight: 400; letter-spacing: 0; margin-bottom: 0;
+}
+.contact-card--glass .field label.multiselect__option--all { font-weight: 500; margin-bottom: .35rem; }
+.contact-card--glass .field .multiselect__option input { background: none; border: 0; box-shadow: none; }
+.contact-card--glass .multiselect__chips .chip { color: #fff; background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .3); }
+.contact-card--glass .multiselect__placeholder { color: rgba(255, 255, 255, .6); }
 @media (min-width: 992px) {
   .contact-card__glass-panel { width: 56%; }
 }
