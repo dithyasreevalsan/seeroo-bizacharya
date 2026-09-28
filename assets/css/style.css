@@ -2356,7 +2356,9 @@ fieldset[disabled] { opacity: .6; }
 }
 
 /* Dark facts strip — gradient field + glows instead of a flat fill, chip-style facts. */
-.contact-facts-band { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--black) 0%, var(--black-2) 100%); color: var(--on-dark); border-radius: 28px; padding: clamp(2.25rem, 4vw, 3.5rem); }
+/* Full-bleed band (the <section> itself): square edges, no outer section padding — only its own
+   inner breathing room, with the container aligning the content to the page grid. */
+.contact-facts-band { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(155deg, var(--black) 0%, var(--black-2) 100%); color: var(--on-dark); border-radius: 0; padding: clamp(3rem, 5vw, 4.5rem) 0; }
 .contact-facts-band::before {
   content: ""; position: absolute; z-index: -1; inset: -20% -10% auto auto; width: 60%; aspect-ratio: 1;
   background: radial-gradient(circle, rgba(26, 154, 140, .28) 0%, rgba(26, 154, 140, 0) 70%);
@@ -2388,6 +2390,83 @@ fieldset[disabled] { opacity: .6; }
 
 .map { border-radius: 28px; overflow: hidden; border: 1px solid var(--line); height: clamp(320px, 42vw, 480px); box-shadow: 0 40px 70px -40px rgba(10, 37, 64, .25); }
 .map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* ---------- Contact page polish ---------- */
+/* Field icons inside the glass form, with a teal focus glow */
+.contact-card--glass .field__control { position: relative; }
+.contact-card--glass .field__control > .icon {
+  position: absolute; left: .95rem; top: 50%; transform: translateY(-50%); z-index: 1;
+  width: 17px; height: 17px; color: rgba(255, 255, 255, .55); pointer-events: none; transition: color .25s var(--ease);
+}
+.contact-card--glass .field__control input { padding-left: 2.75rem; }
+.contact-card--glass .field__control:focus-within > .icon { color: #4FC3B5; }
+.contact-card--glass .field input:focus, .contact-card--glass .field select:focus, .contact-card--glass .multiselect__toggle[aria-expanded="true"] {
+  border-color: #4FC3B5; background-color: rgba(255, 255, 255, .14); box-shadow: 0 0 0 3px rgba(79, 195, 181, .22);
+}
+.contact-card--glass .field.is-invalid input, .contact-card--glass .field.is-invalid select { border-color: #ff8a8a; }
+
+/* "Prefer to talk?" — a frosted mini-card on the photo half (desktop only; below 992px the
+   glass panel spans the whole card and would cover it) */
+.contact-card__talk { display: none; }
+@media (min-width: 992px) {
+  .contact-card__talk {
+    position: absolute; z-index: 1; left: clamp(1.5rem, 2.6vw, 2.5rem); bottom: calc(3.6rem + clamp(1.5rem, 2.6vw, 2.5rem));
+    display: grid; gap: .55rem; width: min(40%, 300px); padding: 1.15rem 1.25rem;
+    background: rgba(10, 37, 64, .45); border: 1px solid rgba(255, 255, 255, .22); border-radius: 18px;
+    -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 24px 40px -24px rgba(0, 0, 0, .55);
+  }
+}
+.contact-card__talk-k { margin: 0; font-size: .74rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #4FC3B5; }
+.contact-card__talk-tel { display: inline-flex; align-items: center; gap: .55rem; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; color: #fff; }
+.contact-card__talk-tel .icon { width: 18px; height: 18px; color: #4FC3B5; }
+.contact-card__talk-tel:hover { color: #4FC3B5; }
+.contact-card__talk-wa {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .55rem .9rem; border-radius: 999px;
+  background: #25D366; color: #fff; font-size: .85rem; font-weight: 600; transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.contact-card__talk-wa .icon { width: 16px; height: 16px; }
+.contact-card__talk-wa:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(37, 211, 102, .8); }
+
+/* Contact details band: tiles lift and their icons light up on hover */
+.contact-facts__item { transition: background .25s var(--ease), border-color .25s var(--ease), transform .3s var(--ease); }
+.contact-facts__item:hover { transform: translateY(-3px); border-color: rgba(79, 195, 181, .45); }
+.contact-facts__item .card-x__icon {
+  border-radius: 12px; background: linear-gradient(135deg, rgba(79, 195, 181, .22), rgba(31, 109, 174, .22));
+  transition: background .3s var(--ease), color .3s var(--ease), transform .35s var(--ease);
+}
+.contact-facts__item:hover .card-x__icon { background: #4FC3B5; color: var(--black); transform: scale(1.06); }
+
+/* Map: soft dotted field, framed map, and a floating address card with directions */
+.contact-map-sec { position: relative; isolation: isolate; background: linear-gradient(180deg, #fff 0%, var(--surface) 100%); }
+.contact-map-sec::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(rgba(7, 87, 154, .14) 1.1px, transparent 1.5px) 0 0 / 22px 22px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 0%, transparent 75%); mask-image: radial-gradient(70% 60% at 50% 40%, #000 0%, transparent 75%);
+}
+.map-wrap { position: relative; }
+.map-wrap .map { padding: 8px; background: #fff; }
+.map-wrap .map iframe { border-radius: 22px; }
+.map-card {
+  position: relative; z-index: 1; margin: -3rem 1rem 0; padding: 1.4rem 1.5rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 30px 60px -30px rgba(10, 37, 64, .45);
+}
+.map-card__icon {
+  display: inline-grid; place-items: center; width: 46px; height: 46px; margin-bottom: .9rem; border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--brand-2)); color: #fff; box-shadow: 0 12px 22px -12px rgba(7, 87, 154, .8);
+}
+.map-card__icon .icon { width: 22px; height: 22px; }
+.map-card__k { margin: 0 0 .35rem; font-size: .74rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-2-ink); }
+.map-card__addr { margin: 0 0 1.2rem; font-style: normal; font-size: 1.02rem; font-weight: 500; line-height: 1.55; color: var(--black); }
+.map-card__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.1rem; }
+.map-card__actions .btn .icon { width: 16px; height: 16px; }
+.map-card__call { display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; font-size: .92rem; color: var(--ink); }
+.map-card__call .icon { width: 16px; height: 16px; color: var(--brand-2); }
+.map-card__call:hover { color: var(--primary); }
+@media (min-width: 768px) {
+  /* Right-hand side: Google's own place box occupies the embed's top-left corner */
+  .map-card { position: absolute; right: clamp(1.5rem, 3vw, 2.5rem); top: 50%; transform: translateY(-50%); width: 320px; margin: 0; }
+}
 
 /* About (editorial two-column intro, modelled on the approved reference layout) */
 .about-hero { padding-top: clamp(3rem, 6vw, 5rem); padding-bottom: clamp(3rem, 6vw, 5rem); overflow: hidden; }
