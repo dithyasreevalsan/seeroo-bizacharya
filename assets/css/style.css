@@ -3179,3 +3179,6 @@ fieldset[disabled] { opacity: .6; }
 .ix-rel-opp span { font-size: .9rem; font-weight: 500; }
 @media (max-width: 575.98px) { .ix-rel-opp { grid-auto-columns: 70%; } }
 @media (prefers-reduced-motion: reduce) { .ix-rel-opp a:hover figure img { transform: none; } }
+
+/* Responsive legibility — small tags and labels never drop below 12px */
+.ticket__tag, .ticket__year, .ticket__month, .cta-chain__num, .contact-facts dt, .vm2__core-line, .map-card__k, .ev-fact__k, .ev-rel__date, .ev-rel__tag, .story-card__tag { font-size: 12px; }
