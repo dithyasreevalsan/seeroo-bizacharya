@@ -171,7 +171,7 @@ strong { font-weight: 600; color: var(--ink); }
 .btn-group { display: flex; flex-wrap: wrap; gap: .75rem; }
 @media (max-width: 575.98px) {
   .btn { white-space: normal; text-align: center; }
-  .btn--lg { padding: 0 1.4rem; }
+  .btn--lg { padding: .7rem 1.25rem; font-size: .9375rem; }
   .btn__label { height: auto; overflow: visible; line-height: 1.4; }
   .btn__t--alt { display: none; }
   .btn:hover .btn__t { transform: none; }
@@ -960,6 +960,14 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
   .row-item__image { height: 160px; }
   .row-item__more-text { display: none; }
   .listing__list::after, .listing__list > li::before { left: 1.55rem; }
+}
+/* Phones: icon + arrow share the top line so the title and description get the full row width. */
+@media (max-width: 575.98px) {
+  .row-list--icon-only .row-item { grid-template-columns: auto 1fr; gap: .9rem 1rem; }
+  .row-list--icon-only .row-item__glyph { grid-column: 1; grid-row: 1; }
+  .row-list--icon-only :is(.row-item__icon, .row-item__more) { grid-column: 2; grid-row: 1; justify-self: end; }
+  .row-list--icon-only .row-item > div { grid-column: 1 / -1; grid-row: 2; }
+  .row-list--icon-only .row-item__image { grid-row: 3; margin-top: .25rem; }
 }
 
 .tag { display: inline-flex; align-items: center; padding: .25rem .6rem; border-radius: var(--radius-sm); font-size: .78rem; font-weight: 500; background: #fff; color: var(--text); border: 1px solid var(--line); }
@@ -1920,6 +1928,12 @@ li[data-reveal].is-visible .row-item__image { opacity: 1; transform: translateX(
 /* Flush with the container's left edge on desktop, so the circle lines up with the page-banner
    heading above instead of floating indented in the middle of its column. */
 @media (min-width: 992px) { .about-split__media { margin: 0; } }
+/* Phones: shrink the circle so its tint halo and badge stay inside the page gutters. */
+@media (max-width: 575.98px) {
+  .about-split__media { max-width: calc(100% - 3.5rem); }
+  .about-split__badge { width: 104px; height: 104px; top: -.75rem; right: -.75rem; padding: .75rem; font-size: .75rem; }
+  .about-split__badge .icon { width: 22px; height: 22px; }
+}
 .about-split__blob {
   position: absolute; inset: -8%; z-index: 0; border-radius: 50%;
   background: linear-gradient(155deg, rgba(7, 87, 154, .12) 0%, rgba(26, 154, 140, .16) 100%);
@@ -3182,3 +3196,10 @@ fieldset[disabled] { opacity: .6; }
 
 /* Responsive legibility — small tags and labels never drop below 12px */
 .ticket__tag, .ticket__year, .ticket__month, .cta-chain__num, .contact-facts dt, .vm2__core-line, .map-card__k, .ev-fact__k, .ev-rel__date, .ev-rel__tag, .story-card__tag { font-size: 12px; }
+
+/* Breadcrumb stays on one line on phones — the current page truncates instead of wrapping */
+@media (max-width: 575.98px) {
+  .breadcrumb { flex-wrap: nowrap; white-space: nowrap; min-width: 0; }
+  .breadcrumb > * { flex: none; }
+  .breadcrumb [aria-current] { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+}
