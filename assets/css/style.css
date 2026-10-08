@@ -102,6 +102,10 @@ strong { font-weight: 600; color: var(--ink); }
 .ml { font-family: var(--font-ml); }
 .icon { width: 1.25em; height: 1.25em; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; fill: none; flex: none; }
 .icon--fill { fill: currentColor; stroke: none; }
+/* Bizacharya illustrated icons — two-tone line art on a 48-unit grid (soft tint .d, accent .a), colour from context */
+.icon--art { stroke-width: 2.6; }
+.icon--art .d { fill: currentColor; opacity: .16; stroke: none; }
+.icon--art .a { fill: currentColor; opacity: .5; stroke: none; }
 .skip-link { position: absolute; left: 1rem; top: -100px; z-index: 2000; background: var(--black); color: #fff; padding: .6rem 1rem; border-radius: var(--radius-sm); }
 .skip-link:focus { top: 1rem; color: #fff; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -838,6 +842,11 @@ body.has-hero .burger { background: transparent; border-color: rgba(255, 255, 25
    Clean white background, no decorative texture — the centred numbered timeline is the whole
    visual, deliberately unadorned. */
 .listing { position: relative; }
+/* Listing pages — faint full-section photo backgrounds (blueprint grid on Opportunities, soft gradient on Services) */
+.listing--bg-grid, .listing--bg-gradient { isolation: isolate; overflow: hidden; }
+.listing--bg-grid::before, .listing--bg-gradient::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: center / cover no-repeat; }
+.listing--bg-grid::before { background-image: url("../img/bg-opportunities-grid.jpg"); opacity: .13; }
+.listing--bg-gradient::before { background-image: url("../img/bg-services-gradient.jpg"); opacity: .14; }
 .listing-accent { color: var(--brand-2); }
 
 .listing__list { position: relative; }
