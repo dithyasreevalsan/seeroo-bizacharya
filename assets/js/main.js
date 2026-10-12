@@ -314,13 +314,21 @@
         if (cur) cur.textContent = String(n).padStart(2, '0');
         if (bar) bar.style.width = (n / total * 100) + '%';
       };
-      new Swiper(el, {
-        slidesPerView: 'auto', centeredSlides: true, loop: true, spaceBetween: 28, grabCursor: true, speed: 700,
-        autoplay: reducedMotion ? false : { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
+      const sw = new Swiper(el, {
+        slidesPerView: 'auto', centeredSlides: true, loop: true, spaceBetween: 28, grabCursor: true, speed: reducedMotion ? 0 : 800,
         navigation: { nextEl: $('.stories__next', wrap), prevEl: $('.stories__prev', wrap) },
         a11y: { enabled: true }, keyboard: { enabled: true },
         on: { init: update, slideChange: update }
       });
+      // Own auto-advance (every 2s): keeps sliding even with the pointer over it, pauses while the tab is hidden,
+      // restarts its count after any manual move, and only runs while the carousel is on screen.
+      const DELAY = 2000; let t = 0, hover = false;
+      const onScreen = () => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; };
+      // Keeps ticking; a tick only advances when nobody is hovering and the carousel is in view
+      const arm = () => { clearTimeout(t); t = setTimeout(() => { if (!hover && !document.hidden && onScreen()) sw.slideNext(); arm(); }, DELAY); };
+      sw.on('slideChange', arm);
+      document.addEventListener('visibilitychange', arm);
+      arm();
     });
     const thumbsEl = $('[data-gallery-thumbs]');
     const galleryEl = $('[data-gallery]');
@@ -742,6 +750,224 @@
   }
 
 
+  /* ---------- Learning Hub (Advanced): video rail prev / next ---------- */
+  function initRails() {
+    $$('[data-rail]').forEach((rail) => {
+      const wrap = rail.closest('section');
+      const by = (dir) => { const item = $('li', rail); const w = item ? item.getBoundingClientRect().width + 20 : 320; rail.scrollBy({ left: dir * w, behavior: reducedMotion ? 'auto' : 'smooth' }); };
+      // The rail lives in a panel that may start hidden, so measure the gutter once it is visible
+      const pad = () => { if (!rail.offsetParent) return; rail.style.scrollPaddingInline = getComputedStyle(rail).paddingLeft; rail.scrollLeft = 0; };
+      pad(); window.addEventListener('resize', pad);
+      document.addEventListener('click', (e) => { if (e.target.closest('[data-hub], [data-hub-go]')) setTimeout(pad, 30); });
+      const prev = $('[data-rail-prev]', wrap), next = $('[data-rail-next]', wrap);
+      if (prev) prev.addEventListener('click', () => by(-1));
+      if (next) next.addEventListener('click', () => by(1));
+    });
+  }
+
+  /* ---------- Learning Hub (Advanced): 3D cover-flow of videos ---------- */
+  function initFlow() {
+    $$('[data-flow]').forEach((flow) => {
+      const sec = flow.closest('section');
+      const items = $$('[data-flow-item]', flow), dots = $$('[data-flow-go]', sec), info = $('.lx-flow__info', sec);
+      const t = $('[data-flow-title]', sec), d = $('[data-flow-desc]', sec), num = $('[data-flow-num]', sec), dur = $('[data-flow-dur]', sec);
+      const n = items.length, MS = 5500;
+      let cur = 0, timer = 0, paused = false;
+      const render = () => {
+        items.forEach((it, i) => {
+          let o = i - cur; if (o > n / 2) o -= n; if (o < -n / 2) o += n;
+          it.style.setProperty('--o', o); it.style.setProperty('--a', Math.abs(o));
+          it.classList.toggle('is-on', o === 0);
+          if (Math.abs(o) > 2) it.setAttribute('data-far', ''); else it.removeAttribute('data-far');
+          $('.lx-flow__card', it).tabIndex = o === 0 ? 0 : -1;
+        });
+        dots.forEach((b, i) => b.classList.toggle('is-on', i === cur));
+        const c = $('.lx-flow__card', items[cur]);
+        t.textContent = c.dataset.videoTitle; d.textContent = c.dataset.videoDesc; dur.textContent = c.dataset.dur; num.textContent = String(cur + 1).padStart(2, '0');
+        info.classList.remove('is-swap'); void info.offsetWidth; info.classList.add('is-swap');
+      };
+      const go = (i) => { cur = (i + n) % n; render(); schedule(); };
+      const schedule = () => { clearTimeout(timer); if (!reducedMotion && !paused && flow.offsetParent) timer = setTimeout(() => go(cur + 1), MS); };
+      // A side card brings itself to the centre instead of playing
+      items.forEach((it, i) => $('.lx-flow__card', it).addEventListener('click', (e) => { if (i !== cur) { e.stopImmediatePropagation(); go(i); } }, true));
+      dots.forEach((b) => b.addEventListener('click', () => go(+b.dataset.flowGo)));
+      $('[data-flow-prev]', flow).addEventListener('click', () => go(cur - 1));
+      $('[data-flow-next]', flow).addEventListener('click', () => go(cur + 1));
+      flow.addEventListener('mouseenter', () => { paused = true; clearTimeout(timer); });
+      flow.addEventListener('mouseleave', () => { paused = false; schedule(); });
+      let sx = null;
+      flow.addEventListener('pointerdown', (e) => { sx = e.clientX; });
+      flow.addEventListener('pointerup', (e) => { if (sx !== null && Math.abs(e.clientX - sx) > 40) go(cur + (e.clientX < sx ? 1 : -1)); sx = null; });
+      document.addEventListener('click', (e) => { if (e.target.closest('[data-hub], [data-hub-go]')) setTimeout(() => go(0), 30); });
+      render();
+    });
+  }
+
+  /* ---------- Learning Hub (Advanced): video stage + article preview ---------- */
+  function initStage() {
+    $$('[data-stage]').forEach((stage) => {
+      const screen = $('.lx-stage__screen', stage), imgs = $$('.lx-stage__img', stage), items = $$('[data-stage-item]', stage);
+      const cap = $('.lx-stage__cap', stage), num = $('[data-stage-num]', stage), title = $('[data-stage-title]', stage), desc = $('[data-stage-desc]', stage), dur = $('[data-stage-dur]', stage);
+      const MS = 6000; stage.style.setProperty('--stage-ms', MS + 'ms');
+      let cur = 0, timer = 0;
+      const show = (i) => {
+        cur = (i + items.length) % items.length; const it = items[cur];
+        imgs.forEach((im, k) => im.classList.toggle('is-on', k === cur));
+        items.forEach((b, k) => b.classList.toggle('is-on', k === cur));
+        Object.assign(screen.dataset, { video: it.dataset.v, videoTitle: it.dataset.t, videoDesc: it.dataset.d });
+        screen.setAttribute('aria-label', 'Play: ' + it.dataset.t);
+        num.textContent = String(cur + 1).padStart(2, '0'); title.textContent = it.dataset.t; desc.textContent = it.dataset.d; dur.textContent = it.dataset.dur;
+        cap.classList.remove('is-swap'); void cap.offsetWidth; cap.classList.add('is-swap');
+        schedule();
+      };
+      const schedule = () => { clearTimeout(timer); if (!reducedMotion && !stage.classList.contains('is-paused') && stage.offsetParent) timer = setTimeout(() => show(cur + 1), MS); };
+      items.forEach((b, k) => b.addEventListener('click', () => show(k)));
+      stage.addEventListener('mouseenter', () => { stage.classList.add('is-paused'); clearTimeout(timer); });
+      stage.addEventListener('mouseleave', () => { stage.classList.remove('is-paused'); schedule(); });
+      document.addEventListener('click', (e) => { if (e.target.closest('[data-hub], [data-hub-go]')) setTimeout(() => show(0), 30); });
+    });
+    // Article index: a photo preview follows the cursor over each row
+    $$('.lx-index').forEach((list) => {
+      const peek = $('.lx-peek', list), img = peek && $('img', peek);
+      if (!peek || !window.matchMedia('(hover: hover)').matches) return;
+      $$('.lx-entry', list).forEach((row) => {
+        row.addEventListener('mouseenter', () => { img.src = row.dataset.peek; list.classList.add('is-peeking'); });
+        row.addEventListener('mouseleave', () => list.classList.remove('is-peeking'));
+      });
+      list.addEventListener('mousemove', (e) => { const r = list.getBoundingClientRect(); peek.style.left = (e.clientX - r.left + 170) + 'px'; peek.style.top = (e.clientY - r.top) + 'px'; });
+    });
+  }
+
+  /* ---------- Learning Hub (Advanced): cursor glow on cards + 3D tilt on video cards ---------- */
+  function initLxFx() {
+    if (reducedMotion || !window.matchMedia('(hover: hover)').matches) return;
+    $$('.lx-vid, .lx-tile').forEach((el) => {
+      const tilt = el.classList.contains('lx-vid');
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        el.style.setProperty('--mx', x + 'px'); el.style.setProperty('--my', y + 'px');
+        if (tilt) { el.style.setProperty('--ry', ((x / r.width - .5) * 10).toFixed(2) + 'deg'); el.style.setProperty('--rx', ((.5 - y / r.height) * 8).toFixed(2) + 'deg'); }
+      });
+      el.addEventListener('pointerleave', () => { el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); });
+    });
+  }
+
+  /* ---------- Business Mentoring: arrows travel round the "What We Offer" loop ---------- */
+  function initMentorLoop() {
+    const cycle = $('.mt-cycle');
+    if (!cycle || reducedMotion) return;
+    const list = $('.mt-cycle__list', cycle);
+    const arrows = $$('.mt-cycle__turn', cycle);
+    const icons = $$('.ix-ico', list);
+    const NS = 'http://www.w3.org/2000/svg';
+    const mq = window.matchMedia('(min-width: 992px)');
+    let svg, track, trails = [], len = 0, nodes, raf = 0, visible = false, start = 0, introDone = false, drawPath, head;
+    const LAP = 16000;
+    const until = new Map();
+    // Phones / tablets (no travelling arrows): play each icon's animation as it scrolls into view
+    const playIO = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting || mq.matches) return;
+      const ic = e.target; ic.classList.add('is-lit'); setTimeout(() => ic.classList.remove('is-lit'), 1900);
+    }), { threshold: .8 });
+    icons.forEach((ic) => playIO.observe(ic));
+
+    const build = () => {
+      if (svg) svg.remove();
+      cycle.classList.remove('is-flowing');
+      arrows.forEach((a) => { a.style.transform = ''; });
+      icons.forEach((i) => i.classList.remove('is-lit'));
+      if (!mq.matches) return;
+      const cs = getComputedStyle(cycle);
+      const row = parseFloat(cs.getPropertyValue('--row')), node = parseFloat(cs.getPropertyValue('--node'));
+      const inset = row - node / 2;
+      const x = list.offsetLeft, y = list.offsetTop + inset, w = list.offsetWidth, h = list.offsetHeight - 2 * inset, r = h / 2;
+      svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'mt-cycle__trail');
+      svg.setAttribute('aria-hidden', 'true');
+      const d = `M${x + r},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w - r},${y + h} H${x + r} A${r},${r} 0 0 1 ${x + r},${y} Z`;
+      track = document.createElementNS(NS, 'path'); track.setAttribute('d', d);
+      track.setAttribute('stroke', 'none'); svg.appendChild(track);
+      cycle.insertBefore(svg, cycle.firstChild);
+      len = track.getTotalLength();
+      const colors = ['#1A9A8C', '#07579A'];
+      trails = arrows.map((_, i) => {
+        const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d);
+        p.setAttribute('class', 'mt-cycle__seg'); p.setAttribute('stroke', colors[i % 2]); p.setAttribute('stroke-opacity', '.55');
+        p.setAttribute('stroke-dasharray', `${len * .14} ${len}`);
+        svg.appendChild(p); return p;
+      });
+      // Intro: a glowing line draws itself round the loop; each step flips in as the line reaches it
+      drawPath = document.createElementNS(NS, 'path'); drawPath.setAttribute('d', d);
+      drawPath.setAttribute('class', 'mt-cycle__draw');
+      drawPath.setAttribute('stroke-dasharray', `${len} ${len}`);
+      drawPath.setAttribute('stroke-dashoffset', introDone ? '0' : String(len));
+      svg.insertBefore(drawPath, svg.children[1]);
+      head = document.createElementNS(NS, 'circle'); head.setAttribute('r', '7'); head.setAttribute('class', 'mt-cycle__head-dot');
+      svg.appendChild(head);
+      cycle.classList.add('is-flowing');
+      if (!introDone) cycle.classList.add('is-pre');
+      if (visible) introDone ? loop() : intro();
+    };
+
+    const posOnTrack = (el) => {
+      const box = cycle.getBoundingClientRect(), b = el.getBoundingClientRect();
+      const cx = b.left - box.left + b.width / 2, cy = b.top - box.top + b.height / 2;
+      let best = 0, bd = Infinity;
+      for (let i = 0; i <= 240; i++) { const l = len * i / 240, pt = track.getPointAtLength(l), dd = Math.hypot(pt.x - cx, pt.y - cy); if (dd < bd) { bd = dd; best = l; } }
+      return best;
+    };
+    let introRunning = false;
+    const intro = () => {
+      if (introRunning || introDone) return;
+      introRunning = true;
+      const lis = $$('li', list);
+      const marks = lis.map((li, i) => { const at = posOnTrack($('.ix-ico', li)); return { li, ic: $('.ix-ico', li), at: i === 0 && at > len * .7 ? 0 : at }; });
+      const DUR = 3200, t0 = performance.now();
+      const ease = (k) => 1 - Math.pow(1 - k, 2.2);
+      const step = (t) => {
+        const k = Math.min(1, (t - t0) / DUR), at = ease(k) * len;
+        drawPath.setAttribute('stroke-dashoffset', String(len - at));
+        const pt = track.getPointAtLength(Math.min(at, len - .01));
+        head.setAttribute('cx', pt.x); head.setAttribute('cy', pt.y);
+        marks.forEach((m) => {
+          if (!m.li.classList.contains('is-on') && at >= m.at - 30) {
+            m.li.classList.add('is-on'); m.ic.classList.add('is-lit'); until.set(m.ic, t + 1900);
+            setTimeout(() => { if (!introDone) m.ic.classList.remove('is-lit'); }, 1900);
+          }
+        });
+        if (k < 1) { raf = requestAnimationFrame(step); return; }
+        introDone = true; introRunning = false;
+        cycle.classList.remove('is-pre'); cycle.classList.add('is-drawn');
+        start = performance.now(); loop();
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    const frame = (t) => {
+      const base = ((t - start) % LAP) / LAP;
+      const lit = new Set();
+      const box = cycle.getBoundingClientRect();
+      nodes = icons.map((ic) => { const b = ic.getBoundingClientRect(); return { el: ic, x: b.left - box.left + b.width / 2, y: b.top - box.top + b.height / 2 }; });
+      arrows.forEach((a, i) => {
+        const at = ((base + i / arrows.length) % 1) * len;
+        const p = track.getPointAtLength(at), q = track.getPointAtLength((at + 1) % len);
+        const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+        a.style.transform = `translate(${p.x}px, ${p.y}px) rotate(${ang - 90}deg)`;
+        trails[i].setAttribute('stroke-dashoffset', String(-(at - len * .14)));
+        nodes.forEach((n) => { if (Math.hypot(n.x - p.x, n.y - p.y) < 70) lit.add(n.el); });
+      });
+      icons.forEach((ic) => { if (lit.has(ic) && !(until.get(ic) > t)) until.set(ic, t + 1900); ic.classList.toggle('is-lit', until.get(ic) > t); });
+    };
+    const loop = () => { cancelAnimationFrame(raf); const tick = (t) => { frame(t); raf = requestAnimationFrame(tick); }; raf = requestAnimationFrame(tick); };
+
+    new IntersectionObserver((es) => {
+      visible = es[0].isIntersecting;
+      if (visible && svg && mq.matches) { introDone ? loop() : intro(); } else if (introDone) cancelAnimationFrame(raf);
+    }, { threshold: .35 }).observe(cycle);
+    let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!introRunning) build(); }, 150); });
+    if (document.readyState === 'complete') build(); else window.addEventListener('load', build);
+  }
+
   /* ---------- Success Stories: expanding gallery — the last hovered/focused panel stays open ---------- */
   function initStoryPanes() {
     $$('.ss-acc').forEach((acc) => {
@@ -950,7 +1176,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
-    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initTabs(); initServiceMarqueeNav();
+    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initTabs(); initServiceMarqueeNav();
     initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });

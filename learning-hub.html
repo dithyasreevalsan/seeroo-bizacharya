@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-grid.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -128,14 +128,20 @@
         <div class="lh-shelf__books" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
-    <!-- Paid content area: shows "Coming Soon" while the premium toggle is enabled (Phase 2 subscriber module) -->
+    <!-- Advanced (subscription) view: same content in the premium design -->
     <div data-hub-panel="premium" hidden>
-      <div class="coming-soon" role="status">
-        <span class="card-x__icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-        <span class="ml" lang="ml">ഉടൻ വരുന്നു</span>
-        <h2>Premium Learning Resources — Coming Soon</h2>
-        <p class="muted">Paid courses, templates and member-only webinars are being prepared. Leave your details and we will let you know when the Learning Hub subscription opens.</p>
-        <a class="btn btn--primary" href="contact.html#enquiry"><span class="btn__label"><span class="btn__t">Notify me when it opens</span><span class="btn__t btn__t--alt" aria-hidden="true">Notify me when it opens</span></span></a>
+      <div class="lx-offer" data-reveal>
+        <div class="lx-offer__copy">
+          <h2>Unlock Premium Learning Resources</h2>
+          <p>Join the Learning Hub today and gain unlimited access to expert insights, practical training, and exclusive business resources.</p>
+          <a class="btn btn--accent btn--lg" href="contact.html?interest=Learning%20Hub#enquiry"><span class="btn__label"><span class="btn__t">Subscribe Now</span><span class="btn__t btn__t--alt" aria-hidden="true">Subscribe Now</span></span></a>
+        </div>
+        <div class="lx-offer__deck" aria-hidden="true">
+          <span class="lx-card lx-card--3"><img src="assets/img/learning/marketing-strategy.jpg" alt="" width="320" height="200" loading="lazy"><i></i></span>
+          <span class="lx-card lx-card--2"><img src="assets/img/learning/analytics-desk.jpg" alt="" width="320" height="200" loading="lazy"><i></i></span>
+          <span class="lx-card lx-card--1"><img src="assets/img/learning/strategy-target.jpg" alt="" width="320" height="200" loading="lazy"><span class="lx-card__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span><i></i></span>
+          <span class="lx-offer__orbit"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -152,7 +158,7 @@
       <div class="lh-player" data-reveal>
         <!-- PLACEHOLDER: replace VIDEO_ID_1 with the YouTube video ID -->
         <button class="lh-player__btn" type="button" data-video="VIDEO_ID_1" data-video-title="How to Choose the Right Business Structure in Kerala" data-video-desc="Proprietorship, Partnership, LLP or Private Limited — a plain-language comparison." aria-label="Play: How to Choose the Right Business Structure in Kerala">
-          <span class="lh-player__screen"><img src="assets/img/services/01-training.jpg" alt="Video thumbnail: business structure explainer" width="960" height="540" loading="lazy"><span class="lh-play lh-play--lg"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span><span class="lh-dur">12:40</span></span>
+          <span class="lh-player__screen"><img src="assets/img/learning/strategy-target.jpg" alt="Video thumbnail: business structure explainer" width="960" height="540" loading="lazy"><span class="lh-play lh-play--lg"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span><span class="lh-dur">12:40</span></span>
           <span class="lh-player__body"><h3>How to Choose the Right Business Structure in Kerala</h3><p>Proprietorship, Partnership, LLP or Private Limited — a plain-language comparison.</p></span>
         </button>
       </div>
@@ -161,35 +167,35 @@
           <li>
             <!-- PLACEHOLDER: replace VIDEO_ID_2 with the YouTube video ID -->
             <button class="lh-track" type="button" data-video="VIDEO_ID_2" data-video-title="Udyam (MSME) Registration Explained" data-video-desc="Who should register, what you need, and the benefits available to registered MSMEs." aria-label="Play: Udyam (MSME) Registration Explained">
-              <span class="lh-track__thumb"><img src="assets/img/services/02-registration.jpg" alt="Video thumbnail: Udyam registration walkthrough" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
+              <span class="lh-track__thumb"><img src="assets/img/learning/analytics-desk.jpg" alt="Video thumbnail: Udyam registration walkthrough" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
               <span class="lh-track__body"><h3>Udyam (MSME) Registration Explained</h3><p>Who should register, what you need, and the benefits available to registered MSMEs.</p><span class="lh-track__dur">08:15</span></span>
             </button>
           </li>
           <li>
             <!-- PLACEHOLDER: replace VIDEO_ID_3 with the YouTube video ID -->
             <button class="lh-track" type="button" data-video="VIDEO_ID_3" data-video-title="Preparing a Bank-Ready Project Report" data-video-desc="What lenders look for and how to structure your financial projections." aria-label="Play: Preparing a Bank-Ready Project Report">
-              <span class="lh-track__thumb"><img src="assets/img/services/04-funding.jpg" alt="Video thumbnail: project report preparation" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
+              <span class="lh-track__thumb"><img src="assets/img/learning/marketing-strategy.jpg" alt="Video thumbnail: project report preparation" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
               <span class="lh-track__body"><h3>Preparing a Bank-Ready Project Report</h3><p>What lenders look for and how to structure your financial projections.</p><span class="lh-track__dur">15:02</span></span>
             </button>
           </li>
           <li>
             <!-- PLACEHOLDER: replace VIDEO_ID_4 with the YouTube video ID -->
             <button class="lh-track" type="button" data-video="VIDEO_ID_4" data-video-title="GST Basics for Small Businesses" data-video-desc="Thresholds, registration and the monthly filing rhythm for new businesses." aria-label="Play: GST Basics for Small Businesses">
-              <span class="lh-track__thumb"><img src="assets/img/opportunities/finance-dashboard.jpg" alt="Video thumbnail: GST basics session" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
+              <span class="lh-track__thumb"><img src="assets/img/learning/online-study.jpg" alt="Video thumbnail: GST basics session" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
               <span class="lh-track__body"><h3>GST Basics for Small Businesses</h3><p>Thresholds, registration and the monthly filing rhythm for new businesses.</p><span class="lh-track__dur">10:27</span></span>
             </button>
           </li>
           <li>
             <!-- PLACEHOLDER: replace VIDEO_ID_5 with the YouTube video ID -->
             <button class="lh-track" type="button" data-video="VIDEO_ID_5" data-video-title="Branding on a Small Budget" data-video-desc="Practical brand identity and packaging tips for food and retail startups." aria-label="Play: Branding on a Small Budget">
-              <span class="lh-track__thumb"><img src="assets/img/services/05-branding.jpg" alt="Video thumbnail: branding workshop" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
+              <span class="lh-track__thumb"><img src="assets/img/learning/social-engagement.jpg" alt="Video thumbnail: branding workshop" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
               <span class="lh-track__body"><h3>Branding on a Small Budget</h3><p>Practical brand identity and packaging tips for food and retail startups.</p><span class="lh-track__dur">09:48</span></span>
             </button>
           </li>
           <li>
             <!-- PLACEHOLDER: replace VIDEO_ID_6 with the YouTube video ID -->
             <button class="lh-track" type="button" data-video="VIDEO_ID_6" data-video-title="From Farm to Shelf: Value Addition Ideas" data-video-desc="Coconut, spice, millet and dairy product ideas with real market demand in Kerala." aria-label="Play: From Farm to Shelf: Value Addition Ideas">
-              <span class="lh-track__thumb"><img src="assets/img/opportunities/agri-food-processing.jpg" alt="Video thumbnail: agri value addition talk" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
+              <span class="lh-track__thumb"><img src="assets/img/learning/digital-growth.jpg" alt="Video thumbnail: agri value addition talk" width="320" height="180" loading="lazy"><span class="lh-play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span></span>
               <span class="lh-track__body"><h3>From Farm to Shelf: Value Addition Ideas</h3><p>Coconut, spice, millet and dairy product ideas with real market demand in Kerala.</p><span class="lh-track__dur">13:11</span></span>
             </button>
           </li>
@@ -274,6 +280,149 @@
   </div>
 </section>
 </div>
+<div data-hub-panel="premium" hidden>
+<section class="lx-reel" id="videos-advanced">
+  <div class="container">
+    <div class="lx-head lx-head--center" data-reveal>
+      <div>
+        <p class="eyebrow">Premium content</p>
+        <h2>Videos</h2>
+        <p>Training and other videos — entrepreneurship and business-related sessions from Bizacharya.</p>
+      </div>
+    </div>
+  </div>
+  <div class="lx-flow" data-flow>
+    <ul class="lx-flow__track">
+        <li class="lx-flow__item" data-flow-item="0">
+          <!-- PLACEHOLDER: replace VIDEO_ID_1 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_1" data-video-title="How to Choose the Right Business Structure in Kerala" data-video-desc="Proprietorship, Partnership, LLP or Private Limited — a plain-language comparison." data-dur="12:40" aria-label="Play: How to Choose the Right Business Structure in Kerala">
+            <img src="assets/img/learning/strategy-target.jpg" alt="Video thumbnail: business structure explainer" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">01</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+        <li class="lx-flow__item" data-flow-item="1">
+          <!-- PLACEHOLDER: replace VIDEO_ID_2 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_2" data-video-title="Udyam (MSME) Registration Explained" data-video-desc="Who should register, what you need, and the benefits available to registered MSMEs." data-dur="08:15" aria-label="Play: Udyam (MSME) Registration Explained">
+            <img src="assets/img/learning/analytics-desk.jpg" alt="Video thumbnail: Udyam registration walkthrough" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">02</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+        <li class="lx-flow__item" data-flow-item="2">
+          <!-- PLACEHOLDER: replace VIDEO_ID_3 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_3" data-video-title="Preparing a Bank-Ready Project Report" data-video-desc="What lenders look for and how to structure your financial projections." data-dur="15:02" aria-label="Play: Preparing a Bank-Ready Project Report">
+            <img src="assets/img/learning/marketing-strategy.jpg" alt="Video thumbnail: project report preparation" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">03</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+        <li class="lx-flow__item" data-flow-item="3">
+          <!-- PLACEHOLDER: replace VIDEO_ID_4 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_4" data-video-title="GST Basics for Small Businesses" data-video-desc="Thresholds, registration and the monthly filing rhythm for new businesses." data-dur="10:27" aria-label="Play: GST Basics for Small Businesses">
+            <img src="assets/img/learning/online-study.jpg" alt="Video thumbnail: GST basics session" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">04</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+        <li class="lx-flow__item" data-flow-item="4">
+          <!-- PLACEHOLDER: replace VIDEO_ID_5 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_5" data-video-title="Branding on a Small Budget" data-video-desc="Practical brand identity and packaging tips for food and retail startups." data-dur="09:48" aria-label="Play: Branding on a Small Budget">
+            <img src="assets/img/learning/social-engagement.jpg" alt="Video thumbnail: branding workshop" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">05</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+        <li class="lx-flow__item" data-flow-item="5">
+          <!-- PLACEHOLDER: replace VIDEO_ID_6 with the YouTube video ID -->
+          <button class="lx-flow__card" type="button" data-video="VIDEO_ID_6" data-video-title="From Farm to Shelf: Value Addition Ideas" data-video-desc="Coconut, spice, millet and dairy product ideas with real market demand in Kerala." data-dur="13:11" aria-label="Play: From Farm to Shelf: Value Addition Ideas">
+            <img src="assets/img/learning/digital-growth.jpg" alt="Video thumbnail: agri value addition talk" width="900" height="560" loading="lazy">
+            <span class="lx-flow__num" aria-hidden="true">06</span><span class="lx-flow__play"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></span>
+          </button>
+        </li>
+    </ul>
+    <button class="lx-flow__nav lx-flow__nav--prev" type="button" data-flow-prev aria-label="Previous video"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 18-6-6 6-6"/></svg></button>
+    <button class="lx-flow__nav lx-flow__nav--next" type="button" data-flow-next aria-label="Next video"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></button>
+  </div>
+  <div class="container">
+    <div class="lx-flow__info" aria-live="polite">
+      <h3 data-flow-title>How to Choose the Right Business Structure in Kerala</h3>
+      <p data-flow-desc>Proprietorship, Partnership, LLP or Private Limited — a plain-language comparison.</p>
+      <div class="lx-flow__meta"><span class="lx-flow__count"><b data-flow-num>01</b> / 06</span><span class="lx-flow__dots"><button class="lx-flow__dot is-on" type="button" data-flow-go="0" aria-label="Show video 1"><i></i></button><button class="lx-flow__dot" type="button" data-flow-go="1" aria-label="Show video 2"><i></i></button><button class="lx-flow__dot" type="button" data-flow-go="2" aria-label="Show video 3"><i></i></button><button class="lx-flow__dot" type="button" data-flow-go="3" aria-label="Show video 4"><i></i></button><button class="lx-flow__dot" type="button" data-flow-go="4" aria-label="Show video 5"><i></i></button><button class="lx-flow__dot" type="button" data-flow-go="5" aria-label="Show video 6"><i></i></button></span><span class="lx-flow__dur" data-flow-dur>12:40</span></div>
+    </div>
+  </div>
+</section>
+<section class="lx-journal" id="blogs-advanced">
+  <div class="container">
+    <div class="lx-head lx-head--center" data-reveal>
+      <div>
+        <p class="eyebrow">Latest Blogs</p>
+        <h2>Blogs &amp; Articles</h2>
+        <p>Valuable business insights and entrepreneurship knowledge — blogs, downloadable guides, government scheme write-ups and financial literacy videos.</p>
+      </div>
+      <div class="filter-tabs lx-tabs" data-filter-group="post-grid-adv" role="group" aria-label="Filter content type">
+          <button class="filter-tab is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-tab" type="button" data-filter="blog" aria-pressed="false">Blog</button>
+          <button class="filter-tab" type="button" data-filter="guide" aria-pressed="false">Entrepreneurship Guides</button>
+          <button class="filter-tab" type="button" data-filter="scheme" aria-pressed="false">Government Schemes</button>
+          <button class="filter-tab" type="button" data-filter="literacy" aria-pressed="false">Financial Literacy</button>
+      </div>
+    </div>
+    <div class="lx-mags" id="post-grid-adv">
+      <article class="lx-mag lx-mag--blog" data-category="blog">
+        <figure class="lx-mag__media"><img src="assets/img/about/team-review.jpg" alt="Founder reviewing registration documents" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Blog</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>14 Sep 2026</span>
+          <h3>5 Questions to Answer Before You Register a Company in Kerala</h3>
+          <p>Ownership, liability, tax and funding considerations that decide the right legal structure for your venture.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">01</span><a class="lx-act" href="blog-detail.html">Read More <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></a></div>
+        </div>
+      </article>
+      <article class="lx-mag lx-mag--blog" data-category="blog">
+        <figure class="lx-mag__media"><img src="assets/img/opportunities/startup-growth-chart.jpg" alt="Business plan and financial projections on a desk" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Blog</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>4 Sep 2026</span>
+          <h3>What a Funding-Ready Business Plan Actually Looks Like</h3>
+          <p>The sections banks and investors read first, and the mistakes that get plans rejected.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">02</span><a class="lx-act" href="blog-detail.html">Read More <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></a></div>
+        </div>
+      </article>
+      <article class="lx-mag lx-mag--guide" data-category="guide">
+        <figure class="lx-mag__media"><img src="assets/img/services/compliance-legal-desk.jpg" alt="Downloadable compliance checklist cover" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Entrepreneurship Guide</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Updated Aug 2026</span>
+          <h3>Startup Compliance Checklist for the First 12 Months</h3>
+          <p>A downloadable month-by-month checklist covering registrations, filings and renewals.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">03</span><a class="lx-act" href="#" download>Download Guide <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg></a></div>
+        </div>
+      </article>
+      <article class="lx-mag lx-mag--scheme" data-category="scheme">
+        <figure class="lx-mag__media"><img src="assets/img/opportunities/06-sme-msme.jpg" alt="Government scheme summary" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Government Scheme</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Updated Aug 2026</span>
+          <h3>PMEGP: Subsidised Loans for New Micro Enterprises</h3>
+          <p>Eligibility, subsidy levels and how to apply under the Prime Minister’s Employment Generation Programme.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">04</span><a class="lx-act" href="https://www.kviconline.gov.in/pmegpeportal/" target="_blank" rel="noopener">Visit Scheme Page <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a></div>
+        </div>
+      </article>
+      <article class="lx-mag lx-mag--scheme" data-category="scheme">
+        <figure class="lx-mag__media"><img src="assets/img/opportunities/startup-launch.jpg" alt="Kerala Startup Mission overview" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Government Scheme</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Updated Jul 2026</span>
+          <h3>Kerala Startup Mission: Support for Early-Stage Startups</h3>
+          <p>Recognition, seed funding and incubation support available to startups registered in Kerala.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">05</span><a class="lx-act" href="https://startupmission.kerala.gov.in/" target="_blank" rel="noopener">Visit Scheme Page <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a></div>
+        </div>
+      </article>
+      <article class="lx-mag lx-mag--literacy" data-category="literacy">
+        <figure class="lx-mag__media"><img src="assets/img/opportunities/financial-management-illustration.jpg" alt="Financial literacy video cover" width="800" height="560" loading="lazy"><span class="lx-mag__tag">Financial Literacy</span></figure>
+        <div class="lx-mag__body">
+          <span class="lx-mag__date"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>22 Jul 2026</span>
+          <h3>Understanding Working Capital for Small Businesses</h3>
+          <p>A short video on cash cycles, inventory and why profitable businesses still run out of cash.</p>
+          <div class="lx-mag__foot"><span class="lx-mag__num" aria-hidden="true">06</span><button class="lx-act" type="button" data-video="VIDEO_ID_7" data-video-title="Understanding Working Capital for Small Businesses" data-video-desc="A short video on cash cycles, inventory and why profitable businesses still run out of cash.">Watch on YouTube <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3 20 12 6 21V3z"/></svg></button></div>
+        </div>
+      </article>
+    </div>
+    <p class="filter-empty" hidden>No items in this category yet.</p>
+  </div>
+</section>
+</div>
 <div class="modal" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" aria-hidden="true">
   <div class="modal__backdrop"></div>
   <div class="modal__dialog modal__dialog--wide">
@@ -331,6 +480,6 @@
 </footer>
 <a class="fab fab--wa" href="https://wa.me/919207780808" target="_blank" rel="noopener" aria-label="Chat with Bizacharya on WhatsApp"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3C4.1 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.2-8.3 8.2z"/></svg></a>
 <button class="fab fab--top" id="backToTop" type="button" aria-label="Back to top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
-<script src="assets/js/main.js" defer></script>
+<script src="assets/js/main.js?v=15" defer></script>
 </body>
 </html>
