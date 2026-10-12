@@ -742,6 +742,15 @@
   }
 
 
+  /* ---------- Success Stories: expanding gallery — the last hovered/focused panel stays open ---------- */
+  function initStoryPanes() {
+    $$('.ss-acc').forEach((acc) => {
+      const panes = $$('.ss-pane', acc);
+      const open = (p) => panes.forEach((x) => x.classList.toggle('is-open', x === p));
+      panes.forEach((p) => { p.addEventListener('mouseenter', () => open(p)); p.addEventListener('focusin', () => open(p)); p.addEventListener('click', () => open(p)); });
+    });
+  }
+
   /* ---------- Learning Hub: Free / Premium toggle (premium = Coming Soon) ---------- */
   function initHubToggle() {
     const toggle = $('[data-hub-toggle]');
@@ -941,7 +950,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
-    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initTabs(); initServiceMarqueeNav();
+    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initTabs(); initServiceMarqueeNav();
     initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });
