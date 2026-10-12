@@ -3971,8 +3971,19 @@ fieldset[disabled] { opacity: .6; }
 .lx-flow__info { margin-top: clamp(2rem, 4vw, 3rem); }
 .ss-spot, .swiper-slide-active .ss-spot { box-shadow: none; }
 
-/* Learning Hub hero — third photo card tilted at the lower right of the lesson screen */
-.lh-stage__side { position: absolute; z-index: 2; right: -1.5rem; bottom: -.5rem; width: 38%; aspect-ratio: 3 / 2; margin: 0; overflow: hidden; border-radius: 14px; border: 4px solid rgba(255, 255, 255, .9); transform: rotate(5deg); box-shadow: 0 24px 44px -20px rgba(0, 0, 0, .7); }
-.lh-stage__side img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 55%; }
-.lh-stage__screen figure img { object-position: 50% 55%; }
-@media (max-width: 575.98px) { .lh-stage__side { right: -.25rem; width: 40%; border-width: 3px; } }
+
+/* Learning Hub hero — subtle motion only (design unchanged) */
+@keyframes lh-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@keyframes lh-play-track { 0% { width: 18%; } 100% { width: 78%; } }
+@keyframes lh-spin { to { transform: rotate(360deg); } }
+@keyframes lh-pulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(79, 195, 181, .18); } 50% { box-shadow: 0 0 0 11px rgba(79, 195, 181, 0); } }
+@keyframes lh-ring { 0%, 100% { box-shadow: 0 0 0 6px rgba(255, 255, 255, .2); } 50% { box-shadow: 0 0 0 10px rgba(255, 255, 255, .06); } }
+@media (prefers-reduced-motion: no-preference) {
+  .lh-stage__screen { animation: lh-float 6s ease-in-out infinite; }
+  .lh-stage__back { animation: lh-float 6s -2s ease-in-out infinite; }
+  .lh-stage__faces { animation: lh-float 6s -4s ease-in-out infinite; }
+  .lh-stage__track i { animation: lh-play-track 7s ease-in-out infinite alternate; }
+  .lh-stage__bar .lh-play { animation: lh-ring 2.4s ease-in-out infinite; }
+  .lh-stage__orb--a { animation: lh-spin 30s linear infinite; }
+  .lh-stage__orb--b, .lh-stage__faces::after { animation: lh-pulse 2.4s ease-in-out infinite; }
+}
