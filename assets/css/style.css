@@ -4200,3 +4200,15 @@ fieldset[disabled] { opacity: .6; }
 @media (max-width: 991.98px) { .lh[data-advanced="coming-soon"] .lh-soon { text-align: center; } .lh-soon p { margin-inline: auto; } .lh-soon__art { height: 250px; } }
 @media (max-width: 575.98px) { .lh-soon__card { width: 180px; } .lh-soon__orbit { width: 220px; height: 220px; margin: -110px 0 0 -110px; } .lh-soon__card--2 { margin-left: -120px; } }
 @media (prefers-reduced-motion: reduce) { .lh-soon *, .lh-soon::after { animation: none !important; } }
+/* Basic: hexagon section fades into the Introduction Videos tint, and the gap between them is tightened */
+.lh-sub { background: linear-gradient(180deg, rgba(255, 255, 255, .35) 0%, rgba(255, 255, 255, .35) 55%, var(--surface) 100%), url("../img/learning/bg-hex-white-tile.jpg") left center / auto 100% repeat-x; padding-bottom: clamp(2rem, 4vw, 3rem); }
+.lh-reel { padding-top: clamp(2rem, 4vw, 3rem); }
+/* Toggle size, reduced to a comfortable control size (keeps the same styling) */
+.lh-sub__switch .hub-toggle { padding: 5px; }
+.lh-sub__switch .hub-toggle::before { top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px); }
+.lh-sub__switch .hub-toggle__btn { min-width: 150px; padding: .7rem 1.6rem; font-size: .95rem; gap: .55rem; }
+.lh-sub__switch .hub-toggle__lvl { height: 12px; gap: 2px; }
+.lh-sub__switch .hub-toggle__lvl i { width: 3px; }
+.lh-sub__switch .hub-toggle__lvl i:nth-child(1) { height: 5px; } .lh-sub__switch .hub-toggle__lvl i:nth-child(2) { height: 8px; } .lh-sub__switch .hub-toggle__lvl i:nth-child(3) { height: 12px; }
+.lh-sub__switch .hub-toggle { box-shadow: 0 12px 28px -16px rgba(7, 87, 154, .5), 0 0 0 5px rgba(255, 255, 255, .7); }
+@media (max-width: 575.98px) { .lh-sub__switch .hub-toggle { width: auto; max-width: none; } .lh-sub__switch .hub-toggle__btn { min-width: 130px; padding: .65rem 1.1rem; font-size: .9rem; } }
