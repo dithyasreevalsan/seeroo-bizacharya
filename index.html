@@ -37,7 +37,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
-    <link rel="stylesheet" href="assets/css/style.css?v=5" />
+    <link rel="stylesheet" href="assets/css/style.css?v=40" />
   </head>
   <body class="has-hero">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -177,9 +177,10 @@
             <li class="nav__item">
               <a class="nav__link" href="index.html">Home</a>
             </li>
-            <li class="nav__item">
-              <a class="nav__link" href="about.html">About</a>
-            </li>
+            <li class="nav__item nav__item--has-sub">
+          <a class="nav__link" href="about.html">About Bizacharya</a><button class="nav__toggle" type="button" aria-expanded="false" aria-controls="sub-about" aria-label="Show About Bizacharya menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <ul class="nav__sub" id="sub-about"><li><a href="learning-hub.html">Learning Hub</a></li><li><a href="success-stories.html">Success Stories</a></li><li><a href="community.html">Community</a></li></ul>
+        </li>
             <li class="nav__item nav__item--has-sub">
               <a class="nav__link" href="entrepreneurship-opportunities.html"
                 >Opportunities</a
@@ -285,16 +286,6 @@
               </ul>
             </li>
             <li class="nav__item">
-              <a class="nav__link" href="learning-hub.html">Learning Hub</a>
-            </li>
-            <li class="nav__item">
-              <a class="nav__link" href="community.html">Community</a>
-            </li>
-            <!-- <li class="nav__item"><a class="nav__link" href="success-stories.html">Success Stories</a></li> -->
-            <li class="nav__item">
-              <a class="nav__link" href="careers.html">Careers</a>
-            </li>
-            <li class="nav__item">
               <a class="nav__link" href="contact.html">Contact</a>
             </li>
           </ul>
@@ -352,7 +343,8 @@
         </div>
         <nav class="drawer__nav" aria-label="Mobile">
           <a href="index.html">Home</a>
-          <a href="about.html">About</a>
+          <div class="drawer__item"><a href="about.html">About Bizacharya</a><button class="drawer__acc" type="button" aria-expanded="false" aria-controls="dsub-about" aria-label="Show About Bizacharya menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button></div>
+      <div class="drawer__sub" id="dsub-about"><ul><li><a href="learning-hub.html">Learning Hub</a></li><li><a href="success-stories.html">Success Stories</a></li><li><a href="community.html">Community</a></li></ul></div>
           <div class="drawer__item">
             <a href="entrepreneurship-opportunities.html">Opportunities</a
             ><button
@@ -458,10 +450,6 @@
               </li>
             </ul>
           </div>
-          <a href="learning-hub.html">Learning Hub</a>
-          <a href="community.html">Community</a>
-          <!-- <a href="success-stories.html">Success Stories</a> -->
-          <a href="careers.html">Careers</a>
           <a href="contact.html">Contact</a>
         </nav>
         <div class="drawer__foot">
@@ -2978,6 +2966,6 @@
       src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
       defer
     ></script>
-    <script src="assets/js/main.js?v=15" defer></script>
+    <script src="assets/js/main.js?v=19" defer></script>
   </body>
 </html>

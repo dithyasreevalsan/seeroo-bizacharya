@@ -765,6 +765,38 @@
     });
   }
 
+  /* ---------- Learning Hub (Basic): the article row in focus while scrolling expands ---------- */
+  function initRowFocus() {
+    const list = $('.lh-journal__list');
+    if (!list) return;
+    const rows = () => $$('.lh-row', list).filter((r) => !r.classList.contains('is-hidden'));
+    let current = null, ticking = false;
+    const set = (row) => {
+      if (row === current) return;
+      const apply = () => { $$('.lh-row', list).forEach((r) => r.classList.toggle('is-expanded', r === row)); current = row; };
+      apply();
+    };
+    const pick = () => {
+      ticking = false;
+      const vis = rows(); if (!vis.length) return;
+      // Inside the scrolling tile (desktop) measure against the tile; otherwise against the window
+      const inner = list.scrollHeight > list.clientHeight + 2 && getComputedStyle(list).overflowY !== 'visible';
+      const box = list.getBoundingClientRect();
+      const line = inner ? box.top + Math.min(140, box.height * .3) : window.innerHeight * .42;
+      let chosen = vis[0];
+      vis.forEach((r) => { if (r.getBoundingClientRect().top <= line) chosen = r; });
+      if (inner && list.scrollTop + list.clientHeight >= list.scrollHeight - 4) chosen = vis[vis.length - 1];   // reached the end of the tile
+      set(chosen);
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(pick); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    list.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    // Re-evaluate after a category filter
+    $$('[data-filter-group="post-grid"] .filter-tab').forEach((b) => b.addEventListener('click', () => { current = null; list.scrollTop = 0; setTimeout(pick, 30); }));
+    pick();
+  }
+
   /* ---------- Learning Hub (Advanced): 3D cover-flow of videos ---------- */
   function initFlow() {
     $$('[data-flow]').forEach((flow) => {
@@ -1176,7 +1208,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
-    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initTabs(); initServiceMarqueeNav();
+    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initRowFocus(); initTabs(); initServiceMarqueeNav();
     initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });

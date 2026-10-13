@@ -3570,19 +3570,7 @@ fieldset[disabled] { opacity: .6; }
 .lh-row:not(.is-hidden):nth-child(n+4 of .lh-row:not(.is-hidden)) { animation-delay: .18s; }
 
 /* Featured (first visible) article */
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) { grid-template-columns: 1fr; gap: 0; padding: 0; overflow: hidden; margin-bottom: .75rem; border: 1px solid var(--line); background: #fff; box-shadow: 0 26px 60px -40px rgba(10, 37, 64, .55); }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__media { aspect-ratio: 16 / 7; border-radius: 0; }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__media::after { left: 18px; bottom: auto; top: 18px; padding: 4px 12px; background: var(--black); color: #fff; }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__body { padding: 1.5rem 1.75rem .5rem; }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) h3 { font-size: var(--font-h3); margin-bottom: .5rem; }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__act { grid-column: 1; padding: .75rem 1.75rem 1.75rem; }
-.lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-post__go { background: var(--black); border-color: var(--black); color: #fff; }
-@media (max-width: 575.98px) {
-  .lh-row { padding: .9rem .25rem; }
-  .lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__media { aspect-ratio: 16 / 10; }
-  .lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__body { padding: 1.25rem 1.25rem .25rem; }
-  .lh-row:nth-child(1 of .lh-row:not(.is-hidden)) .lh-row__act { padding: .75rem 1.25rem 1.25rem; }
-}
+@media (max-width: 575.98px) { .lh-row { padding: .9rem .25rem; } }
 
 /* =========================================================================
    Learning Hub — ADVANCED view (.lx). Same content as Basic, premium design:
@@ -3986,4 +3974,122 @@ fieldset[disabled] { opacity: .6; }
   .lh-stage__bar .lh-play { animation: lh-ring 2.4s ease-in-out infinite; }
   .lh-stage__orb--a { animation: lh-spin 30s linear infinite; }
   .lh-stage__orb--b, .lh-stage__faces::after { animation: lh-pulse 2.4s ease-in-out infinite; }
+}
+
+/* =========================================================================
+   Learning Hub — background textures
+   Basic: one quiet hexagon texture, faint, on its two feature panels.
+   ========================================================================= */
+/* Basic */
+/* Basic offer panel: white geometric artwork repeated side by side (alternate copies mirrored so
+   joins are seamless), scaled to the panel height (never stretched), with a light blue-white wash */
+.lh-shelf { background: #fff; } /* plain panel */
+.lh-shelf::before { display: none; }
+.lh-journal__aside { background: radial-gradient(70% 50% at 100% 0%, rgba(79, 195, 181, .22), transparent 70%), linear-gradient(165deg, rgba(10, 37, 64, .9) 0%, rgba(14, 53, 88, .86) 100%), url("../img/learning/bg-hex.jpg") center / cover no-repeat; }
+
+.lh-reel__head p:not(.eyebrow) { color: var(--text); }
+/* Basic — section behind the offer panel: white hexagon artwork repeated side by side
+   (alternate copies mirrored for seamless joins), scaled to the section height, never stretched.
+   The panel itself is untouched. Advanced keeps its own blue background (more specific rule). */
+.lh-sub { background: linear-gradient(180deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, .35)), url("../img/learning/bg-hex-white-tile.jpg") left center / auto 100% repeat-x; }
+/* Basic — Blogs & Articles: swirl artwork at both sides (left copy mirrored). Each keeps its own
+   proportions (height-based size, never stretched); the white artwork background melts into the section. */
+.lh-journal { background: url("../img/learning/bg-swirl-left.jpg?v=2") left bottom / min(26vw, 420px) auto no-repeat, url("../img/learning/bg-swirl-right.jpg?v=2") right top / min(26vw, 420px) auto no-repeat, #fff; }
+/* Blogs & Articles — light blue section background; multiply blend lets the swirl artwork's
+   white base take on the blue, so only the lines show */
+.lh-journal { background-color: #EAF3FA; background-blend-mode: multiply, multiply, normal; }
+/* Blogs & Articles — fade in from white at the top so it blends into the Introduction Videos section above */
+.lh-journal { background-image: url("../img/learning/bg-swirl-left.jpg?v=2"), url("../img/learning/bg-swirl-right.jpg?v=2"), linear-gradient(180deg, #F8FBFE 0, #EAF3FA 72px, #EAF3FA 100%);
+  background-position: left bottom, right top, 0 0; background-size: min(26vw, 420px) auto, min(26vw, 420px) auto, 100% 100%; background-repeat: no-repeat; background-blend-mode: multiply, multiply, normal; }
+
+/* Basic — Introduction Videos: minute decorative elements (kept very light) */
+.lh-reel { overflow: hidden; }
+.lh-reel > .container { position: relative; z-index: 1; }
+/* dot grid, top-right */
+.lh-reel::before { content: ""; position: absolute; z-index: 0; right: 6%; top: 9%; width: 132px; height: 92px; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(rgba(7, 87, 154, .38) 1.4px, transparent 1.6px); background-size: 14px 14px; }
+/* soft teal ring + small dot, bottom-left */
+.lh-reel::after { content: ""; position: absolute; z-index: 0; left: 4%; bottom: 10%; width: 110px; height: 110px; border-radius: 50%; pointer-events: none;
+  border: 1.5px dashed rgba(26, 154, 140, .3); box-shadow: 150px -40px 0 -51px rgba(79, 195, 181, .45); }
+/* plus marks either side of the heading */
+.lh-reel__head { position: relative; }
+.lh-reel__head::before, .lh-reel__head::after { content: ""; position: absolute; top: 40%; width: 14px; height: 14px; pointer-events: none; opacity: .45;
+  background: linear-gradient(var(--brand-2) 0 0) center / 100% 2px no-repeat, linear-gradient(var(--brand-2) 0 0) center / 2px 100% no-repeat; }
+.lh-reel__head::before { left: -14%; transform: rotate(45deg); }
+.lh-reel__head::after { right: -12%; top: 18%; background: linear-gradient(var(--primary) 0 0) center / 100% 2px no-repeat, linear-gradient(var(--primary) 0 0) center / 2px 100% no-repeat; }
+@media (max-width: 767.98px) { .lh-reel::before, .lh-reel__head::before, .lh-reel__head::after { display: none; } .lh-reel::after { left: -40px; } }
+
+/* Blogs & Articles list — compact rows (image + text, action under the text so nothing gets
+   squeezed); the row currently in focus while scrolling expands into the feature layout (JS). */
+.lh-row { grid-template-columns: 150px minmax(0, 1fr); align-items: start; }
+.lh-row .lh-row__act { grid-column: 2; }
+.lh-row__meta { flex-wrap: nowrap; white-space: nowrap; }
+.lh-row__body h3 { font-size: var(--font-h4); }
+@media (max-width: 575.98px) { .lh-row { grid-template-columns: 96px minmax(0, 1fr); } .lh-row__meta { flex-wrap: wrap; white-space: normal; } }
+
+/* Blogs & Articles list — neat version: every article is the same clean card; the one in focus
+   while scrolling grows smoothly in place (wider photo, white card, soft shadow) — no layout jumps */
+.lh-journal__list { display: grid; gap: .85rem; }
+.lh-row { grid-template-columns: 128px minmax(0, 1fr); align-items: center; gap: .4rem 1.4rem; padding: 1rem; margin: 0;
+  background: rgba(255, 255, 255, .55); border: 1px solid rgba(10, 37, 64, .06); border-radius: 18px; box-shadow: none;
+  transition: grid-template-columns .55s cubic-bezier(.22, .61, .36, 1), background .45s, box-shadow .45s, border-color .45s; }
+.lh-row:hover { background: #fff; }
+.lh-row__media { aspect-ratio: 4 / 3; border-radius: 12px; }
+.lh-row h3 { font-size: var(--font-h4); transition: color .3s; }
+.lh-row__body p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lh-row .lh-row__act { grid-column: 2; }
+.lh-row.is-expanded { grid-template-columns: 250px minmax(0, 1fr); background: #fff; border-color: var(--line); box-shadow: 0 26px 50px -34px rgba(10, 37, 64, .45); }
+.lh-row.is-expanded h3 { color: var(--primary); }
+.lh-row.is-expanded .lh-post__go { background: var(--black); border-color: var(--black); color: #fff; }
+@media (max-width: 575.98px) {
+  .lh-row, .lh-row.is-expanded { grid-template-columns: 96px minmax(0, 1fr); padding: .85rem; }
+}
+@media (max-width: 575.98px) { .lh-row, .lh-row.is-expanded { align-items: start; } }
+
+/* Blogs & Articles — all articles inside one tile. On desktop the tile matches the navy panel's
+   height and the cards scroll inside it (size containment stops the list from setting the row height). */
+.lh-journal__list { padding: 1rem; border-radius: 24px; background: rgba(255, 255, 255, .6); border: 1px solid rgba(10, 37, 64, .07); box-shadow: 0 30px 60px -44px rgba(10, 37, 64, .45); }
+@media (min-width: 992px) {
+  .lh-journal__layout { align-items: stretch; }
+  .lh-journal__aside { position: relative; top: auto; }
+  .lh-journal__list { contain: size; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; padding: 1rem .75rem 1rem 1rem;
+    scrollbar-width: thin; scrollbar-color: rgba(7, 87, 154, .35) transparent;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 40px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 40px), transparent 100%); }
+  .lh-journal__list::-webkit-scrollbar { width: 6px; }
+  .lh-journal__list::-webkit-scrollbar-thumb { background: rgba(7, 87, 154, .3); border-radius: 6px; }
+}
+@media (max-width: 575.98px) { .lh-journal__list { padding: .6rem; border-radius: 20px; } }
+@media (min-width: 992px) { .lh-journal__list { padding-bottom: 2.75rem; } }
+
+/* ===== Blogs & Articles tile — clean finish =====
+   One solid white tile; articles are calm rows divided by hairlines (no cards inside the card).
+   Every row has the same structure and size; the row in focus is highlighted in place
+   (tint, accent bar, slightly zoomed photo) without changing size, so nothing jumps. */
+.lh-journal__list { padding: .5rem 1.25rem; gap: 0; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 60px -46px rgba(10, 37, 64, .4); }
+@media (min-width: 992px) { .lh-journal__list { padding: .5rem 1rem .5rem 1.25rem; -webkit-mask-image: none; mask-image: none; } }
+.lh-row, .lh-row.is-expanded { position: relative; grid-template-columns: 132px minmax(0, 1fr); gap: .35rem 1.25rem; align-items: center; margin: 0;
+  padding: 1.1rem .9rem; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none;
+  transition: background .35s ease; }
+.lh-row:last-of-type { border-bottom: 0; }
+.lh-row::before { content: ""; position: absolute; left: 0; top: 1.1rem; bottom: 1.1rem; width: 3px; border-radius: 3px; background: var(--brand-2); transform: scaleY(0); transition: transform .35s cubic-bezier(.22, .61, .36, 1); display: block; }
+.lh-row.is-expanded { background: linear-gradient(90deg, rgba(26, 154, 140, .07), rgba(26, 154, 140, 0) 85%); }
+.lh-row.is-expanded::before { transform: scaleY(1); }
+.lh-row:hover { background: var(--surface-2); }
+.lh-row__media { grid-row: span 2; align-self: center; aspect-ratio: 4 / 3; border-radius: 12px; }
+.lh-row__media img { transition: transform .6s cubic-bezier(.22, .61, .36, 1); }
+.lh-row.is-expanded .lh-row__media img { transform: scale(1.06); }
+.lh-row__meta { margin-bottom: .3rem; }
+.lh-row h3, .lh-row.is-expanded h3 { margin: 0 0 .3rem; font-size: 1rem; line-height: 1.4; color: var(--black); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color .3s; }
+.lh-row.is-expanded h3 { color: var(--primary); }
+.lh-row__body p { font-size: .875rem; line-height: 1.55; margin: 0; }
+.lh-row .lh-row__act { grid-column: 2; align-self: start; }
+/* one consistent action style: a quiet text link with an arrow */
+.lh-row .lh-post__go, .lh-row.is-expanded .lh-post__go { padding: 0; border: 0; border-radius: 0; background: none; color: var(--primary); font-size: .875rem; font-weight: 600; gap: .4rem; }
+.lh-row .lh-post__go .icon { width: 14px; height: 14px; transition: transform .3s; }
+.lh-row:hover .lh-post__go, .lh-row.is-expanded .lh-post__go { background: none; color: var(--brand-2-ink); }
+.lh-row:hover .lh-post__go .icon, .lh-row.is-expanded .lh-post__go .icon { transform: translateX(3px); }
+@media (max-width: 575.98px) {
+  .lh-journal__list { padding: .25rem .75rem; }
+  .lh-row, .lh-row.is-expanded { grid-template-columns: 88px minmax(0, 1fr); gap: .3rem .9rem; padding: 1rem .25rem 1rem .6rem; align-items: start; }
+  .lh-row__media { grid-row: span 3; }
 }
