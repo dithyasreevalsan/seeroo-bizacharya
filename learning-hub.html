@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-grid.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=40">
+  <link rel="stylesheet" href="assets/css/style.css?v=45">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -83,7 +83,13 @@
     </div>
   </div>
 </div>
-<main id="main" class="lh">
+<!--
+  ADVANCED VIEW SWITCH
+  data-advanced="coming-soon"  -> clicking "Advanced" shows the Coming Soon panel (current setting)
+  data-advanced="live"         -> clicking "Advanced" shows the full Advanced design (offer, video showcase, magazine articles)
+  Only this one attribute needs to change; nothing else in the page or CSS has to be touched.
+-->
+<main id="main" class="lh" data-advanced="coming-soon">
 <section class="lh-hero">
   <div class="container">
     <div class="lh-hero__grid">
@@ -126,6 +132,22 @@
     </div>
     <!-- Advanced (subscription) view: same content in the premium design -->
     <div data-hub-panel="premium" hidden>
+      <div class="lh-soon" role="status">
+        <div class="lh-soon__copy">
+          <span class="lh-soon__tag"><i aria-hidden="true"></i><span lang="ml">ഉടൻ വരുന്നു</span></span>
+          <h2>Premium Learning Resources — <span>Coming Soon</span></h2>
+          <p>Paid courses, templates and member-only webinars are being prepared. Leave your details and we will let you know when the Learning Hub subscription opens.</p>
+          <a class="btn btn--accent btn--lg" href="contact.html?interest=Learning%20Hub#enquiry"><span class="btn__label"><span class="btn__t">Notify me when it opens</span><span class="btn__t btn__t--alt" aria-hidden="true">Notify me when it opens</span></span></a>
+        </div>
+        <div class="lh-soon__art" aria-hidden="true">
+          <span class="lh-soon__orbit"></span>
+          <span class="lh-soon__card lh-soon__card--3"><img src="assets/img/learning/idea-thinking.jpg" alt="" width="320" height="200" loading="lazy"></span>
+          <span class="lh-soon__card lh-soon__card--2"><img src="assets/img/learning/idea-puzzle.jpg" alt="" width="320" height="200" loading="lazy"></span>
+          <span class="lh-soon__card lh-soon__card--1"><img src="assets/img/learning/growth-partnership.jpg" alt="" width="320" height="200" loading="lazy"><i class="lh-soon__bar"><b></b></i></span>
+          <span class="lh-soon__lock"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="16" r="1.4"/></svg></span>
+          <span class="lh-soon__spark lh-soon__spark--a"></span><span class="lh-soon__spark lh-soon__spark--b"></span>
+        </div>
+      </div>
       <div class="lx-offer" data-reveal>
         <div class="lx-offer__copy">
           <h2>Unlock Premium Learning Resources</h2>
