@@ -765,6 +765,25 @@
     });
   }
 
+  /* ---------- Women Entrepreneurship staircase: label row = tallest label (keeps text off the steps) ---------- */
+  function initStairLabels() {
+    const list = $('.women-steps');
+    if (!list) return;
+    const measure = () => {
+      let max = 0;
+      $$('li', list).forEach((li) => {
+        const t = [...li.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+        if (!t) return;
+        const r = document.createRange(); r.selectNodeContents(t);
+        max = Math.max(max, r.getBoundingClientRect().height);
+      });
+      if (max) list.style.setProperty('--ws-label', Math.ceil(max + 6) + 'px');
+    };
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 120); });
+  }
+
   /* ---------- Learning Hub (Basic): the article row in focus while scrolling expands ---------- */
   function initRowFocus() {
     const list = $('.lh-journal__list');
@@ -1208,7 +1227,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
     initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
-    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initRowFocus(); initTabs(); initServiceMarqueeNav();
+    initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initRowFocus(); initStairLabels(); initTabs(); initServiceMarqueeNav();
     initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');
   });

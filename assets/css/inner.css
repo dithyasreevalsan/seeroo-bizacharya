@@ -1583,3 +1583,71 @@ li > .ix-ico { justify-self: start; }
   .mt-cycle.is-pre .mt-cycle__list li.is-on { color: var(--black); }
 }
 .mt-cycle.is-pre .mt-cycle__seg { opacity: 0; } .mt-cycle__seg { transition: opacity .6s; }
+
+/* Rural Enterprises — Who Can Benefit: slower, calmer entrance for the pins (was .6s with an 80ms step) */
+.ix .rr-pins li[data-reveal] { transform: translateY(26px); transition: opacity 1.4s cubic-bezier(.22, .61, .36, 1), transform 1.4s cubic-bezier(.22, .61, .36, 1); }
+.ix .rr-pins li[data-reveal].is-visible { transform: none; }
+.ix .rr-pins li:nth-child(1) { transition-delay: 0s !important; }
+.ix .rr-pins li:nth-child(2) { transition-delay: .25s !important; }
+.ix .rr-pins li:nth-child(3) { transition-delay: .5s !important; }
+.ix .rr-pins li:nth-child(4) { transition-delay: .75s !important; }
+.ix .rr-pins li:nth-child(5) { transition-delay: 1s !important; }
+.ix .rr-pins li:nth-child(6) { transition-delay: 1.25s !important; }
+/* Who Can Benefit pins: whole sequence takes 5s (2s per pin, 0.6s apart; last starts at 3s) */
+.ix .rr-pins li[data-reveal] { transition-duration: 2s, 2s; }
+.ix .rr-pins li:nth-child(2) { transition-delay: .6s !important; }
+.ix .rr-pins li:nth-child(3) { transition-delay: 1.2s !important; }
+.ix .rr-pins li:nth-child(4) { transition-delay: 1.8s !important; }
+.ix .rr-pins li:nth-child(5) { transition-delay: 2.4s !important; }
+.ix .rr-pins li:nth-child(6) { transition-delay: 3s !important; }
+/* Who Can Benefit pins: whole sequence takes 8s (3s per pin, 1s apart; last starts at 5s) */
+.ix .rr-pins li[data-reveal] { transition-duration: 3s, 3s; }
+.ix .rr-pins li:nth-child(2) { transition-delay: 1s !important; }
+.ix .rr-pins li:nth-child(3) { transition-delay: 2s !important; }
+.ix .rr-pins li:nth-child(4) { transition-delay: 3s !important; }
+.ix .rr-pins li:nth-child(5) { transition-delay: 4s !important; }
+.ix .rr-pins li:nth-child(6) { transition-delay: 5s !important; }
+/* Who Can Benefit pins: whole sequence takes 6s (2.25s per pin, 0.75s apart; last starts at 3.75s) */
+.ix .rr-pins li[data-reveal] { transition-duration: 2.25s, 2.25s; }
+.ix .rr-pins li:nth-child(2) { transition-delay: .75s !important; }
+.ix .rr-pins li:nth-child(3) { transition-delay: 1.5s !important; }
+.ix .rr-pins li:nth-child(4) { transition-delay: 2.25s !important; }
+.ix .rr-pins li:nth-child(5) { transition-delay: 3s !important; }
+.ix .rr-pins li:nth-child(6) { transition-delay: 3.75s !important; }
+/* Who Can Benefit pins: whole sequence takes 3.5s (1.3s per pin, 0.44s apart; last starts at 2.2s) */
+.ix .rr-pins li[data-reveal] { transition-duration: 1.3s, 1.3s; }
+.ix .rr-pins li:nth-child(2) { transition-delay: .44s !important; }
+.ix .rr-pins li:nth-child(3) { transition-delay: .88s !important; }
+.ix .rr-pins li:nth-child(4) { transition-delay: 1.32s !important; }
+.ix .rr-pins li:nth-child(5) { transition-delay: 1.76s !important; }
+.ix .rr-pins li:nth-child(6) { transition-delay: 2.2s !important; }
+
+/* Women Entrepreneurship — Our Services steps: slower staircase entrance (was .6s with an 80ms step).
+   1.3s per step, 0.35s apart -> all seven in about 3.4s */
+.ix .women-steps li[data-reveal] { transform: translateY(26px); transition: opacity 1.3s cubic-bezier(.22, .61, .36, 1), transform 1.3s cubic-bezier(.22, .61, .36, 1); }
+.ix .women-steps li[data-reveal].is-visible { transform: none; }
+.ix .women-steps li:nth-child(1) { transition-delay: 0s !important; }
+.ix .women-steps li:nth-child(2) { transition-delay: .35s !important; }
+.ix .women-steps li:nth-child(3) { transition-delay: .7s !important; }
+.ix .women-steps li:nth-child(4) { transition-delay: 1.05s !important; }
+.ix .women-steps li:nth-child(5) { transition-delay: 1.4s !important; }
+.ix .women-steps li:nth-child(6) { transition-delay: 1.75s !important; }
+.ix .women-steps li:nth-child(7) { transition-delay: 2.1s !important; }
+
+/* Women Entrepreneurship — Our Services staircase, cleaned up (desktop):
+   every column has the same structure — circle, a fixed-height label block, then its step —
+   so the circles and labels climb in an even line parallel to the steps instead of
+   floating at different heights depending on how many lines a label wraps to. */
+@media (min-width: 992px) {
+  .women-steps { --rise: 22px; column-gap: 0; }
+  .women-steps li { grid-template-rows: 44px 6.4em auto; gap: 1rem; padding: 0 1.1rem; font-size: .95rem; line-height: 1.45; }
+  .women-steps li::after { margin: 0 -1.1rem; height: calc(var(--rise) * (var(--i) + 1) + 8px); border-left: 0; box-shadow: inset 1px 0 0 rgba(255, 255, 255, .8); }
+  .women-steps li:first-child::after { box-shadow: none; }
+}
+@media (min-width: 992px) { .women-steps li { align-items: start; } }
+/* Staircase labels: the label row is sized to the tallest label (measured in JS -> --ws-label),
+   so no label can ever run into its step at any screen width */
+@media (min-width: 992px) {
+  .women-steps li { grid-template-rows: 44px var(--ws-label, 6.4em) auto; }
+}
+@media (min-width: 992px) and (max-width: 1279.98px) { .women-steps li { font-size: .875rem; padding: 0 .8rem; } .women-steps li::after { margin: 0 -.8rem; } }
