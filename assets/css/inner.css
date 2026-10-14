@@ -1073,7 +1073,7 @@ li > .ix-ico { justify-self: start; }
 .mk-hero h1 { color: #fff; max-width: 15ch; }
 .mk-hero .ix-hero__lede { color: var(--on-dark); }
 .mk-hero__grid { display: grid; gap: 3rem; align-items: end; }
-@media (min-width: 992px) { .mk-hero__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 5rem; min-height: clamp(580px, 74vh, 760px); align-content: end; } }
+@media (min-width: 992px) { .mk-hero__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 5rem; min-height: clamp(420px, 52vh, 540px); align-content: center; align-items: center; } }
 
 .mk-intro .lead { margin-bottom: 1.5rem; }
 .mk-intro__photo { aspect-ratio: 1100 / 700; }
