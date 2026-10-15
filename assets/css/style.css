@@ -2818,11 +2818,6 @@ fieldset[disabled] { opacity: .6; }
     linear-gradient(90deg, rgba(10, 37, 64, .8) 0%, rgba(10, 37, 64, .3) 58%, rgba(10, 37, 64, .12) 100%);
 }
 /* Ring motif echoing the brand geometry, bleeding off the top-right corner. */
-.ev-hero__rings {
-  position: absolute; z-index: -1; top: -28%; right: -12%; width: clamp(320px, 42vw, 720px); aspect-ratio: 1;
-  pointer-events: none; opacity: .5;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' fill='none' stroke='%234FC3B5' stroke-width='1'%3E%3Ccircle cx='200' cy='200' r='80'/%3E%3Ccircle cx='200' cy='200' r='128'/%3E%3Ccircle cx='200' cy='200' r='176'/%3E%3C/svg%3E") no-repeat center / contain;
-}
 .ev-hero__inner { position: relative; z-index: 1; color: #fff; padding-top: clamp(2.5rem, 6vw, 4rem); }
 .ev-hero__inner .back-link { color: rgba(255, 255, 255, .78); }
 .ev-hero__inner .back-link:hover { color: #fff; }
@@ -3145,7 +3140,7 @@ fieldset[disabled] { opacity: .6; }
   -webkit-mask-image: radial-gradient(55% 45% at 50% 30%, #000 0%, transparent 75%); mask-image: radial-gradient(55% 45% at 50% 30%, #000 0%, transparent 75%);
 }
 .ev-clients-sec__wave { position: absolute; z-index: 0; top: -1px; left: 0; width: 100%; height: clamp(28px, 5vw, 70px); display: block; pointer-events: none; }
-/* Brand ring motif (as in the event hero), in navy/teal at low strength */
+/* Brand ring motif, in navy/teal at low strength */
 .ev-clients-sec__rings {
   position: absolute; z-index: -1; left: -140px; bottom: -160px; width: clamp(300px, 34vw, 520px); aspect-ratio: 1; pointer-events: none; opacity: .55;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' fill='none' stroke-width='1'%3E%3Ccircle cx='200' cy='200' r='80' stroke='%231A9A8C' stroke-opacity='.45'/%3E%3Ccircle cx='200' cy='200' r='128' stroke='%2307579A' stroke-opacity='.28'/%3E%3Ccircle cx='200' cy='200' r='176' stroke='%2307579A' stroke-opacity='.16'/%3E%3C/svg%3E") no-repeat center / contain;
@@ -3306,7 +3301,6 @@ fieldset[disabled] { opacity: .6; }
   /* The strip stops overlapping on phones — stacked, a negative margin would bury the hero copy. */
   .ev-facts-sec { margin-top: clamp(-2.5rem, -5vw, -1.5rem); }
   .ev-hero { padding-bottom: clamp(3.5rem, 12vw, 5rem); }
-  .ev-hero__rings { opacity: .3; top: -14%; right: -28%; }
   .ev-hero__actions .btn { width: 100%; }
   .ev-hero__actions > [data-register-cta] { width: 100%; }
   .ev-ag { grid-template-columns: 58px 1fr; gap: .9rem; }
