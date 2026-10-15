@@ -3000,11 +3000,9 @@ fieldset[disabled] { opacity: .6; }
     radial-gradient(50% 60% at 50% 0%, rgba(26, 154, 140, .22) 0%, rgba(26, 154, 140, 0) 70%),
     linear-gradient(160deg, var(--black) 0%, #0D2E4F 60%, var(--black-2) 100%);
 }
-.ev-speakers-sec__rings {
-  position: absolute; z-index: -1; bottom: -180px; left: -160px; width: 420px; height: 420px; border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, .08); box-shadow: 0 0 0 60px rgba(255, 255, 255, .02), 0 0 0 61px rgba(255, 255, 255, .06);
-  pointer-events: none;
-}
+/* Bizacharya logo-mark watermark (data-watermark="corner-tr", as on the clients section), turned
+   white so it reads on the navy band */
+.ev-speakers-sec .section-watermark__img { filter: brightness(0) invert(1); opacity: .06; }
 .ev-speakers-sec .section-head h2 { color: #fff; }
 .ev-speakers-sec .section-head p { color: var(--on-dark); }
 .ev-speakers-sec .section-head .eyebrow { color: #4FC3B5; }
