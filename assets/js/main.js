@@ -292,6 +292,19 @@
     io.observe(vm);
   }
 
+  /* ---------- Client logos: Owl Carousel (jQuery + Owl are loaded only on pages that use it) ---------- */
+  // Glides continuously: a linear transition whose speed equals the autoplay timeout.
+  function initClientCarousel() {
+    const el = $('[data-clients-carousel]');
+    if (!el || !window.jQuery || !jQuery.fn.owlCarousel) return;
+    const SPEED = 3200;
+    jQuery(el).owlCarousel({
+      loop: true, margin: 18, dots: false, nav: false, mouseDrag: true, touchDrag: true,
+      autoplay: !reducedMotion, autoplayTimeout: SPEED, autoplaySpeed: SPEED, smartSpeed: 600, slideTransition: 'linear', autoplayHoverPause: true,
+      responsive: { 0: { items: 2 }, 576: { items: 3 }, 992: { items: 4 }, 1200: { items: 5 }, 1600: { items: 6 } }
+    });
+  }
+
   /* ---------- Swiper carousels ---------- */
   function initCarousels() {
     if (typeof Swiper === 'undefined') return;
@@ -1226,7 +1239,7 @@
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     initHeader(); initDropdowns(); initDrawer(); initReveal(); initParallax(); initListingTimeline(); initBackToTop();
-    initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initStoryShow(); initMultiselect();
+    initJourney(); initCompanyTimeline(); initVisionMission(); initCarousels(); initClientCarousel(); initStoryShow(); initMultiselect();
     initForms(); initModals(); initVideos(); initFilters(); initEventState(); initHubToggle(); initStoryPanes(); initMentorLoop(); initRails(); initLxFx(); initStage(); initFlow(); initRowFocus(); initStairLabels(); initTabs(); initServiceMarqueeNav();
     initHeroSlider(); initSectionWatermarks();
     if ($('.mobile-bar') && !document.body.hasAttribute('data-status')) document.body.classList.add('has-mobile-bar');

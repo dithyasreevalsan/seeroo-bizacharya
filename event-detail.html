@@ -17,7 +17,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-grid.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=49">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=61">
 </head>
 <body data-status="upcoming" data-registration="required">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -206,7 +207,99 @@
   </div>
 </section>
 
-<!-- 4. Related events — PLACEHOLDER: three upcoming entries from the events table -->
+<!-- 4. Speakers — navy band, "Industry Pioneers & Thought Leaders". PLACEHOLDER: names, roles and photos come from the event's speakers table.
+     Each card takes a photo (<img> inside .ev-spk__photo) or, when none is uploaded, initials in .ev-spk__initials. -->
+<section class="section section--tight ev-speakers-sec" id="ev-speakers" aria-labelledby="ev-speakers-title">
+  <span class="ev-speakers-sec__rings" aria-hidden="true"></span>
+  <div class="container">
+    <div class="section-head section-head--center" data-reveal>
+      <p class="eyebrow">Distinguished Speakers</p>
+      <h2 id="ev-speakers-title">Industry Pioneers &amp; Thought Leaders</h2>
+      <p>Founders, bankers and enterprise experts sharing practical lessons on building, funding and growing a business in Kerala.</p>
+    </div>
+    <ul class="ev-spk-grid" data-stagger>
+      <li class="ev-spk ev-spk--featured" data-reveal>
+        <span class="ev-spk__role">Chief Guest</span>
+        <span class="ev-spk__photo"><span class="ev-spk__initials" aria-hidden="true">AM</span></span>
+        <h3 class="ev-spk__name">Anil Menon</h3>
+        <p class="ev-spk__title">Managing Director</p>
+        <p class="ev-spk__org">Kerala Enterprise Finance Ltd.</p>
+        <a class="ev-spk__in" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Anil Menon on LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </li>
+      <li class="ev-spk ev-spk--featured" data-reveal>
+        <span class="ev-spk__role">Keynote Speaker</span>
+        <span class="ev-spk__photo"><span class="ev-spk__initials" aria-hidden="true">LN</span></span>
+        <h3 class="ev-spk__name">Lakshmi Nair</h3>
+        <p class="ev-spk__title">Founder &amp; CEO</p>
+        <p class="ev-spk__org">Malabar Agro Foods</p>
+        <a class="ev-spk__in" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Lakshmi Nair on LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </li>
+      <li class="ev-spk" data-reveal>
+        <span class="ev-spk__role">Speaker</span>
+        <span class="ev-spk__photo"><span class="ev-spk__initials" aria-hidden="true">RT</span></span>
+        <h3 class="ev-spk__name">Rahul Thomas</h3>
+        <p class="ev-spk__title">Senior Business Mentor</p>
+        <p class="ev-spk__org">Bizacharya Consulting</p>
+        <a class="ev-spk__in" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Rahul Thomas on LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </li>
+      <li class="ev-spk" data-reveal>
+        <span class="ev-spk__role">Speaker</span>
+        <span class="ev-spk__photo"><span class="ev-spk__initials" aria-hidden="true">SK</span></span>
+        <h3 class="ev-spk__name">Sreeja K.</h3>
+        <p class="ev-spk__title">Chartered Accountant</p>
+        <p class="ev-spk__org">Compliance &amp; Funding Advisor</p>
+        <a class="ev-spk__in" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="Sreeja K. on LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </li>
+    </ul>
+    <!-- Call for speakers: glowing glass panel — mic badge, copy, audience chips and CTA -->
+    <div class="ev-spk-cta" data-reveal>
+      <span class="ev-spk-cta__glow" aria-hidden="true"></span>
+      <span class="ev-spk-cta__mic" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span>
+      <div class="ev-spk-cta__body">
+        <p class="eyebrow ev-spk-cta__kicker">Call for Speakers</p>
+        <h3 class="ev-spk-cta__title">Share your expertise on our stage</h3>
+        <p class="ev-spk-cta__text">Founders, mentors and domain experts can apply to speak at a Bizacharya event and help Kerala's next generation of entrepreneurs.</p>
+        <ul class="ev-spk-cta__chips" aria-label="Who can apply">
+          <li>Founders</li><li>Mentors</li><li>Bankers &amp; investors</li><li>Domain experts</li>
+        </ul>
+      </div>
+      <a class="btn btn--accent ev-spk-cta__btn" href="contact.html"><span class="btn__label"><span class="btn__t">Apply to speak</span><span class="btn__t btn__t--alt" aria-hidden="true">Apply to speak</span></span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Clients — Owl Carousel logo row gliding continuously.
+     PLACEHOLDER: logos in assets/img/clients/ stand in for real client logos (SVG/PNG, ~220×56, transparent). -->
+<section class="section ev-clients-sec" aria-labelledby="ev-clients-title" data-watermark="side-r">
+  <!-- Navy wave: carries the speakers band above into this section with a curve instead of a hard edge -->
+  <svg class="ev-clients-sec__wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="evClientsWave" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#0D2E4F"/><stop offset="1" stop-color="#123B63"/></linearGradient></defs><path d="M0 0h1440v38c-180 34-360 52-540 40S540 30 360 34 120 70 0 62z" fill="url(#evClientsWave)"/><path d="M0 62c120 8 240-24 360-28s360 32 540 44 360-6 540-40" fill="none" stroke="#4FC3B5" stroke-opacity=".55" stroke-width="1.5"/></svg>
+  <span class="ev-clients-sec__rings" aria-hidden="true"></span>
+  <span class="ev-clients-sec__band" aria-hidden="true"></span>
+  <div class="container">
+    <div class="section-head section-head--center" data-reveal>
+      <p class="eyebrow">Our Clients</p>
+      <h2 id="ev-clients-title">Trusted by 54+ Financial Institutions</h2>
+      <p>NBFCs, small finance banks, co-operatives and growing enterprises across Kerala rely on Bizacharya to launch, comply and scale.</p>
+    </div>
+  </div>
+  <div class="ev-clients-rows" data-reveal>
+    <div class="owl-carousel ev-clients" data-clients-carousel>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-01-nila-finance.svg" alt="Nila Finance" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-02-periyar-coop-bank.svg" alt="Periyar Co-op Bank" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-03-kayal-microfinance.svg" alt="Kayal Microfinance" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-04-sahya-capital.svg" alt="Sahya Capital" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-05-thejas-sfb.svg" alt="Thejas Small Finance Bank" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-06-vembanad-nidhi.svg" alt="Vembanad Nidhi Ltd" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-07-harita-agro.svg" alt="Harita Agro Producers" width="220" height="56" loading="lazy"></span></div>
+        <div class="ev-client"><span class="ev-client__logo"><img src="assets/img/clients/client-08-anchal-fintech.svg" alt="Anchal Fintech" width="220" height="56" loading="lazy"></span></div>
+    </div>
+  </div>
+  <div class="container">
+    <p class="ev-clients-foot" data-reveal>Your institution could be next. <a href="contact.html">Talk to our consulting team<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></p>
+  </div>
+</section>
+
+<!-- 6. Related events — PLACEHOLDER: three upcoming entries from the events table -->
 <section class="section section--tight section--light ev-related-sec">
   <div class="container">
     <div class="ev-related-head" data-reveal>
@@ -329,6 +422,8 @@
 <a class="fab fab--wa" href="https://wa.me/919207780808" target="_blank" rel="noopener" aria-label="Chat with Bizacharya on WhatsApp"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" stroke="none" d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3C4.1 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.2-8.3 8.2z"/></svg></a>
 <button class="fab fab--top" id="backToTop" type="button" aria-label="Back to top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-<script src="assets/js/main.js?v=20" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
+<script src="assets/js/main.js?v=24" defer></script>
 </body>
 </html>

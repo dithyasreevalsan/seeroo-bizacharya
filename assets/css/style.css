@@ -2992,21 +2992,227 @@ fieldset[disabled] { opacity: .6; }
 .ev-ag__body h3 { font-size: 1.1rem; margin: 0 0 .35rem; letter-spacing: -0.01em; }
 .ev-ag__body p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.55; }
 
-/* --- Mentors --- */
-.ev-speakers { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
-@media (min-width: 576px) { .ev-speakers { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 992px) { .ev-speakers { grid-template-columns: repeat(3, 1fr); } }
-.ev-sp {
-  background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
-  padding-bottom: 1.35rem; text-align: center;
-  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s;
+/* --- Speakers: "Industry Pioneers & Thought Leaders" — navy band, centred portrait cards.
+   Featured roles (chief guest, keynote) get a teal-lit border; every card lifts on hover. --- */
+.ev-speakers-sec {
+  overflow: hidden; color: #fff;
+  background:
+    radial-gradient(50% 60% at 50% 0%, rgba(26, 154, 140, .22) 0%, rgba(26, 154, 140, 0) 70%),
+    linear-gradient(160deg, var(--black) 0%, #0D2E4F 60%, var(--black-2) 100%);
 }
-.ev-sp:hover { transform: translateY(-6px); border-color: transparent; box-shadow: 0 34px 60px -30px rgba(10, 37, 64, .4); }
-.ev-sp__photo { margin: 0 0 1.15rem; aspect-ratio: 4 / 3; border-radius: 0; overflow: hidden; }
-.ev-sp__photo img { transition: transform .6s var(--ease); }
-.ev-sp:hover .ev-sp__photo img { transform: scale(1.06); }
-.ev-sp__name { font-size: 1.1rem; margin: 0 1rem .25rem; }
-.ev-sp__role { margin: 0 1rem; font-size: .88rem; color: var(--muted); }
+.ev-speakers-sec__rings {
+  position: absolute; z-index: -1; bottom: -180px; left: -160px; width: 420px; height: 420px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .08); box-shadow: 0 0 0 60px rgba(255, 255, 255, .02), 0 0 0 61px rgba(255, 255, 255, .06);
+  pointer-events: none;
+}
+.ev-speakers-sec .section-head h2 { color: #fff; }
+.ev-speakers-sec .section-head p { color: var(--on-dark); }
+.ev-speakers-sec .section-head .eyebrow { color: #4FC3B5; }
+
+.ev-spk-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(.75rem, 2vw, 1.5rem); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 992px) { .ev-spk-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ev-spk {
+  position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 1.5rem 1.25rem 1.6rem; border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, .02) 100%);
+  border: 1px solid rgba(255, 255, 255, .12);
+  transition: transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.ev-spk--featured { border-color: rgba(79, 195, 181, .55); box-shadow: 0 0 0 1px rgba(79, 195, 181, .08), 0 24px 50px -30px rgba(26, 154, 140, .7); }
+.ev-spk:hover { transform: translateY(-6px); border-color: rgba(79, 195, 181, .85); box-shadow: 0 30px 60px -30px rgba(26, 154, 140, .75); }
+.ev-spk__role {
+  display: inline-block; padding: .3rem .8rem; border-radius: 999px; margin-bottom: 1.15rem;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: #BFEDE7; background: rgba(26, 154, 140, .16); border: 1px solid rgba(79, 195, 181, .4);
+  white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+}
+.ev-spk__photo {
+  display: grid; place-items: center; width: 112px; height: 112px; border-radius: 50%; overflow: hidden; margin-bottom: 1.15rem;
+  border: 3px solid rgba(79, 195, 181, .7); box-shadow: 0 0 0 6px rgba(26, 154, 140, .12);
+  background: linear-gradient(145deg, var(--primary) 0%, var(--brand-2) 100%);
+  transition: transform .5s var(--ease);
+}
+.ev-spk__photo img { width: 100%; height: 100%; object-fit: cover; }
+.ev-spk:hover .ev-spk__photo { transform: scale(1.05); }
+.ev-spk__initials { font-size: 1.9rem; font-weight: 600; color: #fff; letter-spacing: .02em; }
+.ev-spk__name { margin: 0 0 .35rem; font-size: var(--font-h3); color: #fff; letter-spacing: -0.01em; }
+.ev-spk__title { margin: 0 0 .25rem; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #4FC3B5; }
+.ev-spk__org { margin: 0 0 1.25rem; font-size: .9rem; color: var(--on-dark); }
+.ev-spk__in {
+  display: inline-grid; place-items: center; width: 38px; height: 38px; margin-top: auto; border-radius: 50%;
+  color: #fff; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16);
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.ev-spk__in .icon { width: 16px; height: 16px; }
+.ev-spk__in:hover, .ev-spk__in:focus-visible { background: var(--brand-2); border-color: var(--brand-2); }
+
+/* Call for speakers — glass panel with a teal-to-blue gradient border, a soft travelling glow,
+   a pulsing mic badge, audience chips and a teal CTA. */
+.ev-spk-cta {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; gap: 1.25rem 1.75rem; align-items: center; grid-template-columns: 1fr;
+  margin-top: clamp(2.25rem, 4vw, 3.25rem); padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.25rem, 3vw, 2.5rem);
+  border-radius: 20px; border: 1px solid transparent;
+  background:
+    linear-gradient(135deg, rgba(18, 59, 99, .96) 0%, rgba(10, 37, 64, .96) 55%, rgba(13, 61, 74, .96) 100%) padding-box,
+    linear-gradient(120deg, rgba(79, 195, 181, .85) 0%, rgba(255, 255, 255, .12) 45%, rgba(31, 109, 174, .85) 100%) border-box;
+  box-shadow: 0 40px 80px -45px rgba(26, 154, 140, .8);
+}
+@media (min-width: 576px) { .ev-spk-cta { grid-template-columns: auto minmax(0, 1fr); align-items: start; } }
+@media (min-width: 992px) { .ev-spk-cta { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; } }
+/* Dotted texture on the right, fading towards the copy */
+.ev-spk-cta::after {
+  content: ""; position: absolute; z-index: -1; inset: 0 0 0 auto; width: 45%; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, .16) 1px, transparent 1.2px); background-size: 14px 14px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%); mask-image: linear-gradient(90deg, transparent, #000 70%);
+}
+.ev-spk-cta__glow {
+  position: absolute; z-index: -1; top: -60%; left: -10%; width: 55%; height: 220%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(26, 154, 140, .35), rgba(26, 154, 140, 0));
+  animation: evSpkGlow 9s var(--ease) infinite alternate;
+}
+@keyframes evSpkGlow { from { transform: translateX(0); } to { transform: translateX(120%); } }
+
+.ev-spk-cta__mic {
+  position: relative; display: inline-grid; place-items: center; width: 72px; height: 72px; border-radius: 50%;
+  color: #fff; background: linear-gradient(145deg, var(--brand-2) 0%, var(--primary) 100%);
+  box-shadow: 0 0 0 8px rgba(26, 154, 140, .14), 0 18px 34px -14px rgba(26, 154, 140, .9);
+}
+.ev-spk-cta__mic .icon { width: 30px; height: 30px; }
+.ev-spk-cta__mic::after {
+  content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(79, 195, 181, .55);
+  animation: evSpkPing 2.4s var(--ease) infinite;
+}
+@keyframes evSpkPing { from { transform: scale(1); opacity: .9; } to { transform: scale(1.45); opacity: 0; } }
+
+.ev-spk-cta__kicker { margin: 0 0 .35rem; color: #4FC3B5; }
+.ev-spk-cta__title { margin: 0 0 .45rem; font-size: clamp(1.3rem, 2.2vw, 1.65rem); color: #fff; letter-spacing: -0.015em; }
+.ev-spk-cta__text { margin: 0; max-width: 560px; font-size: .95rem; line-height: 1.6; color: var(--on-dark); }
+.ev-spk-cta__chips { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.ev-spk-cta__chips li {
+  padding: .3rem .8rem; border-radius: 999px; font-size: .8rem; font-weight: 500; color: #DDF4F1;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14);
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.ev-spk-cta:hover .ev-spk-cta__chips li { border-color: rgba(79, 195, 181, .45); }
+
+.ev-spk-cta__btn { gap: .6rem; white-space: nowrap; box-shadow: 0 16px 30px -14px rgba(26, 154, 140, .95); justify-self: start; }
+@media (min-width: 576px) and (max-width: 991.98px) { .ev-spk-cta__btn { grid-column: 2; } }
+@media (min-width: 992px) { .ev-spk-cta__btn { justify-self: end; } }
+.ev-spk-cta__btn .icon { width: 18px; height: 18px; transition: transform .3s var(--ease); }
+.ev-spk-cta__btn:hover .icon { transform: translateX(4px); }
+/* Phones: compact 2-up speaker cards; CTA stacks centred with a full-width button */
+@media (max-width: 575.98px) {
+  .ev-spk { padding: 1rem .65rem 1.1rem; border-radius: 14px; }
+  .ev-spk__role { margin-bottom: .85rem; padding: .25rem .55rem; font-size: .58rem; letter-spacing: .06em; }
+  .ev-spk__photo { width: 76px; height: 76px; margin-bottom: .85rem; border-width: 2px; box-shadow: 0 0 0 4px rgba(26, 154, 140, .12); }
+  .ev-spk__initials { font-size: 1.35rem; }
+  .ev-spk__name { font-size: 1rem; }
+  .ev-spk__title { font-size: .62rem; letter-spacing: .05em; }
+  .ev-spk__org { margin-bottom: .9rem; font-size: .8rem; line-height: 1.35; }
+  .ev-spk__in { width: 34px; height: 34px; }
+}
+@media (max-width: 359.98px) {
+  .ev-spk__role { font-size: .52rem; letter-spacing: .04em; padding: .22rem .45rem; }
+  .ev-spk__title { font-size: .58rem; letter-spacing: .03em; }
+}
+@media (max-width: 575.98px) {
+  .ev-spk-cta { justify-items: center; text-align: center; border-radius: 16px; }
+  .ev-spk-cta::after { width: 100%; }
+  .ev-spk-cta__mic { width: 60px; height: 60px; }
+  .ev-spk-cta__mic .icon { width: 26px; height: 26px; }
+  .ev-spk-cta__text { font-size: .9rem; }
+  .ev-spk-cta__chips { justify-content: center; }
+  .ev-spk-cta__btn { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ev-spk-cta__glow, .ev-spk-cta__mic::after { animation: none; }
+}
+
+/* --- Clients: navy wave from the speakers band, white-to-surface gradient, brand rings, logo watermark and a full-bleed
+   Owl Carousel row gliding continuously with faded edges. Tiles show the logo only, grey until hovered. --- */
+.ev-clients-sec {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding-top: calc(clamp(3rem, 6vw, 5.5rem) + clamp(28px, 5vw, 70px));
+  /* White at the top, settling into the light surface of the "Keep going" section below */
+  background:
+    radial-gradient(60% 50% at 50% 0%, rgba(79, 195, 181, .10) 0%, rgba(79, 195, 181, 0) 70%),
+    linear-gradient(180deg, #fff 0%, #fff 45%, var(--surface) 100%);
+}
+/* Faint blueprint grid, strongest under the heading and fading out to the edges */
+.ev-clients-sec::before {
+  content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+  background-image: linear-gradient(rgba(7, 87, 154, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(7, 87, 154, .05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(55% 45% at 50% 30%, #000 0%, transparent 75%); mask-image: radial-gradient(55% 45% at 50% 30%, #000 0%, transparent 75%);
+}
+.ev-clients-sec__wave { position: absolute; z-index: 0; top: -1px; left: 0; width: 100%; height: clamp(28px, 5vw, 70px); display: block; pointer-events: none; }
+/* Brand ring motif (as in the event hero), in navy/teal at low strength */
+.ev-clients-sec__rings {
+  position: absolute; z-index: -1; left: -140px; bottom: -160px; width: clamp(300px, 34vw, 520px); aspect-ratio: 1; pointer-events: none; opacity: .55;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' fill='none' stroke-width='1'%3E%3Ccircle cx='200' cy='200' r='80' stroke='%231A9A8C' stroke-opacity='.45'/%3E%3Ccircle cx='200' cy='200' r='128' stroke='%2307579A' stroke-opacity='.28'/%3E%3Ccircle cx='200' cy='200' r='176' stroke='%2307579A' stroke-opacity='.16'/%3E%3C/svg%3E") no-repeat center / contain;
+  animation: evRingsSpin 60s linear infinite;
+}
+@keyframes evRingsSpin { to { rotate: 360deg; } }
+/* Lit band behind the logo row: soft teal-to-blue glow with a dot texture */
+.ev-clients-sec__band {
+  position: absolute; z-index: -1; left: 0; right: 0; bottom: clamp(5.5rem, 9vw, 7.5rem); height: 170px; pointer-events: none;
+  background:
+    radial-gradient(rgba(7, 87, 154, .14) 1px, transparent 1.3px) 0 0 / 16px 16px,
+    linear-gradient(90deg, rgba(26, 154, 140, 0) 0%, rgba(26, 154, 140, .10) 30%, rgba(7, 87, 154, .10) 70%, rgba(7, 87, 154, 0) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+}
+
+/* Full-bleed row with soft fades at both edges */
+.ev-clients-rows {
+  display: block; min-width: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+.ev-clients .owl-stage { transition-timing-function: linear !important; }
+.ev-client {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  height: 104px; padding: 1rem 1.25rem; border-radius: 18px; border: 1px solid var(--line); background: #fff;
+}
+/* Gradient border on its own layer: a gradient can't be transitioned, but the layer's opacity can, so it fades in smoothly */
+.ev-client::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, var(--brand-2), var(--primary));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0; transition: opacity .5s ease;
+}
+.ev-client:hover::before { opacity: 1; }
+.ev-client__logo { display: grid; place-items: center; width: 100%; }
+.ev-clients .ev-client img {
+  width: 100%; max-width: 176px; height: auto; max-height: 52px; object-fit: contain;
+  filter: grayscale(1); opacity: .55; transition: filter .5s ease, opacity .5s ease;
+}
+.ev-clients .ev-client:hover img { filter: none; opacity: 1; }
+
+.ev-clients-foot { margin: clamp(2rem, 3.5vw, 2.75rem) 0 0; text-align: center; color: var(--muted); font-size: .98rem; }
+.ev-clients-foot a {
+  display: inline-flex; align-items: center; gap: .45rem; margin-left: .35rem; font-weight: 600; color: var(--primary);
+  border-bottom: 1px solid rgba(7, 87, 154, .3); transition: gap .3s var(--ease), border-color .3s var(--ease);
+}
+.ev-clients-foot a .icon { width: 17px; height: 17px; }
+.ev-clients-foot a:hover { gap: .7rem; border-color: var(--primary); }
+@media (max-width: 575.98px) {
+  .ev-client { height: 84px; padding: .7rem .75rem; border-radius: 14px; }
+  .ev-clients .ev-client img { max-width: 150px; max-height: 44px; }
+  .ev-clients-rows {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  }
+  .ev-clients-foot { font-size: .92rem; }
+  .ev-clients-foot a { display: flex; width: max-content; margin: .4rem auto 0; }
+  .ev-clients-sec__rings { width: 240px; left: -110px; bottom: -110px; }
+  .ev-clients-sec__band { height: 130px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ev-clients-sec__rings { animation: none; }
+  .ev-client::before, .ev-clients .ev-client img { transition: none; }
+}
 
 /* --- Venue --- */
 .ev-venue { display: grid; gap: clamp(1.75rem, 4vw, 3rem); align-items: center; }
@@ -3084,7 +3290,7 @@ fieldset[disabled] { opacity: .6; }
 
 /* --- Section decoration: soft brand glows in the empty margins --- */
 .ev-agenda-sec, .ev-speakers-sec, .ev-venue-sec, .ev-related-sec { position: relative; isolation: isolate; }
-.ev-speakers-sec::before, .ev-related-sec::before {
+.ev-related-sec::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(42% 52% at 96% 6%, rgba(7, 87, 154, .07) 0%, rgba(7, 87, 154, 0) 70%),
@@ -3123,8 +3329,8 @@ fieldset[disabled] { opacity: .6; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ev-hl__item, .ev-sp, .ev-rel, .ev-rel::after, .ev-rel__media img, .ev-fact__icon, .ev-sp__photo img, .ev-rel__go, .ev-ag::after { transition: none; }
-  .ev-hl__item:hover, .ev-sp:hover, .ev-rel:hover, .ev-rel:hover .ev-rel__media img { transform: none; }
+  .ev-hl__item, .ev-spk, .ev-spk__photo, .ev-rel, .ev-rel::after, .ev-rel__media img, .ev-fact__icon, .ev-rel__go, .ev-ag::after { transition: none; }
+  .ev-hl__item:hover, .ev-spk:hover, .ev-spk:hover .ev-spk__photo, .ev-rel:hover, .ev-rel:hover .ev-rel__media img { transform: none; }
 }
 /* ---------- 20. Utilities ---------- */
 .mt-0 { margin-top: 0 !important; }
